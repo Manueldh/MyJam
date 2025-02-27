@@ -15,6 +15,9 @@ app
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
+  .get('/login', onLogin)
+
+  .listen(8000)
 // Use MongoDB
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 // Construct URL used to connect to database from info in the .env file
@@ -63,3 +66,7 @@ app.use((err, req, res) => {
 app.listen(process.env.PORT, () => {
   console.log(`I did not change this message and now my webserver is listening at port ${process.env.PORT}`)
 })
+
+function onLogin(req, res) {
+  res.render('login')
+}

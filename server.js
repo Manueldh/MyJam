@@ -1,28 +1,26 @@
-// dit is een boilerplate voor een node.js webserver met alle basis die je nodig hebt om je webserver aan de praat te krijgen
-// deze boilerplate is geen werkende webserver, maar een overzicht van de verschillende codefragmenten die je nodig hebt
-// kopieer deze dus niet integraal, maar zoek de stukjes die je nodig hebt en pas ze aan, zodat ze werken voor jouw project
-
-// Add info from .env file to process.env
 require('dotenv').config() 
 
-// Initialise Express webserver
 const express = require('express')
 const app = express()
 
 app
   .use(express.urlencoded({extended: true})) // middleware to parse form data from incoming HTTP request and add form fields to req.body
-  .use(express.static('static'))             // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
+  .use("/", express.static('static'))        // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
   .get('/login', onLogin)
+  .get('/register', onRegister)
+
+  .post('/submitInlog', onSubmitInlog)
+  .post('/registerAccount', onRegisterAccount)
 
   .listen(8000)
-// Use MongoDB
+
+
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
-// Construct URL used to connect to database from info in the .env file
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
-// Create a MongoClient
+
 const client = new MongoClient(uri, {
     serverApi: {
       version: ServerApiVersion.v1,
@@ -41,7 +39,6 @@ client.connect()
     console.log(`For uri - ${uri}`)
   })
 
-// A sample route, replace this with your own routes
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
@@ -62,11 +59,42 @@ app.use((err, req, res) => {
   res.status(500).send('500: server error')
 })
 
-// Start the webserver and listen for HTTP requests at specified port
-app.listen(process.env.PORT, () => {
-  console.log(`I did not change this message and now my webserver is listening at port ${process.env.PORT}`)
-})
 
 function onLogin(req, res) {
-  res.render('login')
+  res.render('login.ejs')
+}
+
+async function onSubmitInlog(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  const user = await collection.findOne({
+    username: req.body.username,
+    password: req.body.password
+  })
+
+  if (user) { 
+    res.render('inlogmatch.ejs')
+  } else {
+    res.render('inlogfout.ejs')
+  }
+
+}
+
+function onRegister(req, res) {
+  res.render('register.ejs')
+}
+
+async function onRegisterAccount(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  result = await collection.insertOne({
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+  })
+  
+  
+  res.render('succes.ejs', { data: req.body })
 }

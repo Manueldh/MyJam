@@ -1,17 +1,25 @@
 {
   "name": "myjam",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manueldh/MyJam.git"
   },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Manueldh/MyJam/issues"
+  },
+  "homepage": "https://github.com/Manueldh/MyJam#readme",
   "description": "",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "ejs": "^3.1.10",
     "express": "^4.21.2",
-    "mongodb": "^4.17.2"
+    "mongodb": "^6.14.2"
   }
 }

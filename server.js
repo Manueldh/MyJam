@@ -1,6 +1,7 @@
 require('dotenv').config() 
 
 const express = require('express')
+const session = require('express-session')
 const app = express()
 
 app
@@ -16,6 +17,13 @@ app
   .post('/registerAccount', onRegisterAccount)
 
   .listen(8000)
+
+app
+  .use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET
+  }))
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
@@ -73,12 +81,12 @@ async function onSubmitInlog(req, res) {
     password: req.body.password
   })
 
-  if (user) { 
-    res.render('inlogmatch.ejs')
+  if (user) {
+    req.session.user = user
+    res.render('test.ejs', { username: user.username })
   } else {
     res.render('inlogfout.ejs')
   }
-
 }
 
 function onRegister(req, res) {

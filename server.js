@@ -51,7 +51,7 @@ client.connect()
   })
 
 app.get('/', (req, res) => {
-  res.render('register.ejs', {username: req.session.user ? req.session.user.username : null})
+  res.render('register.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null, error: null})
 })
 
 // Middleware to handle not found errors - error 404

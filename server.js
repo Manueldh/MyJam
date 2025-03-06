@@ -1,4 +1,6 @@
 require('dotenv').config() 
+const xss = require('xss')
+const bcrypt = require('bcryptjs')
 
 const express = require('express')
 const session = require('express-session')
@@ -70,51 +72,56 @@ app.use((err, req, res) => {
 
 
 function onLogin(req, res) {
-  res.render('login.ejs')
+  res.render('login.ejs', {username: req.session.user ? req.session.user.username : null})
 }
 
 function onLogout(req, res) {
-  req.session.destroy
-  res.redirect('/')
+  req.session.destroy((err) => {
+    res.redirect('/') 
+  })
 }
 
 
 async function onSubmitInlog(req, res) {
-  try {
     const dataBase = client.db(process.env.DB_NAME)
     const collection = dataBase.collection(process.env.DB_COLLECTION)
 
+    const username = xss(req.body.username)
+    const password = xss(req.body.password)
+
+
     const user = await collection.findOne({
-      username: req.body.username,
-      password: req.body.password
+      username: username
     })
 
-    if (user) {
+    if (user && await bcrypt.compare(password, user.password)) {
       req.session.user = { username: user.username}
-      res.redirect('/')
+      res.redirect('/') 
     } else {
       res.render('inlogfout.ejs')
     }
-  } catch (error) {
-    console.error('Error during login:', error)
-    res.status(500).send('500: server error')
-  }
 }
 
 function onRegister(req, res) {
-  res.render('register.ejs')
+  res.render('register.ejs', {username: req.session.user ? req.session.user.username : null})
 }
 
 async function onRegisterAccount(req, res) {
-  const dataBase = client.db(process.env.DB_NAME)
-  const collection = dataBase.collection(process.env.DB_COLLECTION)
+      const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
 
-  result = await collection.insertOne({
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password,
-  })
-  
-  
-  res.render('succes.ejs', { data: req.body })
-}
+    const email = xss(req.body.email)
+    const username = xss(req.body.username)
+    const password = xss(req.body.password)
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    result = await collection.insertOne({
+      email: email,
+      username: username,
+      password: hashedPassword,
+    })
+
+    req.session.user = { username: req.body.username }
+    res.redirect('/')
+  }

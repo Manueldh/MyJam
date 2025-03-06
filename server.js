@@ -10,13 +10,13 @@ app
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
-  .get('/login', onLogin)
+  // .get('/login', onLogin)
   .get('/register', onRegister)
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
 
-  .listen(8000)
+  .listen(4497)
 
 app
   .use(session({
@@ -25,6 +25,87 @@ app
     secret: process.env.SESSION_SECRET
   }))
 
+// ********************************************************************************************************
+// ******************************************************************************************************** 
+// *******************************************SPOTIFY API**************************************************
+// ********************************************************************************************************
+// ********************************************************************************************************
+
+const SpotifyWebApi = require('spotify-web-api-node')
+
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI
+})
+
+const scopes = ['user-read-private', 'user-read-email']; 
+
+app.get('/login', (req, res) => {
+  res.redirect(spotifyApi.createAuthorizeURL(scopes));
+});
+
+app.get('/callback', (req, res) => {
+  const error = req.query.error;
+  const code = req.query.code;
+  const state = req.query.state;
+
+  if (error) {
+    console.error('Callback Error:', error);
+    res.send(`Callback Error: ${error}`);
+    return;
+  }
+
+  spotifyApi
+    .authorizationCodeGrant(code)
+    .then(data => {
+      const access_token = data.body['access_token'];
+      const refresh_token = data.body['refresh_token'];
+      const expires_in = data.body['expires_in'];
+
+      spotifyApi.setAccessToken(access_token);
+      spotifyApi.setRefreshToken(refresh_token);
+
+      console.log('access_token:', access_token);
+      console.log('refresh_token:', refresh_token);
+
+      console.log(
+        `Sucessfully retreived access token. Expires in ${expires_in} s.`
+      );
+      res.send('Success! You can now close the window.');
+
+      setInterval(async () => {
+        const data = await spotifyApi.refreshAccessToken();
+        const access_token = data.body['access_token'];
+
+        console.log('The access token has been refreshed!');
+        console.log('access_token:', access_token);
+        spotifyApi.setAccessToken(access_token);
+      }, expires_in / 2 * 1000);
+    })
+    .catch(error => {
+      console.error('Error getting Tokens:', error);
+      res.send(`Error getting Tokens: ${error}`);
+    });
+});
+
+app.get('/track/:id', async (req, res) => {
+  const trackId = req.params.id;
+
+  // Controleer of het access token is ingesteld
+  const accessToken = spotifyApi.getAccessToken();
+  if (!accessToken) {
+    return res.status(400).send('No access token provided');
+  }
+
+  try {
+    const data = await spotifyApi.getTrack(trackId);
+    res.json(data.body);
+  } catch (err) {
+    console.error('Error fetching track data', err);
+    res.status(500).send('Error fetching track data');
+  }
+})
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
@@ -67,6 +148,17 @@ app.use((err, req, res) => {
   res.status(500).send('500: server error')
 })
 
+app.get('/track/:id', async (req, res) => {
+  const trackId = req.params.id;
+
+  try {
+    const data = await spotifyApi.getTrack(trackId);
+    res.json(data.body);
+  } catch (err) {
+    console.error('Error fetching track data', err);
+    res.status(500).send('Error fetching track data');
+  }
+});
 
 function onLogin(req, res) {
   res.render('login.ejs')
@@ -106,3 +198,6 @@ async function onRegisterAccount(req, res) {
   
   res.render('succes.ejs', { data: req.body })
 }
+
+
+

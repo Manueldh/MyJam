@@ -72,13 +72,15 @@ app.use((err, req, res) => {
 
 
 function onLogin(req, res) {
-  res.render('login.ejs', {username: req.session.user ? req.session.user.username : null})
+
+  res.render('login.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null})
 }
 
 function onLogout(req, res) {
   req.session.destroy((err) => {
     res.redirect('/') 
   })
+
 }
 
 
@@ -103,10 +105,13 @@ async function onSubmitInlog(req, res) {
 }
 
 function onRegister(req, res) {
+
   res.render('register.ejs', {
     username: req.session.user ? req.session.user.username : null,
-    error: null
+    error: null,
+    title: 'Register' 
   })
+
 }
 
 async function onRegisterAccount(req, res) {

@@ -12,7 +12,12 @@ body {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
 }
+/*NavBar*/
+svg {
+    max-width: 30px;
+}
 
+/*LoginIn page*/
 form{
     display: flex;
     flex-direction: column;

@@ -26,6 +26,25 @@ form{
     width: 30%;
 }
 
+form > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 94.5%;
+}
+
+form > button{
+    margin: 10px;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-bg-color);
+    color: var(--color-light);
+    font-family: var(--main-font);
+    cursor: pointer;
+}
+
     label, input{
         margin: 10px;
         border-radius: 5px;
@@ -45,14 +64,3 @@ form{
         font-weight: 600;
     }
 
-    form > button{
-        margin: 10px;
-        padding: 10px;
-        width: 100%;
-        border: none;
-        border-radius: 5px;
-        background-color: var(--main-bg-color);
-        color: var(--color-light);
-        font-family: var(--main-font);
-        cursor: pointer;
-    }

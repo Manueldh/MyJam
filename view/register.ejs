@@ -34,6 +34,10 @@
 
         <button type="submit">Sign up</button>
       </form>
+
+      <% if (error) { %>
+        <p><%= error %></p>
+      <% } %>
     </main>
 
     <footer></footer>

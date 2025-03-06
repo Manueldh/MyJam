@@ -103,7 +103,10 @@ async function onSubmitInlog(req, res) {
 }
 
 function onRegister(req, res) {
-  res.render('register.ejs', {username: req.session.user ? req.session.user.username : null})
+  res.render('register.ejs', {
+    username: req.session.user ? req.session.user.username : null,
+    error: null
+  })
 }
 
 async function onRegisterAccount(req, res) {
@@ -114,9 +117,14 @@ async function onRegisterAccount(req, res) {
     const username = xss(req.body.username)
     const password = xss(req.body.password)
 
+    const duplicateUser = await collection.findOne({ username: username })
+    if (duplicateUser) {
+      return res.render('register.ejs', { error: 'Username already taken', username: null })
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    result = await collection.insertOne({
+    const result = await collection.insertOne({
       email: email,
       username: username,
       password: hashedPassword,

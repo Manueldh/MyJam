@@ -69,7 +69,9 @@ app.use((err, req, res) => {
 
 
 function onLogin(req, res) {
-  res.render('login.ejs')
+  res.render('login.ejs', 
+    { title: 'Login' }
+  )
 }
 
 async function onSubmitInlog(req, res) {
@@ -90,7 +92,7 @@ async function onSubmitInlog(req, res) {
 }
 
 function onRegister(req, res) {
-  res.render('register.ejs')
+  res.render('register.ejs', { title: 'Register' })
 }
 
 async function onRegisterAccount(req, res) {

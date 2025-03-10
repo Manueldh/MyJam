@@ -17,8 +17,10 @@
 body {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    background-color: var(--main-bg-color);
+    background: linear-gradient(var(--main-bg-color) 40%, transparent 40%) no-repeat;
 }
+  
+  
 /*NavBar*/
 
 
@@ -88,28 +90,33 @@ nav {
     }
 
 /*LoginIn page*/
-form{
+
+h1{
+    font-family: var(--main-font);
+    color: black;
+}
+
+.inner-login{
+    text-align: left ;
+    width: 30%;
+}
+
+.login{
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     justify-content: center;
-    margin: 0 auto;
+    align-items: center; 
+}
+
+
+form{
+    margin-top: 20px;
     padding: 50px;
     border-radius: 10px;
     background-color: var(--color-light);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 30%;
-}
-
-form > div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 94.5%;
 }
 
 form > button{
-    margin: 10px;
     padding: 10px;
     width: 100%;
     border: none;
@@ -118,18 +125,18 @@ form > button{
     color: var(--color-light);
     font-family: var(--main-font);
     cursor: pointer;
+    margin-bottom: 8px;
 }
 
     label, input{
-        margin: 10px;
         border-radius: 5px;
         font-family: var(--main-font);
         width: 100%;
     }
 
     input{
-        margin: 10px;
         padding: 10px;
+        margin-bottom: 20px;
         background-color: var(--main-color-grey);
         width: 100%;
         border: none;
@@ -137,5 +144,11 @@ form > button{
 
     label{
         font-weight: 600;
+    }
+
+    form > a{
+        color: var(--main-link-color);
+        text-decoration: underline;
+        font-size: 12px;
     }
 

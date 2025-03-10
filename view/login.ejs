@@ -6,26 +6,24 @@
 
   </head>
   <body>
-    <header>
-
-        <%- include ('menu') %>
-    </header>
+    <header><%- include ('menu') %></header>
 
     <main>
-      <form action="/submitInlog" method="POST">
-        
-        <div>
-          <label for="username">Username</label>
-          <input type="text" name="username" />
-        </div>
+      <div class="login">
+        <div class="inner-login">
+          <h1 class="form-title">Log in</h1>
+          <form action="/submitInlog" method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username" />
 
-        <div>
-          <label for="password">Password</label>
-          <input type="password" name="password" />
+            <label for="password">Password</label>
+            <input type="password" name="password" />
+
+            <button type="submit">Log in</button>
+            <a href="?">Account aanmaken</a>
+          </form>
         </div>
-      
-        <button type="submit">Log in</button>
-      </form>
+      </div>
     </main>
 
     <footer></footer>

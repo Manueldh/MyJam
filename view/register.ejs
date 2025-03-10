@@ -4,23 +4,26 @@
     <%- include ('head') %>
   </head>
   <body>
-    <header>
-        <%- include ('menu') %>
-    </header>
+    <header><%- include ('menu') %></header>
 
     <main>
-      <form action="/registerAccount" method="POST">
-        <label for="email">Email</label>
-        <input type="text" name="email" />
+      <div class="login">
+        <div class="inner-login">
+          <h1>Sign up</h1>
+          <form action="/registerAccount" method="POST">
+            <label for="email">Email</label>
+            <input type="text" name="email" />
 
-        <label for="username">Username</label>
-        <input type="text" name="username" />
+            <label for="username">Username</label>
+            <input type="text" name="username" />
 
-        <label for="password">Password</label>
-        <input type="password" name="password" />
+            <label for="password">Password</label>
+            <input type="password" name="password" />
 
-        <button type="submit">Sign up</button>
-      </form>
+            <button type="submit">Sign up</button>
+          </form>
+        </div>
+      </div>
     </main>
 
     <footer></footer>

@@ -17,20 +17,40 @@
 body {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
+    background: linear-gradient(var(--main-bg-color) 40%, transparent 40%) no-repeat;
 }
+  
+  
 /*NavBar*/
 svg {
     max-width: 30px;
 }
 
 /*LoginIn page*/
+
+h1{
+    font-family: var(--main-font);
+    color: black;
+}
+
+.inner-login{
+    text-align: left ;
+    width: 30%;
+}
+
+.login{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+
 form{
-    margin: auto;
+    margin-top: 20px;
     padding: 50px;
     border-radius: 10px;
     background-color: var(--color-light);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 30%;
 }
 
 form > button{

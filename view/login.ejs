@@ -4,23 +4,24 @@
     <%- include ('head') %>
   </head>
   <body>
-    <header>
-
-        <%- include ('menu') %>
-    </header>
+    <header><%- include ('menu') %></header>
 
     <main>
-      <form action="/submitInlog" method="POST">
-        
-          <label for="username">Username</label>
-          <input type="text" name="username" />
-        
-          <label for="password">Password</label>
-          <input type="password" name="password" />
-      
-        <button type="submit">Log in</button>
-        <a href="/view/register.ejs">Account aanmaken</a>
-      </form>
+      <div class="login">
+        <div class="inner-login">
+          <h1 class="form-title">Log in</h1>
+          <form action="/submitInlog" method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username" />
+
+            <label for="password">Password</label>
+            <input type="password" name="password" />
+
+            <button type="submit">Log in</button>
+            <a href="?">Account aanmaken</a>
+          </form>
+        </div>
+      </div>
     </main>
 
     <footer></footer>

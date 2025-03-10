@@ -18,10 +18,12 @@
   "homepage": "https://github.com/Manueldh/MyJam#readme",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
-    "mongodb": "^6.14.2"
+    "mongodb": "^6.14.2",
+    "xss": "^1.0.15"
   }
 }

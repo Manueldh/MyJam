@@ -1,15 +1,23 @@
 require('dotenv').config() 
+const xss = require('xss')
+const bcrypt = require('bcryptjs')
 
 const express = require('express')
 const session = require('express-session')
 const app = express()
 
 app
+  .use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET
+  }))
   .use(express.urlencoded({extended: true})) // middleware to parse form data from incoming HTTP request and add form fields to req.body
   .use("/", express.static('static'))        // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
+  .get('/logout', onLogout)
   .get('/login', onLogin)
   .get('/register', onRegister)
 
@@ -18,14 +26,9 @@ app
 
   .listen(8000)
 
-app
-  .use(session({
-    resave: false,
-    saveUninitialized: true,
-    secret: process.env.SESSION_SECRET
-  }))
 
 
+  
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
@@ -48,7 +51,7 @@ client.connect()
   })
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.render('register.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null, error: null})
 })
 
 // Middleware to handle not found errors - error 404
@@ -69,42 +72,69 @@ app.use((err, req, res) => {
 
 
 function onLogin(req, res) {
-  res.render('login.ejs', 
-    { title: 'Login' }
-  )
+
+  res.render('login.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null})
 }
 
-async function onSubmitInlog(req, res) {
-  const dataBase = client.db(process.env.DB_NAME)
-  const collection = dataBase.collection(process.env.DB_COLLECTION)
-
-  const user = await collection.findOne({
-    username: req.body.username,
-    password: req.body.password
+function onLogout(req, res) {
+  req.session.destroy((err) => {
+    res.redirect('/') 
   })
 
-  if (user) {
-    req.session.user = user
-    res.render('test.ejs', { username: user.username })
-  } else {
-    res.render('inlogfout.ejs')
-  }
+}
+
+
+async function onSubmitInlog(req, res) {
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+    const username = xss(req.body.username)
+    const password = xss(req.body.password)
+
+
+    const user = await collection.findOne({
+      username: username
+    })
+
+    if (user && await bcrypt.compare(password, user.password)) {
+      req.session.user = { username: user.username}
+      res.redirect('/') 
+    } else {
+      res.render('inlogfout.ejs')
+    }
 }
 
 function onRegister(req, res) {
-  res.render('register.ejs', { title: 'Register' })
+
+  res.render('register.ejs', {
+    username: req.session.user ? req.session.user.username : null,
+    error: null,
+    title: 'Register' 
+  })
+
 }
 
 async function onRegisterAccount(req, res) {
-  const dataBase = client.db(process.env.DB_NAME)
-  const collection = dataBase.collection(process.env.DB_COLLECTION)
+      const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
 
-  result = await collection.insertOne({
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password,
-  })
-  
-  
-  res.render('succes.ejs', { data: req.body })
-}
+    const email = xss(req.body.email)
+    const username = xss(req.body.username)
+    const password = xss(req.body.password)
+
+    const duplicateUser = await collection.findOne({ username: username })
+    if (duplicateUser) {
+      return res.render('register.ejs', { error: 'Username already taken', username: null })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const result = await collection.insertOne({
+      email: email,
+      username: username,
+      password: hashedPassword,
+    })
+
+    req.session.user = { username: req.body.username }
+    res.redirect('/')
+  }

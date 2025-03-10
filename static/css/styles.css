@@ -6,7 +6,7 @@
 
 :root{
     --main-bg-color: #FF7300;
-    --main-text-color: #00000000;
+    --main-text-color: #000000;
     --color-light: #ffffff;
     --main-link-color: #ff9100;
     --main-link-hover-color: #0056b3;
@@ -22,9 +22,72 @@ body {
   
   
 /*NavBar*/
-svg {
-    max-width: 30px;
+
+
+nav {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    justify-content: space-between;
+    background: var(--color-light);
+    align-items: center;
+    margin: 1em;
+    padding: 1em;
+    border-radius: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+    nav a {
+        display: flex;
+        text-decoration: none;
+        gap: 0.2rem;
+        padding: 0 0.8rem;
+        align-items: center;
+    }
+
+    nav svg {
+        width: 20px;
+    }
+
+    nav > a svg {
+        fill: var(--main-bg-color);
+        width: 30px;
+    }
+
+    nav > a p {
+        font-size: 1.2em;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+    }
+
+    nav p {
+        white-space: nowrap;
+        color: var(--main-text-color);
+        font-weight: 600;
+    }
+
+    nav > ul > li > a > p {
+        position: relative;
+    }
+
+    nav > ul > li > a > p::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--main-text-color);
+        transition: width 150ms linear;
+    }
+
+    nav > ul > li > a > p:hover::before {
+        width: 100%;
+    }
 
 /*LoginIn page*/
 

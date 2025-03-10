@@ -39,73 +39,48 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri: process.env.SPOTIFY_REDIRECT_URI
 })
 
-const scopes = ['user-read-private', 'user-read-email']; 
+async function getAccessToken() {
+  try {
+    const data = await spotifyApi.clientCredentialsGrant();
+    const accessToken = data.body['access_token'];
 
-app.get('/login', (req, res) => {
-  res.redirect(spotifyApi.createAuthorizeURL(scopes));
-});
+    spotifyApi.setAccessToken(accessToken);
+    console.log('✅ Access token verkregen:', accessToken);
 
-app.get('/callback', (req, res) => {
-  const error = req.query.error;
-  const code = req.query.code;
-  const state = req.query.state;
-
-  if (error) {
-    console.error('Callback Error:', error);
-    res.send(`Callback Error: ${error}`);
-    return;
+    // Stel een timer in om het token te vernieuwen vóórdat het verloopt
+    setTimeout(getAccessToken, (data.body['expires_in'] - 60) * 1000);
+  } catch (err) {
+    console.error('❌ Fout bij verkrijgen access token:', err);
   }
+}
 
-  spotifyApi
-    .authorizationCodeGrant(code)
-    .then(data => {
-      const access_token = data.body['access_token'];
-      const refresh_token = data.body['refresh_token'];
-      const expires_in = data.body['expires_in'];
+// Haal het eerste token op bij het starten van de server
+getAccessToken();
 
-      spotifyApi.setAccessToken(access_token);
-      spotifyApi.setRefreshToken(refresh_token);
 
-      console.log('access_token:', access_token);
-      console.log('refresh_token:', refresh_token);
+app.get('/search/:query', async (req, res) => {
+  const searchQuery = req.params.query;
 
-      console.log(
-        `Sucessfully retreived access token. Expires in ${expires_in} s.`
-      );
-      res.send('Success! You can now close the window.');
-
-      setInterval(async () => {
-        const data = await spotifyApi.refreshAccessToken();
-        const access_token = data.body['access_token'];
-
-        console.log('The access token has been refreshed!');
-        console.log('access_token:', access_token);
-        spotifyApi.setAccessToken(access_token);
-      }, expires_in / 2 * 1000);
-    })
-    .catch(error => {
-      console.error('Error getting Tokens:', error);
-      res.send(`Error getting Tokens: ${error}`);
-    });
+  try {
+    const data = await spotifyApi.searchTracks(searchQuery);
+    res.json(data.body.tracks.items);
+  } catch (err) {
+    console.error('❌ Fout bij zoeken:', err);
+    res.status(500).send('Fout bij zoeken');
+  }
 });
 
 app.get('/track/:id', async (req, res) => {
-  const trackId = req.params.id;
-
-  // Controleer of het access token is ingesteld
-  const accessToken = spotifyApi.getAccessToken();
-  if (!accessToken) {
-    return res.status(400).send('No access token provided');
-  }
-
   try {
-    const data = await spotifyApi.getTrack(trackId);
+    const data = await spotifyApi.getTrack(req.params.id);
     res.json(data.body);
   } catch (err) {
-    console.error('Error fetching track data', err);
-    res.status(500).send('Error fetching track data');
+    console.error('❌ Fout bij ophalen trackgegevens:', err);
+    res.status(500).send('Fout bij ophalen trackgegevens');
   }
-})
+});
+
+
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`

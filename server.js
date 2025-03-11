@@ -7,6 +7,8 @@ const session = require('express-session')
 const app = express()
 
 app
+  .use(express.urlencoded({ extended: true })) // middleware to parse form data from incoming HTTP request and add form fields to req.body
+
   .use(session({
     resave: false,
     saveUninitialized: true,
@@ -17,15 +19,78 @@ app
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
+
   .get('/logout', onLogout)
   .get('/login', onLogin)
   .get('/register', onRegister)
 
-  .post('/submitInlog', onSubmitInlog)
-  .post('/registerAccount', onRegisterAccount)
 
-  .listen(8000)
+    res.render('succes.ejs', { data: req.body })
+  })
 
+  .listen(4497)
+
+
+// ********************************************************************************************************
+// ******************************************************************************************************** 
+// *******************************************SPOTIFY API**************************************************
+// ********************************************************************************************************
+// ********************************************************************************************************
+
+const SpotifyWebApi = require('spotify-web-api-node')
+
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI
+})
+
+async function getAccessToken() {
+  try {
+    const data = await spotifyApi.clientCredentialsGrant();
+    const accessToken = data.body['access_token'];
+
+    spotifyApi.setAccessToken(accessToken);
+    console.log('✅ Access token verkregen:', accessToken);
+
+    // Stel een timer in om het token te vernieuwen vóórdat het verloopt
+    setTimeout(getAccessToken, (data.body['expires_in'] - 60) * 1000);
+  } catch (err) {
+    console.error('❌ Fout bij verkrijgen access token:', err);
+  }
+}
+
+// Haal het eerste token op bij het starten van de server
+getAccessToken();
+
+
+app.get('/search/:query', async (req, res) => {
+  const searchQuery = req.params.query;
+
+  try {
+    const data = await spotifyApi.searchTracks(searchQuery);
+    res.json(data.body.tracks.items);
+  } catch (err) {
+    console.error('❌ Fout bij zoeken:', err);
+    res.status(500).send('Fout bij zoeken');
+  }
+});
+
+app.get('/track/:id', async (req, res) => {
+  try {
+    const data = await spotifyApi.getTrack(req.params.id);
+    res.json(data.body);
+  } catch (err) {
+    console.error('❌ Fout bij ophalen trackgegevens:', err);
+    res.status(500).send('Fout bij ophalen trackgegevens');
+  }
+});
+
+// ********************************************************************************************************
+// ******************************************************************************************************** 
+// **********************************************DATABASE**************************************************
+// ********************************************************************************************************
+// ********************************************************************************************************
 
 
   
@@ -33,11 +98,11 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
 const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 })
 
 // Try to open a database connection
@@ -71,7 +136,7 @@ app.use((err, req, res) => {
 })
 
 
-function onLogin(req, res) {
+onLogin(req, res) {
 
   res.render('login.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null})
 }

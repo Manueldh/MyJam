@@ -20,6 +20,7 @@ app
   .get('/logout', onLogout)
   .get('/login', onLogin)
   .get('/register', onRegister)
+  .get('/account', loginCheck, onAccount)
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
@@ -51,7 +52,7 @@ client.connect()
   })
 
 app.get('/', (req, res) => {
-  res.render('register.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null, error: null})
+  res.render('register.ejs', {title: 'Login', user: req.session.user})
 })
 
 // Middleware to handle not found errors - error 404
@@ -70,10 +71,22 @@ app.use((err, req, res) => {
   res.status(500).send('500: server error')
 })
 
+function loginCheck(req, res, next) {
+  if (req.session.user) {
+    next()
+  } else {
+    res.redirect('/login')
+  }
+}
+
+
+function onAccount(req, res) {
+    res.render('account.ejs', {title: 'Account', user: req.session.user})
+}
 
 function onLogin(req, res) {
 
-  res.render('login.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null})
+  res.render('login.ejs', {title: 'Login', user: req.session.user})
 }
 
 function onLogout(req, res) {
@@ -106,11 +119,7 @@ async function onSubmitInlog(req, res) {
 
 function onRegister(req, res) {
 
-  res.render('register.ejs', {
-    username: req.session.user ? req.session.user.username : null,
-    error: null,
-    title: 'Register' 
-  })
+  res.render('register.ejs', {title: 'Register', user: req.session.user })
 
 }
 

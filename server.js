@@ -25,9 +25,6 @@ app
   .get('/register', onRegister)
 
 
-    res.render('succes.ejs', { data: req.body })
-  })
-
   .listen(4497)
 
 
@@ -136,8 +133,7 @@ app.use((err, req, res) => {
 })
 
 
-onLogin(req, res) {
-
+function onLogin(req, res) {
   res.render('login.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null})
 }
 

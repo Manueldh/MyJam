@@ -1,20 +1,52 @@
-require('dotenv').config() 
+require('dotenv').config()
 
 const express = require('express')
 const session = require('express-session')
 const app = express()
 
 app
-  .use(express.urlencoded({extended: true})) // middleware to parse form data from incoming HTTP request and add form fields to req.body
+  .use(express.urlencoded({ extended: true })) // middleware to parse form data from incoming HTTP request and add form fields to req.body
   .use("/", express.static('static'))        // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
-  // .get('/login', onLogin)
-  .get('/register', onRegister)
+  .get('/login', (req, res) => {
+    res.render('login.ejs')
+  })
+  .get('/register', (req, res) => {
+    res.render('register.ejs')
+  })
 
-  .post('/submitInlog', onSubmitInlog)
-  .post('/registerAccount', onRegisterAccount)
+  .post('/submitInlog', async (req, res) => {
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+    const user = await collection.findOne({
+      username: req.body.username,
+      password: req.body.password
+    })
+
+    if (user) {
+      req.session.user = user
+      res.render('test.ejs', { username: user.username })
+    } else {
+      res.render('inlogfout.ejs')
+    }
+  })
+
+  .post('/registerAccount', async (req, res) => {
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+    result = await collection.insertOne({
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+    })
+
+
+    res.render('succes.ejs', { data: req.body })
+  })
 
   .listen(4497)
 
@@ -80,17 +112,22 @@ app.get('/track/:id', async (req, res) => {
   }
 });
 
+// ********************************************************************************************************
+// ******************************************************************************************************** 
+// **********************************************DATABASE**************************************************
+// ********************************************************************************************************
+// ********************************************************************************************************
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
 const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 })
 
 // Try to open a database connection
@@ -122,57 +159,5 @@ app.use((err, req, res) => {
   // send back a HTTP response with status code 500
   res.status(500).send('500: server error')
 })
-
-app.get('/track/:id', async (req, res) => {
-  const trackId = req.params.id;
-
-  try {
-    const data = await spotifyApi.getTrack(trackId);
-    res.json(data.body);
-  } catch (err) {
-    console.error('Error fetching track data', err);
-    res.status(500).send('Error fetching track data');
-  }
-});
-
-function onLogin(req, res) {
-  res.render('login.ejs')
-}
-
-async function onSubmitInlog(req, res) {
-  const dataBase = client.db(process.env.DB_NAME)
-  const collection = dataBase.collection(process.env.DB_COLLECTION)
-
-  const user = await collection.findOne({
-    username: req.body.username,
-    password: req.body.password
-  })
-
-  if (user) {
-    req.session.user = user
-    res.render('test.ejs', { username: user.username })
-  } else {
-    res.render('inlogfout.ejs')
-  }
-}
-
-function onRegister(req, res) {
-  res.render('register.ejs')
-}
-
-async function onRegisterAccount(req, res) {
-  const dataBase = client.db(process.env.DB_NAME)
-  const collection = dataBase.collection(process.env.DB_COLLECTION)
-
-  result = await collection.insertOne({
-      email: req.body.email,
-      username: req.body.username,
-      password: req.body.password,
-  })
-  
-  
-  res.render('succes.ejs', { data: req.body })
-}
-
 
 

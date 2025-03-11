@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign in</title>
-    <link rel="stylesheet" href="static/css/styles.css">
+
+    <%- include ('head') %>
+
   </head>
   <body>
-    <header>
-
-        <%- include ('menu') %>
-    </header>
+    <header><%- include ('menu') %></header>
 
     <main>
-      <form action="/submitInlog" method="POST">
-        <label for="username">username</label>
-        <input type="text" name="username" />
+      <div class="login">
+        <div class="inner-login">
+          <h1 class="form-title">Log in</h1>
+          <form action="/submitInlog" method="POST">
+            <label for="username">Username</label>
+            <input type="text" name="username" />
 
-        <label for="password">password</label>
-        <input type="password" name="password" />
+            <label for="password">Password</label>
+            <input type="password" name="password" />
 
-        <button type="submit">Log in</button>
-      </form>
+            <button type="submit">Log in</button>
+            <a href="?">Account aanmaken</a>
+          </form>
+        </div>
+      </div>
     </main>
 
     <footer></footer>

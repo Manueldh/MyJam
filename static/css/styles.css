@@ -1,0 +1,154 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root{
+    --main-bg-color: #FF7300;
+    --main-text-color: #000000;
+    --color-light: #ffffff;
+    --main-link-color: #ff9100;
+    --main-link-hover-color: #0056b3;
+    --main-font: 'Poppins', sans-serif;
+    --main-color-grey: #D9D9D9;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    background: linear-gradient(var(--main-bg-color) 40%, transparent 40%) no-repeat;
+}
+  
+  
+/*NavBar*/
+
+
+nav {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    justify-content: space-between;
+    background: var(--color-light);
+    align-items: center;
+    margin: 1em;
+    padding: 1em;
+    border-radius: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+    nav a {
+        display: flex;
+        text-decoration: none;
+        gap: 0.2rem;
+        padding: 0 0.8rem;
+        align-items: center;
+    }
+
+    nav svg {
+        width: 20px;
+    }
+
+    nav > a svg {
+        fill: var(--main-bg-color);
+        width: 30px;
+    }
+
+    nav > a p {
+        font-size: 1.2em;
+    }
+
+    nav ul {
+        display: flex;
+        list-style: none;
+    }
+
+    nav p {
+        white-space: nowrap;
+        color: var(--main-text-color);
+        font-weight: 600;
+    }
+
+    nav > ul > li > a > p {
+        position: relative;
+    }
+
+    nav > ul > li > a > p::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--main-text-color);
+        transition: width 150ms linear;
+    }
+
+    nav > ul > li > a > p:hover::before {
+        width: 100%;
+    }
+
+/*LoginIn page*/
+
+h1{
+    font-family: var(--main-font);
+    color: black;
+}
+
+.inner-login{
+    text-align: left ;
+    width: 30%;
+}
+
+.login{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+
+form{
+    margin-top: 20px;
+    padding: 50px;
+    border-radius: 10px;
+    background-color: var(--color-light);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form > button{
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-bg-color);
+    color: var(--color-light);
+    font-family: var(--main-font);
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+    label, input{
+        border-radius: 5px;
+        font-family: var(--main-font);
+        width: 100%;
+    }
+
+    input{
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: var(--main-color-grey);
+        width: 100%;
+        border: none;
+    }
+
+    label{
+        font-weight: 600;
+    }
+
+    form > a{
+        color: var(--main-link-color);
+        text-decoration: underline;
+        font-size: 12px;
+    }
+

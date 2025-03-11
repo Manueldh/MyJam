@@ -24,6 +24,7 @@ app
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
+  .post('/editInfo', onEditInfo)
 
   .listen(8000)
 
@@ -110,10 +111,15 @@ async function onSubmitInlog(req, res) {
     })
 
     if (user && await bcrypt.compare(password, user.password)) {
-      req.session.user = { username: user.username}
+      req.session.user = { 
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+      }
       res.redirect('/') 
     } else {
-      res.render('inlogfout.ejs')
+      res.render('login.ejs', { title: 'Login', error: 'Invalid username or password', user: req.session.user})
     }
 }
 
@@ -133,7 +139,12 @@ async function onRegisterAccount(req, res) {
 
     const duplicateUser = await collection.findOne({ username: username })
     if (duplicateUser) {
-      return res.render('register.ejs', { error: 'Username already taken', username: null })
+      return res.render('register.ejs', { title: "register", error: 'Username already taken', username: null })
+    }
+
+    const duplicateEmail = await collection.findOne({ username: username });
+    if (duplicateEmail) {
+      return res.render('account.ejs', { title: "Your account", error: 'Email already taken', email: null });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -144,6 +155,52 @@ async function onRegisterAccount(req, res) {
       password: hashedPassword,
     })
 
-    req.session.user = { username: req.body.username }
+    req.session.user = { 
+      _id: result.insertedId,
+      username: username,
+      email: email,
+      password: hashedPassword
+     }
     res.redirect('/')
   }
+
+async function onEditInfo(req, res) {
+  const dataBase = client.db(process.env.DB_NAME);
+  const collection = dataBase.collection(process.env.DB_COLLECTION);
+
+  const email = xss(req.body.email);
+  const username = xss(req.body.username);
+  const password = xss(req.body.password);
+  const currentUsername = req.session.user.username;
+
+  const duplicateUser = await collection.findOne({ username: username });
+  if (duplicateUser) {
+    return res.render('account.ejs', { title: "Your account", error: 'Username already taken', user: req.session.user });
+  }
+
+  const duplicateEmail = await collection.findOne({ email: email });
+  if (duplicateEmail) {
+    return res.render('account.ejs', { title: "Your account", error: 'Email already taken', user: req.session.user });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await collection.updateOne(
+    { username: currentUsername },
+    {
+      $set: {
+        email: email,
+        username: username,
+        password: hashedPassword,
+      },
+    }
+  );
+
+  req.session.user = { 
+    username: username,
+    email: email,
+    password: hashedPassword
+  };
+
+  res.render('account', { title: 'Account', user: req.session.user });
+}

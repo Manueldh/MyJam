@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
     <%- include ('head') %>
-
   </head>
   <body>
     <header><%- include ('menu') %></header>
-
     <main>
-     <h1>Hallo, <%- user.username %></h1>
+     <h1>Hallo, <%= user.username %></h1>
      <a href="/logout">log out</a>
-     <section>
-        
-     </section>
-    </main>
+        <button class="edit-details">edit details</button>
+        <form class="test" action="/editInfo" method="POST">
+          <label for="email">Email</label>
+          <input type="text" name="email" class="email" value="<%= user.email %>" readonly/>
 
+          <label for="username">Username</label>
+          <input type="text" name="username" class="username" value="<%= user.username %>" readonly/>
+
+          <label for="password">Password</label>
+          <input type="password" name="password" class="password" value="<%= user.password %>" readonly/>
+
+          <button type="submit">Update Info</button>
+        </form>
+    </main>
     <footer></footer>
+    <script src="/scripts/index.js"></script>
   </body>
 </html>

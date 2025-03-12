@@ -30,10 +30,6 @@ app
   .post('/registerAccount', onRegisterAccount)
   .post('/editInfo', onEditInfo)
 
-
-    res.render('succes.ejs', { data: req.body })
-  })
-
   .listen(4497)
 
 
@@ -154,8 +150,7 @@ function onAccount(req, res) {
     res.render('account.ejs', {title: 'Account', user: req.session.user})
 }
 
-onLogin(req, res) {
-
+function onLogin(req, res) {
   res.render('login.ejs', {title: 'Login', user: req.session.user})
 }
 

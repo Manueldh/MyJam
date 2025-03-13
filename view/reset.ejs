@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  
+    <%- include ('head') %>
+
+  </head>
+  <body>
+    <header><%- include ('menu') %></header>
+
+
+    <main>
+      <div class="login">
+        <div class="inner-login">
+          <h1>Reset Password</h1>
+          <form action="/resetPassword" method="POST">
+            <input type="hidden" name="token" value="<%= token %>"/>
+            <label for="password">New Password</label>
+            <input type="password" name="password" required/>
+
+            <button type="submit">Reset Password</button>
+          </form>
+        </div>
+      </div>
+
+    </main>
+
+    <footer></footer>
+  </body>
+</html>

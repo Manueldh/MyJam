@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ('head') %>
+</head>
+
+<body style="background-color: black; background: black;">
+    
+    <header>
+
+        <%- include ('menu') %>
+    </header>
+
+    <main>
+
+        <div class="muziekresultaat" data-spotify-id="6lrh9jZ1xoMwoErgPSj2rY?si=9d8e4034349f4795" style="display: flex; justify-content: center; align-items: center; height: 100vh; color: black; gap: 20px;">
+            <h1>muziektekst</h1>
+            <button class="favoriet" data-logged-in="<%= user  %>" style="padding: 2em; background-color: orange; cursor: pointer;">Favoriet</button>
+        </div>
+
+    </main>
+
+    <footer></footer>
+
+</body>
+
+<script>
+    const favorieteBtn = document.querySelector('.favoriet');
+    favorieteBtn.addEventListener('click', async () => {
+        const loggedIn = favorieteBtn.getAttribute('data-logged-in')
+
+        if (loggedIn) {
+            try {
+                const spotifyId = document.querySelector('.muziekresultaat').getAttribute('data-spotify-id')
+                const response = await fetch('/favorites/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        spotifyId
+                    })
+                })
+                const data = await response.json()
+                
+                if (data.success) {
+                    favorieteBtn.style.backgroundColor = 'green'
+                } else {
+                    alert("Fout" + data.message)
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        } else {
+            console.log("log is in a sahbi")
+        }
+    } ) 
+</script>
+
+</html>

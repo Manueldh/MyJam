@@ -1,4 +1,4 @@
-require('dotenv').config() 
+require('dotenv').config()
 const xss = require('xss')
 const bcrypt = require('bcryptjs')
 
@@ -14,7 +14,7 @@ app
     saveUninitialized: true,
     secret: process.env.SESSION_SECRET
   }))
-  .use(express.urlencoded({extended: true})) // middleware to parse form data from incoming HTTP request and add form fields to req.body
+  .use(express.urlencoded({ extended: true })) // middleware to parse form data from incoming HTTP request and add form fields to req.body
   .use("/", express.static('static'))        // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
@@ -27,10 +27,14 @@ app
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
   .get('/account', loginCheck, onAccount)
-
+  .get('/results', onResults)
+  
+  .post('/favorites/add', addFavorite)
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
   .post('/editInfo', onEditInfo)
+
+
 
   .listen(4497)
 
@@ -97,7 +101,7 @@ app.get('/track/:id', async (req, res) => {
 // ********************************************************************************************************
 
 
-  
+
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
@@ -120,7 +124,7 @@ client.connect()
   })
 
 app.get('/', (req, res) => {
-  res.render('register.ejs', {title: 'Login', user: req.session.user})
+  res.render('register.ejs', { title: 'Login', user: req.session.user })
 })
 
 // Middleware to handle not found errors - error 404
@@ -149,97 +153,97 @@ function loginCheck(req, res, next) {
 
 
 function onAccount(req, res) {
-    res.render('account.ejs', {title: 'Account', user: req.session.user})
+  res.render('account.ejs', { title: 'Account', user: req.session.user })
 }
 
 function onLogin(req, res) {
-  res.render('login.ejs', {title: 'Login', user: req.session.user})
+  res.render('login.ejs', { title: 'Login', user: req.session.user })
 }
 
 function onLogout(req, res) {
   req.session.destroy((err) => {
-    res.redirect('/') 
+    res.redirect('/')
   })
 
 }
 
 function onGenre(req, res) {
-  res.render('genre.ejs', {title: 'Genre', username: req.session.user ? req.session.user.username : null})
+  res.render('genre.ejs', { title: 'Genre', username: req.session.user ? req.session.user.username : null })
 }
 
 function onInstrument(req, res) {
-  res.render('instrument.ejs', {title: 'Instrument', username: req.session.user ? req.session.user.username : null})
+  res.render('instrument.ejs', { title: 'Instrument', username: req.session.user ? req.session.user.username : null })
 }
 
 function onDifficulty(req, res) {
-  res.render('difficulty.ejs', {title: 'Difficulty', username: req.session.user ? req.session.user.username : null})
+  res.render('difficulty.ejs', { title: 'Difficulty', username: req.session.user ? req.session.user.username : null })
 }
 
 async function onSubmitInlog(req, res) {
-    const dataBase = client.db(process.env.DB_NAME)
-    const collection = dataBase.collection(process.env.DB_COLLECTION)
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
 
-    const username = xss(req.body.username)
-    const password = xss(req.body.password)
+  const username = xss(req.body.username)
+  const password = xss(req.body.password)
 
 
-    const user = await collection.findOne({
-      username: username
-    })
+  const user = await collection.findOne({
+    username: username
+  })
 
-    if (user && await bcrypt.compare(password, user.password)) {
-      req.session.user = { 
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        password: user.password,
-      }
-      res.redirect('/') 
-    } else {
-      res.render('login.ejs', { title: 'Login', error: 'Invalid username or password', user: req.session.user})
+  if (user && await bcrypt.compare(password, user.password)) {
+    req.session.user = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      password: user.password,
     }
+    res.redirect('/')
+  } else {
+    res.render('login.ejs', { title: 'Login', error: 'Invalid username or password', user: req.session.user })
+  }
 }
 
 function onRegister(req, res) {
 
-  res.render('register.ejs', {title: 'Register', user: req.session.user })
+  res.render('register.ejs', { title: 'Register', user: req.session.user })
 
 }
 
 async function onRegisterAccount(req, res) {
-      const dataBase = client.db(process.env.DB_NAME)
-    const collection = dataBase.collection(process.env.DB_COLLECTION)
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
 
-    const email = xss(req.body.email)
-    const username = xss(req.body.username)
-    const password = xss(req.body.password)
+  const email = xss(req.body.email)
+  const username = xss(req.body.username)
+  const password = xss(req.body.password)
 
-    const duplicateUser = await collection.findOne({ username: username })
-    if (duplicateUser) {
-      return res.render('register.ejs', { title: "register", error: 'Username already taken', username: null })
-    }
-
-    const duplicateEmail = await collection.findOne({ username: username });
-    if (duplicateEmail) {
-      return res.render('account.ejs', { title: "Your account", error: 'Email already taken', email: null });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    const result = await collection.insertOne({
-      email: email,
-      username: username,
-      password: hashedPassword,
-    })
-
-    req.session.user = { 
-      _id: result.insertedId,
-      username: username,
-      email: email,
-      password: hashedPassword
-     }
-    res.redirect('/')
+  const duplicateUser = await collection.findOne({ username: username })
+  if (duplicateUser) {
+    return res.render('register.ejs', { title: "register", error: 'Username already taken', username: null })
   }
+
+  const duplicateEmail = await collection.findOne({ username: username });
+  if (duplicateEmail) {
+    return res.render('account.ejs', { title: "Your account", error: 'Email already taken', email: null });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  const result = await collection.insertOne({
+    email: email,
+    username: username,
+    password: hashedPassword,
+  })
+
+  req.session.user = {
+    _id: result.insertedId,
+    username: username,
+    email: email,
+    password: hashedPassword
+  }
+  res.redirect('/')
+}
 
 
 async function onEditInfo(req, res) {
@@ -274,11 +278,46 @@ async function onEditInfo(req, res) {
     }
   );
 
-  req.session.user = { 
+  req.session.user = {
     username: username,
     email: email,
     password: hashedPassword
   };
 
   res.render('account', { title: 'Account', user: req.session.user });
+}
+
+
+function onResults(req, res) {
+  res.render('results.ejs', { title: 'Results', user: req.session.user })
+}
+
+async function addFavorite(req, res) {
+  if (!req.session.user) {
+    return res.status(401).send('You must be logged in to add a favorite')
+  }
+
+  const userId = req.session.user._id
+  const { spotifyId } = req.body
+
+  try {
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+    const result = await collection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $addToSet: { favorites: spotifyId } }
+    )
+
+    if (result.modifiedCount > 0) {
+      res.json({ success: true })
+    } else {
+      res.status(400).json({ success: false, message: 'Failed to add to favorites' })
+    }
+  } catch (err) {
+    console.error('❌ Failed to add favorite:', err)
+    res.status(500).send('Failed to add favorite')
+  } finally {
+    await client.close()
+  }
 }

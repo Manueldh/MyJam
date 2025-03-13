@@ -23,8 +23,10 @@ app
   .get('/logout', onLogout)
   .get('/login', onLogin)
   .get('/register', onRegister)
+  .get('/genre', onGenre)
+  .get('/instrument', onInstrument)
+  .get('/difficulty', onDifficulty)
   .get('/account', loginCheck, onAccount)
-
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
@@ -161,6 +163,17 @@ function onLogout(req, res) {
 
 }
 
+function onGenre(req, res) {
+  res.render('genre.ejs', {title: 'Genre', username: req.session.user ? req.session.user.username : null})
+}
+
+function onInstrument(req, res) {
+  res.render('instrument.ejs', {title: 'Instrument', username: req.session.user ? req.session.user.username : null})
+}
+
+function onDifficulty(req, res) {
+  res.render('difficulty.ejs', {title: 'Difficulty', username: req.session.user ? req.session.user.username : null})
+}
 
 async function onSubmitInlog(req, res) {
     const dataBase = client.db(process.env.DB_NAME)

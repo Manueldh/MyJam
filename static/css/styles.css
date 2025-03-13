@@ -14,10 +14,13 @@
     --main-color-grey: #D9D9D9;
 }
 
+
+/* Omdat dit nu op de body staat, verplaatst de achtergrond kleur nu mee met de content, dit moet ik nog aanpassen */
 body {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    background: linear-gradient(var(--main-bg-color) 40%, transparent 40%) no-repeat;
+    background: linear-gradient(var(--main-bg-color) 100%, transparent 40%) no-repeat;
+    background-size: 100% 55vh; 
 }
   
   
@@ -93,7 +96,7 @@ nav {
 
 h1{
     font-family: var(--main-font);
-    color: black;
+    color: var(--color-light);
 }
 
 .inner-login{
@@ -105,6 +108,7 @@ h1{
     display: flex;
     justify-content: center;
     align-items: center; 
+    margin-top: 150px;
 }
 
 
@@ -149,8 +153,133 @@ form > button{
     form > a{
         color: var(--main-link-color);
         text-decoration: underline;
-        font-size: 12px;
+        font-size: 14px;
     }
+
+
+/* Instrument page */
+
+.kop-instrument{
+    padding: 50px 70px 0;
+}
+
+.instrument-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 kolommen */
+    gap: 20px;
+    padding: 35px 70px;
+}
+
+.instrument-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--main-text-color);
+    color: var(--color-light);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.instrument-button:hover {
+    transform: scale(1.05);
+}
+
+.instrument-button:active {
+    transform: scale(0.95);
+}
+
+/* .instrument-button:focus nog doen */
+
+.progress-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.progress-buttons button {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-bg-color);
+    color: var(--color-light);
+    font-family: var(--main-font);
+    font-size: 18px;
+}
+
+@media (max-width: 1200px) {
+    .instrument-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 kolommen */
+    }
+}
+
+@media (max-width: 900px) {
+    .instrument-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 kolommen */
+    }
+}
+
+@media (max-width: 600px) {
+    .instrument-grid {
+        grid-template-columns: 1fr; /* 1 kolom */
+
+        /* progress buttons fixen */
+    }
+}
+
+/* Difficulty page */
+
+.level-grid {
+    display: flex;  
+    justify-content: center;
+    gap: 20px;
+    padding: 35px 70px;
+    flex-direction: column;
+    background-color: var(--color-light);
+    border-radius: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.level-btn{
+    padding: 20px 70px;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--main-font);
+    font-size: 1.2em;
+    transition: .5s all ease;
+}
+
+.level-btn:hover {
+    transform: scale(1.1);
+}
+
+.level-btn:active {
+    transform: scale(0.95);
+}
+
+.level-btn:focus {
+    background-color: var(--main-bg-color);
+    color: var(--color-light);
+}
+
+.level{
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    padding: 25px;
+}
+
+.kop-difficulty{
+    text-align: center;
+    padding-bottom: 20px;
+    padding-top: 60px;
+}
 
     .test input:focus{
         outline: none;

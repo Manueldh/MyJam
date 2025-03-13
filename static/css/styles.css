@@ -34,11 +34,13 @@ nav {
     z-index: 1000;
     justify-content: space-between;
     background: var(--color-light);
+    height: 7vh;
     align-items: center;
     margin: 1em;
     padding: 1em;
     border-radius: 1em;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s ease-in-out;
 }
 
     nav a {
@@ -47,10 +49,12 @@ nav {
         gap: 0.2rem;
         padding: 0 0.8rem;
         align-items: center;
+        transition: all 0.5s ease-in-out;
     }
 
     nav svg {
         width: 20px;
+        transition: width 0.5s ease-in-out;
     }
 
     nav > a svg {
@@ -60,11 +64,15 @@ nav {
 
     nav > a p {
         font-size: 1.2em;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     }
 
     nav ul {
         display: flex;
         list-style: none;
+        justify-content: flex-end; 
+        transition: all 0.5s ease-in-out;
+        width: auto;
     }
 
     nav p {
@@ -75,6 +83,7 @@ nav {
 
     nav > ul > li > a > p {
         position: relative;
+        transition: opacity 0.5s ease-in-out;
     }
 
     nav > ul > li > a > p::before {
@@ -91,6 +100,58 @@ nav {
     nav > ul > li > a > p:hover::before {
         width: 100%;
     }
+
+@media (max-width: 700px) {
+    nav > a {
+        opacity: 0;
+        transform: scale(0.4);
+        position: absolute;
+        transition: all 0.3s ease-in-out;
+    }
+
+    nav ul li a p {
+        opacity: 0;
+        transform: scale(0.4);
+        position: absolute;
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    nav ul {
+        width: 100%;
+        justify-content: space-evenly;
+        transition: justify-content 0.5s ease-in-out;
+    }
+
+    nav ul li a {
+        padding: 0 1rem;
+    }
+
+    nav ul li a svg {
+        width: 30px;
+    }
+}
+
+@media (min-width: 701px) {
+    nav > a {
+        opacity: 1;
+        transform: scale(1);
+        position: static;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    nav ul li a p {
+        opacity: 1;
+        transform: scale(1);
+        position: static;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    nav ul {
+        justify-content: flex-end;
+        max-width: 100%;
+        transition: max-width 0.5s ease-in-out;
+    }
+}
 
 /*LoginIn page*/
 

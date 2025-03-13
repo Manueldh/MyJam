@@ -5,13 +5,15 @@
 }
 
 :root{
-    --main-bg-color: #FF7300;
-    --main-text-color: #000000;
+    --main-bg-color: radial-gradient(hsl(0, 0%, 9%),#070707);
+    --main-text-color: #ffffff;
     --color-light: #ffffff;
-    --main-link-color: #ff9100;
+    --main-link-color: #FF7300;
     --main-link-hover-color: #0056b3;
     --main-font: 'Poppins', sans-serif;
     --main-color-grey: #D9D9D9;
+    --nav-primary-color: #1a1a1a;
+    --nav-secondary-color: #d4d4d4;
 }
 
 

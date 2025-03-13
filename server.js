@@ -164,15 +164,15 @@ function onLogout(req, res) {
 }
 
 function onGenre(req, res) {
-  res.render('genre.ejs', {title: 'Genre', username: req.session.user ? req.session.user.username : null})
+  res.render('genre.ejs', {title: 'Genre', user: req.session.user})
 }
 
 function onInstrument(req, res) {
-  res.render('instrument.ejs', {title: 'Instrument', username: req.session.user ? req.session.user.username : null})
+  res.render('instrument.ejs', {title: 'Instrument', user: req.session.user })
 }
 
 function onDifficulty(req, res) {
-  res.render('difficulty.ejs', {title: 'Difficulty', username: req.session.user ? req.session.user.username : null})
+  res.render('difficulty.ejs', {title: 'Difficulty', user: req.session.user})
 }
 
 async function onSubmitInlog(req, res) {

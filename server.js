@@ -1,4 +1,6 @@
-require('dotenv').config() 
+const dotenv = require('dotenv').config() 
+const crypto = require('crypto')
+const nodemailer = require('nodemailer')
 const xss = require('xss')
 const bcrypt = require('bcryptjs')
 
@@ -27,10 +29,13 @@ app
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
   .get('/account', loginCheck, onAccount)
+  .get('/forgot', onForgot)
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
   .post('/editInfo', onEditInfo)
+  .post('/forgotAuth', onForgotAuth)
+  .post('/resetPassword', onResetPassword)
 
   .listen(4497)
 
@@ -123,6 +128,27 @@ app.get('/', (req, res) => {
   res.render('register.ejs', {title: 'Login', user: req.session.user})
 })
 
+
+app.get('/reset/:token', async (req, res) => {
+  const token = req.params.token;
+  const dataBase = client.db(process.env.DB_NAME);
+  const collection = dataBase.collection(process.env.DB_COLLECTION);
+
+  const user = await collection.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.render('reset.ejs', { title: 'Reset Password', error: 'Password reset token is invalid or has expired', user: req.session.user });
+  }
+
+  res.render('reset.ejs', { title: 'Reset Password', token: token, user: req.session.user });
+});
+
+
+
+
 // Middleware to handle not found errors - error 404
 app.use((req, res) => {
   // log error to console
@@ -147,6 +173,9 @@ function loginCheck(req, res, next) {
   }
 }
 
+function onForgot(req, res) {
+  res.render('forgot.ejs', {title: 'Forgot', user: req.session.user})
+}
 
 function onAccount(req, res) {
     res.render('account.ejs', {title: 'Account', user: req.session.user})
@@ -216,12 +245,12 @@ async function onRegisterAccount(req, res) {
 
     const duplicateUser = await collection.findOne({ username: username })
     if (duplicateUser) {
-      return res.render('register.ejs', { title: "register", error: 'Username already taken', username: null })
+      return res.render('register.ejs', { title: "register", error: 'Username already taken', user: null })
     }
 
     const duplicateEmail = await collection.findOne({ username: username });
     if (duplicateEmail) {
-      return res.render('account.ejs', { title: "Your account", error: 'Email already taken', email: null });
+      return res.render('account.ejs', { title: "Your account", error: 'Email already taken', user: null });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -238,30 +267,30 @@ async function onRegisterAccount(req, res) {
       email: email,
       password: hashedPassword
      }
-    res.redirect('/')
+    res.render('register.ejs', { title: 'Register', user: req.session.user })
   }
 
 
 async function onEditInfo(req, res) {
-  const dataBase = client.db(process.env.DB_NAME);
-  const collection = dataBase.collection(process.env.DB_COLLECTION);
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
 
-  const email = xss(req.body.email);
-  const username = xss(req.body.username);
-  const password = xss(req.body.password);
-  const currentUsername = req.session.user.username;
+  const email = xss(req.body.email)
+  const username = xss(req.body.username)
+  const password = xss(req.body.password)
+  const currentUsername = req.session.user.username
 
-  const duplicateUser = await collection.findOne({ username: username });
+  const duplicateUser = await collection.findOne({ username: username })
   if (duplicateUser) {
-    return res.render('account.ejs', { title: "Your account", error: 'Username already taken', user: req.session.user });
+    return res.render('account.ejs', { title: "Your account", error: 'Username already taken', user: req.session.user })
   }
 
-  const duplicateEmail = await collection.findOne({ email: email });
+  const duplicateEmail = await collection.findOne({ email: email })
   if (duplicateEmail) {
-    return res.render('account.ejs', { title: "Your account", error: 'Email already taken', user: req.session.user });
+    return res.render('account.ejs', { title: "Your account", error: 'Email already taken', user: req.session.user })
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10)
 
   await collection.updateOne(
     { username: currentUsername },
@@ -278,7 +307,101 @@ async function onEditInfo(req, res) {
     username: username,
     email: email,
     password: hashedPassword
-  };
+  }
 
-  res.render('account', { title: 'Account', user: req.session.user });
+  res.render('account', { title: 'Account', user: req.session.user })
 }
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD
+  }
+ 
+})
+
+async function onForgotAuth(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  const username = xss(req.body.username)
+  const email = xss(req.body.email)
+
+  const user = await collection.findOne({
+    username: username,
+    email: email
+  })
+
+  if (user) {
+    const token = crypto.randomBytes(20).toString('hex')
+    const expires = Date.now() + 3600000 // 1 hour
+    await collection.updateOne(
+      { _id: user._id },
+      {
+        $set: {
+          resetPasswordToken: token,
+          resetPasswordExpires: expires
+        }
+      }
+    )
+    const mailTemplate = {
+      from: '"MyJam Support" <myjam.help@gmail.com>',
+      to: email,
+      subject: 'Password reset',
+      html: `
+        <p>Hi ${username},</p>
+        <p>You requested a password reset. Click the link below to reset your password:</p>
+        <p><a href="http://localhost:4497/reset/${token}">Reset Password</a></p>
+        <p>If you did not request this, please ignore this email.</p>
+        <p>Thanks,<br/>The MyJam Team</p>
+        <br/>
+        <img src="https://lukaspelberg.github.io/FED/images/myjam.svg" alt="MyJam logo" width="50" height="50">
+        `
+    }
+
+    transporter.sendMail(mailTemplate)
+    
+    res.render('confirm.ejs', { title: 'Confirm', email : user.email, user: req.session.user }) 
+  } else {
+    res.render('reset.ejs', { title: 'Reset Password', error: 'Invalid username or password', user: req.session.user })
+  }
+}
+
+async function onResetPassword(req, res) {
+    const token = req.body.token
+    const newPassword = xss(req.body.password)
+
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+    const user = await collection.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    })
+
+    if (!user) {
+      return res.render('reset.ejs', { title: 'Reset Password', error: 'Password reset token is invalid or has expired', user: req.session.user })
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+    await collection.updateOne(
+      { _id: user._id },
+      {
+        $set: {
+          password: hashedPassword,
+          resetPasswordToken: null,
+          resetPasswordExpires: null
+        }
+      }
+    )
+
+    req.session.user = { 
+      username: username,
+      email: email,
+      password: hashedPassword
+    }
+
+    res.render('login.ejs', { title: 'Login', message: 'Password has been reset successfully', user: req.session.user })
+  }

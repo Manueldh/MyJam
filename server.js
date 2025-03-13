@@ -1,4 +1,4 @@
-require('dotenv').config() 
+const dotenv = require('dotenv').config() 
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const xss = require('xss')
@@ -318,9 +318,8 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD
   }
+ 
 })
-
-
 
 async function onForgotAuth(req, res) {
   const dataBase = client.db(process.env.DB_NAME)

@@ -57,7 +57,7 @@ nav {
     }
 
     nav > a svg {
-        fill: var(--nav-secondary-color);
+        fill: var(--main-link-color);
         width: 30px;
     }
 
@@ -173,7 +173,7 @@ form > button{
 
 /* Instrument page */
 
-.kop-instrument{
+.kop-instrument, .kop-genre{
     padding: 50px 70px 0;
 }
 
@@ -208,10 +208,16 @@ form > button{
     transform: scale(0.95);
 }
 
-.instrument-button:focus {
+.instrument-button.selected {
     color: var(--main-link-color);
     border: #FF7300 2px solid;
 }
+
+
+/* .selected{
+    color: var(--main-link-color);
+    border: #FF7300 2px solid; 
+} */
 
 /* .instrument-button:focus nog doen */
 
@@ -221,7 +227,7 @@ form > button{
     gap: 20px;
 }
 
-.progress-buttons button {
+.progress-buttons a {
     padding: 10px 20px;
     margin-bottom: 20px;
     border: none;
@@ -230,6 +236,13 @@ form > button{
     color: var(--main-text-color);
     font-family: var(--main-font);
     font-size: 18px;
+    text-decoration: none;
+
+    display: flex;
+}
+
+.progress-buttons a >img{
+    padding: 0 7px;
 }
 
 @media (max-width: 1200px) {
@@ -283,7 +296,7 @@ form > button{
     transform: scale(0.95);
 }
 
-.level-btn:focus {
+.level-btn.selected {
     color: var(--main-link-color);
     border: #FF7300 2px solid;
 }
@@ -292,7 +305,6 @@ form > button{
     display: flex;
     justify-content: center;
     align-items: center; 
-    padding: 25px;
 }
 
 .kop-difficulty{
@@ -304,4 +316,80 @@ form > button{
     .test input:focus{
         outline: none;
     }
+
+/* Genre page */
+
+.genre-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 kolommen */
+    gap: 20px;
+    padding: 35px 70px;
+}
+
+.genre-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--nav-primary-color);
+    color: var(--main-text-color);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.genre-button:hover {
+    transform: scale(1.05);
+}
+
+.genre-button:active {
+    transform: scale(0.95);
+}
+
+.genre-button.selected {
+    color: var(--main-link-color);
+    border: #FF7300 2px solid;
+}
     
+
+
+
+
+
+
+/* Home page */
+
+
+.home{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--main-text-color);
+
+    padding: 10em;
+}
+
+.home a{
+    padding: 8px 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-link-color);
+    color: var(--color-light);
+    font-family: var(--main-font);
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 20px;
+
+    text-decoration: none;
+}
+
+.home p{
+    font-size: 1.5em;
+    padding: 20px;
+    text-align: center;
+}

@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    
-<head>
+  <head>
     <%- include ('head') %>
   </head>
 
-<body>
-    
-    <header>
+  <body>
+    <header><%- include ('menu') %></header>
 
-        <%- include ('menu') %>
-    </header>
+    <main>
+     
+        <h1 class="kop-genre">Choose your instruments</h1>
 
-    <main></main>
+      <div class="genre-grid">
+        <button class="genre-button">Electric guitar</button>
+        <button class="genre-button">Acoustic guitar</button>
+        <button class="genre-button">Bass guitar</button>
+        <button class="genre-button">Drums</button>
+        <button class="genre-button">Piano</button>
+        <button class="genre-button">Ukelele</button>
+        <button class="genre-button">Violin</button>
+        <button class="genre-button">Trumpet</button>
+        <button class="genre-button">Saxophone</button>
+        <button class="genre-button">Flute</button>
+        <button class="genre-button">Accordion</button>
+        <button class="genre-button">Cello</button>
+      </div>
+
+      <div class="progress-buttons">
+        <a href="/instrument" class="Previous"><img src="./Images/arrow-left.svg" alt="">Previous</a>
+        <a href="/difficulty" class="Next">Next <img src="./Images/arrow-right.svg" alt=""></a>
+      </div>
+    </main>
 
     <footer></footer>
 
-</body>
+    <script src="/scripts/multiple.js"></script>
 
-
+  </body>
 </html>

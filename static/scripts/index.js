@@ -15,7 +15,9 @@ function toggleEditing() {
     editDetails.textContent = 'change info'
   } else {
     editDetails.textContent = 'cancel'
-  }
+  };
 }
 
 editDetails.addEventListener('click', toggleEditing)
+
+

@@ -7,6 +7,8 @@ const session = require('express-session')
 const app = express()
 
 app
+  .use(express.urlencoded({ extended: true })) // middleware to parse form data from incoming HTTP request and add form fields to req.body
+
   .use(session({
     resave: false,
     saveUninitialized: true,
@@ -17,18 +19,82 @@ app
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
+
   .get('/logout', onLogout)
   .get('/login', onLogin)
   .get('/register', onRegister)
   .get('/genre', onGenre)
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
+  .get('/account', loginCheck, onAccount)
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
+  .post('/editInfo', onEditInfo)
 
-  .listen(8000)
+  .listen(4497)
 
+
+// ********************************************************************************************************
+// ******************************************************************************************************** 
+// *******************************************SPOTIFY API**************************************************
+// ********************************************************************************************************
+// ********************************************************************************************************
+
+const SpotifyWebApi = require('spotify-web-api-node')
+
+const spotifyApi = new SpotifyWebApi({
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI
+})
+
+async function getAccessToken() {
+  try {
+    const data = await spotifyApi.clientCredentialsGrant();
+    const accessToken = data.body['access_token'];
+
+    spotifyApi.setAccessToken(accessToken);
+    console.log('✅ Access token verkregen:', accessToken);
+
+    // Stel een timer in om het token te vernieuwen vóórdat het verloopt
+    setTimeout(getAccessToken, (data.body['expires_in'] - 60) * 1000);
+  } catch (err) {
+    console.error('❌ Fout bij verkrijgen access token:', err);
+  }
+}
+
+// Haal het eerste token op bij het starten van de server
+getAccessToken();
+
+
+app.get('/search/:query', async (req, res) => {
+  const searchQuery = req.params.query;
+
+  try {
+    const data = await spotifyApi.searchTracks(searchQuery);
+    res.json(data.body.tracks.items);
+  } catch (err) {
+    console.error('❌ Fout bij zoeken:', err);
+    res.status(500).send('Fout bij zoeken');
+  }
+});
+
+app.get('/track/:id', async (req, res) => {
+  try {
+    const data = await spotifyApi.getTrack(req.params.id);
+    res.json(data.body);
+  } catch (err) {
+    console.error('❌ Fout bij ophalen trackgegevens:', err);
+    res.status(500).send('Fout bij ophalen trackgegevens');
+  }
+});
+
+// ********************************************************************************************************
+// ******************************************************************************************************** 
+// **********************************************DATABASE**************************************************
+// ********************************************************************************************************
+// ********************************************************************************************************
 
 
   
@@ -36,11 +102,11 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
 const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 })
 
 // Try to open a database connection
@@ -54,7 +120,7 @@ client.connect()
   })
 
 app.get('/', (req, res) => {
-  res.render('register.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null, error: null})
+  res.render('register.ejs', {title: 'Login', user: req.session.user})
 })
 
 // Middleware to handle not found errors - error 404
@@ -73,10 +139,21 @@ app.use((err, req, res) => {
   res.status(500).send('500: server error')
 })
 
+function loginCheck(req, res, next) {
+  if (req.session.user) {
+    next()
+  } else {
+    res.redirect('/login')
+  }
+}
+
+
+function onAccount(req, res) {
+    res.render('account.ejs', {title: 'Account', user: req.session.user})
+}
 
 function onLogin(req, res) {
-
-  res.render('login.ejs', {title: 'Login', username: req.session.user ? req.session.user.username : null})
+  res.render('login.ejs', {title: 'Login', user: req.session.user})
 }
 
 function onLogout(req, res) {
@@ -111,20 +188,21 @@ async function onSubmitInlog(req, res) {
     })
 
     if (user && await bcrypt.compare(password, user.password)) {
-      req.session.user = { username: user.username}
+      req.session.user = { 
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+      }
       res.redirect('/') 
     } else {
-      res.render('inlogfout.ejs')
+      res.render('login.ejs', { title: 'Login', error: 'Invalid username or password', user: req.session.user})
     }
 }
 
 function onRegister(req, res) {
 
-  res.render('register.ejs', {
-    username: req.session.user ? req.session.user.username : null,
-    error: null,
-    title: 'Register' 
-  })
+  res.render('register.ejs', {title: 'Register', user: req.session.user })
 
 }
 
@@ -138,7 +216,12 @@ async function onRegisterAccount(req, res) {
 
     const duplicateUser = await collection.findOne({ username: username })
     if (duplicateUser) {
-      return res.render('register.ejs', { error: 'Username already taken', username: null })
+      return res.render('register.ejs', { title: "register", error: 'Username already taken', username: null })
+    }
+
+    const duplicateEmail = await collection.findOne({ username: username });
+    if (duplicateEmail) {
+      return res.render('account.ejs', { title: "Your account", error: 'Email already taken', email: null });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -149,6 +232,53 @@ async function onRegisterAccount(req, res) {
       password: hashedPassword,
     })
 
-    req.session.user = { username: req.body.username }
+    req.session.user = { 
+      _id: result.insertedId,
+      username: username,
+      email: email,
+      password: hashedPassword
+     }
     res.redirect('/')
   }
+
+
+async function onEditInfo(req, res) {
+  const dataBase = client.db(process.env.DB_NAME);
+  const collection = dataBase.collection(process.env.DB_COLLECTION);
+
+  const email = xss(req.body.email);
+  const username = xss(req.body.username);
+  const password = xss(req.body.password);
+  const currentUsername = req.session.user.username;
+
+  const duplicateUser = await collection.findOne({ username: username });
+  if (duplicateUser) {
+    return res.render('account.ejs', { title: "Your account", error: 'Username already taken', user: req.session.user });
+  }
+
+  const duplicateEmail = await collection.findOne({ email: email });
+  if (duplicateEmail) {
+    return res.render('account.ejs', { title: "Your account", error: 'Email already taken', user: req.session.user });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await collection.updateOne(
+    { username: currentUsername },
+    {
+      $set: {
+        email: email,
+        username: username,
+        password: hashedPassword,
+      },
+    }
+  );
+
+  req.session.user = { 
+    username: username,
+    email: email,
+    password: hashedPassword
+  };
+
+  res.render('account', { title: 'Account', user: req.session.user });
+}

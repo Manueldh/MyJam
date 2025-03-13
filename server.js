@@ -197,7 +197,7 @@ function onGenre(req, res) {
 }
 
 function onInstrument(req, res) {
-  res.render('instrument.ejs', {title: 'Instrument', user: req.session.user })
+  res.render('instrument.ejs', {title: 'Instrument', user: req.session.user})
 }
 
 function onDifficulty(req, res) {

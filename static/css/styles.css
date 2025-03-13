@@ -5,13 +5,15 @@
 }
 
 :root{
-    --main-bg-color: #FF7300;
-    --main-text-color: #000000;
+    --main-bg-color: radial-gradient(#161616,#070707);
+    --main-text-color: #ffffff;
     --color-light: #ffffff;
-    --main-link-color: #ff9100;
+    --main-link-color: #FF7300;
     --main-link-hover-color: #0056b3;
     --main-font: 'Poppins', sans-serif;
     --main-color-grey: #D9D9D9;
+    --nav-primary-color: #1a1a1a;
+    --nav-secondary-color: #d4d4d4;
 }
 
 
@@ -19,8 +21,7 @@
 body {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
-    background: linear-gradient(var(--main-bg-color) 100%, transparent 40%) no-repeat;
-    background-size: 100% 55vh; 
+    background: var(--main-bg-color);
 }
   
   
@@ -33,7 +34,8 @@ nav {
     top: 0;
     z-index: 1000;
     justify-content: space-between;
-    background: var(--color-light);
+    background: var(--nav-primary-color);
+    color: var(--nav-secondary-color);
     align-items: center;
     margin: 1em;
     padding: 1em;
@@ -51,15 +53,17 @@ nav {
 
     nav svg {
         width: 20px;
+        fill: var(--nav-secondary-color);
     }
 
     nav > a svg {
-        fill: var(--main-bg-color);
+        fill: var(--nav-secondary-color);
         width: 30px;
     }
 
     nav > a p {
         font-size: 1.2em;
+        color: var(--nav-secondary-color);
     }
 
     nav ul {
@@ -99,9 +103,18 @@ h1{
     color: var(--color-light);
 }
 
+.login h1{
+    text-align: left;
+    padding-bottom: 20px;
+}
+
 .inner-login{
     text-align: left ;
-    width: 30%;
+    width: 40%;
+    background-color: var(--nav-primary-color);
+    padding: 3em;
+    border-radius: 1em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .login{
@@ -114,9 +127,7 @@ h1{
 
 form{
     margin-top: 20px;
-    padding: 50px;
     border-radius: 10px;
-    background-color: var(--color-light);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -125,7 +136,7 @@ form > button{
     width: 100%;
     border: none;
     border-radius: 5px;
-    background-color: var(--main-bg-color);
+    background-color: var(--main-link-color);
     color: var(--color-light);
     font-family: var(--main-font);
     cursor: pointer;
@@ -140,18 +151,21 @@ form > button{
 
     input{
         padding: 10px;
+        margin-top: 10px;
         margin-bottom: 20px;
-        background-color: var(--main-color-grey);
         width: 100%;
-        border: none;
+        border: white 2px solid;
+        background: none;
+        color: var(--main-text-color);
     }
 
     label{
         font-weight: 600;
+        color: var(--main-text-color);
     }
 
     form > a{
-        color: var(--main-link-color);
+        color: var(--main-text-color);
         text-decoration: underline;
         font-size: 14px;
     }
@@ -179,8 +193,8 @@ form > button{
     background-position: center;
     border: none;
     border-radius: 10px;
-    background-color: var(--main-text-color);
-    color: var(--color-light);
+    background-color: var(--nav-primary-color);
+    color: var(--main-text-color);
     font-size: 1.2em;
     cursor: pointer;
     transition: transform 0.2s;
@@ -192,6 +206,11 @@ form > button{
 
 .instrument-button:active {
     transform: scale(0.95);
+}
+
+.instrument-button:focus {
+    color: var(--main-link-color);
+    border: #FF7300 2px solid;
 }
 
 /* .instrument-button:focus nog doen */
@@ -207,8 +226,8 @@ form > button{
     margin-bottom: 20px;
     border: none;
     border-radius: 5px;
-    background-color: var(--main-bg-color);
-    color: var(--color-light);
+    background-color: var(--main-link-color);
+    color: var(--main-text-color);
     font-family: var(--main-font);
     font-size: 18px;
 }
@@ -241,12 +260,13 @@ form > button{
     gap: 20px;
     padding: 35px 70px;
     flex-direction: column;
-    background-color: var(--color-light);
+    background-color: none;
     border-radius: 1em;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .level-btn{
+    background-color: var(--nav-primary-color);
+    color: var(--main-text-color);
     padding: 20px 70px;
     border: none;
     border-radius: 10px;
@@ -264,8 +284,8 @@ form > button{
 }
 
 .level-btn:focus {
-    background-color: var(--main-bg-color);
-    color: var(--color-light);
+    color: var(--main-link-color);
+    border: #FF7300 2px solid;
 }
 
 .level{

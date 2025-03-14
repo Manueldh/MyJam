@@ -35,7 +35,7 @@ nav {
     top: 0;
     z-index: 1000;
     justify-content: space-between;
-    background: var(--color-light);
+    background: var(--nav-primary-color);
     height: 7vh;
     align-items: center;
     margin: 1em;
@@ -57,15 +57,17 @@ nav {
     nav svg {
         width: 20px;
         transition: width 0.5s ease-in-out;
+        fill: var(--nav-secondary-color);
     }
 
     nav > a svg {
-        fill: var(--main-bg-color);
+        fill: var(--main-link-color);
         width: 30px;
     }
 
     nav > a p {
         font-size: 1.2em;
+        color: var(--nav-secondary-color);
         transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     }
 
@@ -79,7 +81,7 @@ nav {
 
     nav p {
         white-space: nowrap;
-        color: var(--main-text-color);
+        color: var(--nav-secondary-color);
         font-weight: 600;
     }
 
@@ -95,7 +97,7 @@ nav {
         bottom: 0;
         width: 0;
         height: 2px;
-        background-color: var(--main-text-color);
+        background-color: var(--nav-secondary-color);
         transition: width 150ms linear;
     }
 
@@ -108,20 +110,20 @@ nav {
         opacity: 0;
         transform: scale(0.4);
         position: absolute;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.5s ease-in-out;
     }
 
     nav ul li a p {
         opacity: 0;
         transform: scale(0.4);
         position: absolute;
-        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     }
 
     nav ul {
         width: 100%;
         justify-content: space-evenly;
-        transition: justify-content 0.5s ease-in-out;
+        transition: justify-content 0.5s ease-in-out, width 0.5s ease-in-out;
     }
 
     nav ul li a {
@@ -150,8 +152,7 @@ nav {
 
     nav ul {
         justify-content: flex-end;
-        max-width: 100%;
-        transition: max-width 0.5s ease-in-out;
+        width: auto;
     }
 }
 

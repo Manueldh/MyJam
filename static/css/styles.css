@@ -35,12 +35,13 @@ nav {
     z-index: 1000;
     justify-content: space-between;
     background: var(--nav-primary-color);
-    color: var(--nav-secondary-color);
+    height: 7vh;
     align-items: center;
     margin: 1em;
     padding: 1em;
     border-radius: 1em;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: all 0.5s ease-in-out;
 }
 
     nav a {
@@ -53,6 +54,7 @@ nav {
 
     nav svg {
         width: 20px;
+        transition: width 0.5s ease-in-out;
         fill: var(--nav-secondary-color);
     }
 
@@ -64,11 +66,15 @@ nav {
     nav > a p {
         font-size: 1.2em;
         color: var(--nav-secondary-color);
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     }
 
     nav ul {
         display: flex;
         list-style: none;
+        justify-content: flex-end; 
+        width: auto;
+        transition: all 0.5s ease-in-out;
     }
 
     nav p {
@@ -77,10 +83,13 @@ nav {
         font-weight: 400;
         font-size: .9em;
         padding: 0 4px;
+        color: var(--nav-secondary-color);
+        font-weight: 600;
     }
 
     nav > ul > li > a > p {
         position: relative;
+        transition: opacity 0.5s ease-in-out;
     }
 
     nav > ul > li > a > p::before {
@@ -90,13 +99,69 @@ nav {
         bottom: 0;
         width: 0;
         height: 2px;
-        background-color: var(--main-text-color);
+        background-color: var(--nav-secondary-color);
         transition: width 150ms linear;
     }
 
     nav > ul > li > a > p:hover::before {
         width: 100%;
     }
+
+@keyframes expandWidth {
+    from {
+        width: 85%;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    nav > a {
+        opacity: 0;
+        transform: scale(0.4);
+        position: absolute;
+        transition: all 0.5s ease-in-out;
+    }
+
+    nav ul li a p {
+        opacity: 0;
+        transform: scale(0.4);
+        position: absolute;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    nav ul {
+        width: 85%;
+        margin-left: auto;
+        justify-content: space-evenly;
+        animation: expandWidth 0.5s ease-in-out forwards;
+    }
+
+    nav ul li a {
+        padding: 0 1rem;
+    }
+
+    nav ul li a svg {
+        width: 30px;
+    }
+}
+
+@media (min-width: 701px) {
+    nav > a {
+        opacity: 1;
+        transform: scale(1);
+        position: static;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    nav ul li a p {
+        opacity: 1;
+        transform: scale(1);
+        position: static;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+}
 
 /*LoginIn page*/
 

@@ -28,6 +28,7 @@ app
   .get('/genre', onGenre)
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
+  .get('/filter-sorteer', onFilterSorteer)
   .get('/account', loginCheck, onAccount)
   .get('/home', onHome)
   .get('/forgot', onForgot)
@@ -204,6 +205,10 @@ function onInstrument(req, res) {
 
 function onDifficulty(req, res) {
   res.render('difficulty.ejs', {title: 'Difficulty', user: req.session.user})
+}
+
+function onFilterSorteer(req, res) {
+  res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user})
 }
 
 function onHome(req, res) {

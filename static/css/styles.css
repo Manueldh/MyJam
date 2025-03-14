@@ -74,7 +74,9 @@ nav {
     nav p {
         white-space: nowrap;
         color: var(--main-text-color);
-        font-weight: 600;
+        font-weight: 400;
+        font-size: .9em;
+        padding: 0 4px;
     }
 
     nav > ul > li > a > p {
@@ -197,7 +199,7 @@ form > button{
     color: var(--main-text-color);
     font-size: 1.2em;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: .2s all ease;
 }
 
 .instrument-button:hover {
@@ -213,7 +215,79 @@ form > button{
     border: #FF7300 2px solid;
 }
 
+#Electric-guitar{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/electric-guitar.jpg');
+  background-size: cover;
+}
 
+#Acoustic-guitar{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/acoustic-guitar.jpg');
+  background-size: cover;
+}
+
+#Bass-guitar{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/bass-guitar.jpg');
+  background-size: cover;
+  background-position: bottom;
+}
+
+#Drums{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/drums.jpg');
+  background-size: cover;
+}
+
+#Piano{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/Piano.jpg');
+  background-size: cover;
+}
+
+#Ukelele{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/ukelele.jpg');
+  background-size: cover;
+  background-position: bottom;
+}
+
+#Violin{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/violin.jpg');
+  background-size: cover;
+}
+
+#Saxophone{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/saxophone.jpg');
+  background-size: cover;
+}
+
+#Trumpet{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/trumpet.jpg');
+  background-size: cover;
+}
+
+#Flute{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/flute.jpg');
+  background-size: cover;
+}
+
+#Cello{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/cello.jpg');
+  background-size: cover;
+}
+
+#Accordion{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+              url('../images/accordion.jpg');
+  background-size: cover;
+}
 /* .selected{
     color: var(--main-link-color);
     border: #FF7300 2px solid; 
@@ -351,8 +425,9 @@ form > button{
 }
 
 .genre-button.selected {
-    color: var(--main-link-color);
-    border: #FF7300 2px solid;
+    color: var(--main-text-color);
+    /* border: #FF7300 2px solid; */
+    background-color: var(--main-link-color);
 }
     
 

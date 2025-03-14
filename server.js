@@ -29,7 +29,9 @@ app
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
   .get('/account', loginCheck, onAccount)
+  .get('/home', onHome)
   .get('/forgot', onForgot)
+
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
@@ -202,6 +204,10 @@ function onInstrument(req, res) {
 
 function onDifficulty(req, res) {
   res.render('difficulty.ejs', {title: 'Difficulty', user: req.session.user})
+}
+
+function onHome(req, res) {
+  res.render('home.ejs', {title: 'Home', user: req.session.user})
 }
 
 async function onSubmitInlog(req, res) {

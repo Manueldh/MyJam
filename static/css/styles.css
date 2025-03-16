@@ -503,13 +503,16 @@ form > button{
 .filter-sort{
     display: flex;
     max-width: 90%;
+    gap: 5%;
     margin: 0 auto;
+    margin-top: 5em;
     justify-self: center;
 }
 
 .left-column {
-    min-width: 35%;
-
+    flex: 0 0 auto;
+    min-width: 18em;
+    max-width: 25em;
 }
 
     .left-column section {
@@ -600,14 +603,47 @@ form > button{
         }
 
 .right-column {
-    min-width: 65%;
+    flex: 1;
+    min-width: 0;
 }
+
+    .right-column .selected-filters-container {
+        margin-top: 1em;
+    }
+
+    .right-column .selected-filters-container h3 {
+        visibility: hidden;
+        height: 0;
+    }
+
+    .right-column .selected-filters-container .selected-filter {
+        background-color: var(--nav-primary-color);
+        border-radius: 0.3em;
+        color: var(--main-text-color);
+        font-size: 1.3em;
+        padding: 0.3em 0.5em;
+        margin: 0 0.5em 0.5em 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+
+    .right-column .selected-filters-container .selected-filter svg {
+        width: 1.3em;
+        fill: var(--nav-secondary-color);
+    }
+
+    .right-column .selected-filters-container .selected-filter svg:hover {
+        width: 1.3em;
+        fill: var(--main-link-color);
+    }
 
     .right-column .sort-container {
         display: flex;
         justify-content: end;
         align-items: center;
         gap: 1em;
+        margin-top: 1em;
     }
 
         .right-column .sort-container h3 {

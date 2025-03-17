@@ -132,9 +132,9 @@ app.get('/', (req, res) => {
 
 
 app.get('/reset/:token', async (req, res) => {
-  const token = req.params.token;
-  const dataBase = client.db(process.env.DB_NAME);
-  const collection = dataBase.collection(process.env.DB_COLLECTION);
+  const token = req.params.token
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
 
   const user = await collection.findOne({
     resetPasswordToken: token,
@@ -142,10 +142,10 @@ app.get('/reset/:token', async (req, res) => {
   });
 
   if (!user) {
-    return res.render('reset.ejs', { title: 'Reset Password', error: 'Password reset token is invalid or has expired', user: req.session.user });
+    return res.render('reset.ejs', { title: 'Reset Password', error: 'Password reset token is invalid or has expired', user: req.session.user })
   }
 
-  res.render('reset.ejs', { title: 'Reset Password', token: token, user: req.session.user });
+  res.render('reset.ejs', { title: 'Reset Password', token: token, user: req.session.user })
 });
 
 
@@ -237,7 +237,7 @@ async function onSubmitInlog(req, res) {
 
 function onRegister(req, res) {
 
-  res.render('register.ejs', {title: 'Register', user: req.session.user })
+  res.render('register.ejs', {title: 'Register', user: req.session.user, error: null})
 
 }
 
@@ -256,7 +256,7 @@ async function onRegisterAccount(req, res) {
 
     const duplicateEmail = await collection.findOne({ username: username });
     if (duplicateEmail) {
-      return res.render('account.ejs', { title: "Your account", error: 'Email already taken', user: null });
+      return res.render('register.ejs', { title: "Your account", error: 'Email already taken', user: null });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -404,8 +404,8 @@ async function onResetPassword(req, res) {
     )
 
     req.session.user = { 
-      username: username,
-      email: email,
+      username: user.username,
+      email: user.email,
       password: hashedPassword
     }
 

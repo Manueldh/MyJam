@@ -456,6 +456,10 @@ form > button{
         outline: none;
     }
 
+    .w {
+        color: white;
+    }
+
 /* Genre page */
 
 .genre-grid {

@@ -6,21 +6,28 @@
   <body>
     <header><%- include ('menu') %></header>
     <main>
-     <h1>Hallo, <%= user.username %></h1>
-     <a href="/logout">log out</a>
-        <button class="edit-details">edit details</button>
-        <form class="test" action="/editInfo" method="POST">
-          <label for="email">Email</label>
-          <input type="text" name="email" class="email" value="<%= user.email %>" required readonly/>
 
-          <label for="username">Username</label>
-          <input type="text" name="username" class="username" value="<%= user.username %>" required readonly/>
+      <div class="login">
+        <div class="inner-login">
 
-          <label for="password">Password</label>
-          <input type="password" name="password" class="password" placeholder="Your Password.." required readonly/>
+          <h1>Hallo, <%= user.username %></h1>
+          <a href="/logout">log out</a>
+          <button class="edit-details">edit details</button>
+        
+          <form class="test" action="/editInfo" method="POST">
+            <label for="email">Email</label>
+            <input type="text" name="email" class="email" value=" <%= user.email %>" requiredreadonly/>
 
-          <button type="submit">Update Info</button>
-        </form>
+            <label for="username">Username</label>
+            <input type="text" name="username" class="username" value=" <%= user.username %>" required readonly/>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" class="password" placeholder="Your Password.." requiredreadonly/>
+
+            <button type="submit">Update Info</button>
+          </form>
+        </div>
+      </div>
     </main>
     <footer></footer>
     <script src="static/scripts/index.js"></script>

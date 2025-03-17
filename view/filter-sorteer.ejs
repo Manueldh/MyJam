@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <%- include ('head') %>
+  </head>
+
+<body>
+    
+    <header>
+
+        <%- include ('menu') %>
+    </header>
+
+    <main>
+        <div class="filter-sort">
+            <div class="left-column">
+                <section class="section-instruments">
+                    <h2>Instruments</h2>
+                    <ul>
+                        <li>
+                            <input type="checkbox" name="instruments" value="Electric-guitar">
+                            <label for="Electric-guitar">Electric guitar</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="instruments" value="Acoustic-guitar">
+                            <label for="Acoustic-guitar">Acoustic guitar</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="instruments" value="Bass-guitar">
+                            <label for="Bass-guitar">Bass guitar</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="instruments" value="Drums">
+                            <label for="Drums">Drums</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="instruments" value="Piano">
+                            <label for="Piano">Piano</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="instruments" value="Ukelele">
+                            <label for="Ukelele">Ukelele</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="instruments" value="Violin">
+                            <label for="Violin">Violin</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="instruments" value="Trumpet">
+                            <label for="Trumpet">Trumpet</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="instruments" value="Saxophone">
+                            <label for="Saxophone">Saxophone</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="instruments" value="Flute">
+                            <label for="Flute">Flute</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="instruments" value="Accordion">
+                            <label for="Accordion">Accordion</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="instruments" value="Cello">
+                            <label for="Cello">Cello</label>
+                        </li>
+                    </ul>
+                    <button class="button-more-instruments">
+                        <p>More</p>
+                        <svg viewBox="0 0 12 9" xmlns="http://www.w3.org/2000/svg">
+                            <title>Arrow down</title>
+                            <path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>
+                        </svg>
+                    </button>
+                </section>
+                <section class="section-genre">
+                    <h2>Genre</h2>
+                    <ul>
+                        <li>
+                            <input type="checkbox" name="genre" value="Rock">
+                            <label for="Rock">Rock</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="genre" value="Metal">
+                            <label for="Metal">Metal</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="genre" value="Pop">
+                            <label for="Pop">Pop</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="genre" value="R&B">
+                            <label for="R&B">R&B</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="genre" value="Jazz">
+                            <label for="Jazz">Jazz</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="genre" value="Soul">
+                            <label for="Soul">Soul</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="genre" value="Classic">
+                            <label for="Classic">Classic</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="genre" value="Country">
+                            <label for="Country">Country</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="genre" value="Hip-Hop">
+                            <label for="Hip-Hop">Hip-Hop</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="genre" value="Electronic">
+                            <label for="Electronic">Electronic</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="genre" value="Alternative">
+                            <label for="Alternative">Alternative</label>
+                        </li>
+                        <li class="hidden-option">
+                            <input type="checkbox" name="genre" value="House">
+                            <label for="House">House</label>
+                        </li>
+                    </ul>
+                    <button class="button-more-genres">
+                        <p>More</p>
+                        <svg viewBox="0 0 12 9" xmlns="http://www.w3.org/2000/svg">
+                            <title>Arrow down</title>
+                            <path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>
+                        </svg>
+                    </button>
+                </section>
+                <section class="section-difficulty">
+                    <h2>Difficulty</h2>
+                    <ul>
+                        <li>
+                            <input type="checkbox" name="difficulty" value="Amateur">
+                            <label for="Amateur">Amateur</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="difficulty" value="Beginner">
+                            <label for="Beginner">Beginner</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="difficulty" value="Intermediate">
+                            <label for="Intermediate">Intermediate</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="difficulty" value="Experienced">
+                            <label for="Experienced">Experienced</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="difficulty" value="Master">
+                            <label for="Master">Master</label>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+            <div class="right-column">
+                <div>
+                    <section class="selected-filters-container">
+                        <h3>Selected filters</h3>
+                        <div id="selected-filters"></div>
+                    </section>
+                    <section class="sort-container"> 
+                        <h3>Sort by:</h3>
+                        <div id="select-style">
+                            <select name="sort" id="sort">
+                                <option value="recent">Most recent</option>
+                                <option value="popular">Popular</option>
+                                <option value="relevance">Relevance</option>
+                                <option value="durationLong">Duration - long</option>
+                                <option value="durationShort">Duration - short</option>
+                            </select>
+                            <svg viewBox="0 0 12 9" xmlns="http://www.w3.org/2000/svg">
+                                <title>Arrow down</title>
+                                <path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>
+                            </svg>
+                        </div>
+                    </section>
+                    <section class="results-container">
+                        <h3>Results</h3>
+                        <div class="results-top-bar">
+                            <span>Title</span>
+                            <span>Date added</span>
+                            <span>
+                                <svg viewBox="0 0 15 17" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.60256 1.6H8.80256C9.24256 1.6 9.60256 1.24 9.60256 0.8C9.60256 0.36 9.24256 0 8.80256 0H5.60256C5.16256 0 4.80256 0.36 4.80256 0.8C4.80256 1.24 5.16256 1.6 5.60256 1.6ZM12.8266 5.112L13.4266 4.512C13.5745 4.36316 13.6575 4.16184 13.6575 3.952C13.6575 3.74216 13.5745 3.54084 13.4266 3.392L13.4186 3.384C13.2697 3.23607 13.0684 3.15305 12.8586 3.15305C12.6487 3.15305 12.4474 3.23607 12.2986 3.384L11.6986 3.984C10.4245 2.95855 8.83805 2.39962 7.20256 2.4C3.36256 2.4 0.0985606 5.568 0.00256063 9.408C-0.0230899 10.3696 0.14419 11.3265 0.494522 12.2223C0.844854 13.1181 1.37114 13.9347 2.04229 14.6237C2.71344 15.3128 3.51586 15.8604 4.40216 16.2342C5.28846 16.6079 6.24067 16.8003 7.20256 16.8C8.55801 16.8007 9.8861 16.4186 11.0339 15.6976C12.1816 14.9766 13.1024 13.946 13.6901 12.7246C14.2778 11.5032 14.5086 10.1406 14.3558 8.7938C14.203 7.44699 13.6729 6.17073 12.8266 5.112ZM8.00256 9.6C8.00256 10.04 7.64256 10.4 7.20256 10.4C6.76256 10.4 6.40256 10.04 6.40256 9.6V6.4C6.40256 5.96 6.76256 5.6 7.20256 5.6C7.64256 5.6 8.00256 5.96 8.00256 6.4V9.6Z"/>
+                                </svg>
+                            </span>
+                        </div>
+                        <div id="results">
+                            <div class="song">
+                                <div class="song-info-container">
+                                    <img class="cover" src="/static/Images/song-cover-test.jpg" alt="Song cover">
+                                    <div class="song-info">
+                                        <span class="title">All My Love</span>
+                                        <span class="artist">Led Zeppelin</span>
+                                    </div>
+                                </div>
+                                <span class="date-added">28 Feb 2025</span>
+                                <span class="duration">5:15</span>
+                                <div class="actions">
+                                    <button class="favorite">
+                                        <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="play">
+                                        <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="song">
+                                <div class="song-info-container">
+                                    <img class="cover" src="/static/Images/song-cover-test2.jpg" alt="Song cover">
+                                    <div class="song-info">
+                                        <span class="title">Under the Bridge</span>
+                                        <span class="artist">Red Hot Chili Peppers</span>
+                                    </div>
+                                </div>
+                                <span class="date-added">28 Feb 2025</span>
+                                <span class="duration">4:24</span>
+                                <div class="actions">
+                                    <button class="favorite">
+                                        <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="play">
+                                        <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="song">
+                                <div class="song-info-container">
+                                    <img class="cover" src="/static/Images/song-cover-test3.jpg" alt="Song cover">
+                                    <div class="song-info">
+                                        <span class="title">Fat Bottomed Girls</span>
+                                        <span class="artist">Queen</span>
+                                    </div>
+                                </div>
+                                <span class="date-added">27 Feb 2025</span>
+                                <span class="duration">4:15</span>
+                                <div class="actions">
+                                    <button class="favorite">
+                                        <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="play">
+                                        <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+
+    <script src="/static/scripts/filter-sort.js"></script>
+
+</body>
+
+
+</html>

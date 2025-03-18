@@ -8,6 +8,7 @@
     <main>
     <div class="login">
     <div class="inner-login">
+    
      <h1>Hallo, <%= user.username %></h1>
      <a href="/logout">log out</a>
         <button class="edit-details">edit details</button>
@@ -25,7 +26,7 @@
         <form action="/editPassword" method="POST">
           <label for="password">Change your password</label>
           <input type="password" name="password" class="password" placeholder="Edit your password..." required/>
-          <button type="submit">Update Info</button>
+          <button type="submit">Update Password</button>
         </form>
     </main>
     <footer></footer>

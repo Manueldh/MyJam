@@ -17,7 +17,7 @@ app
     secret: process.env.SESSION_SECRET
   }))
   .use(express.urlencoded({extended: true})) // middleware to parse form data from incoming HTTP request and add form fields to req.body
-  .use("/", express.static('static'))        // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
+  .use("/static", express.static('static'))  // Allow server to serve static content such as images, stylesheets, fonts or frontend js from the directory named static
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
@@ -28,6 +28,7 @@ app
   .get('/genre', onGenre)
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
+  .get('/filter-sorteer', onFilterSorteer)
   .get('/account', loginCheck, onAccount)
   .get('/home', onHome)
   .get('/forgot', onForgot)
@@ -205,6 +206,10 @@ function onInstrument(req, res) {
 
 function onDifficulty(req, res) {
   res.render('difficulty.ejs', {title: 'Difficulty', user: req.session.user})
+}
+
+function onFilterSorteer(req, res) {
+  res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user})
 }
 
 function onHome(req, res) {

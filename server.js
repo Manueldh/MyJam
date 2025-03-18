@@ -36,6 +36,7 @@ app
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
   .post('/editInfo', onEditInfo)
+  .post('/editPassword', onEditPassword)
   .post('/forgotAuth', onForgotAuth)
   .post('/resetPassword', onResetPassword)
 
@@ -127,7 +128,7 @@ client.connect()
   })
 
 app.get('/', (req, res) => {
-  res.render('register.ejs', {title: 'Login', user: req.session.user})
+  res.render('register.ejs', {title: 'Login', user: req.session.user, error: null})
 })
 
 
@@ -142,7 +143,7 @@ app.get('/reset/:token', async (req, res) => {
   });
 
   if (!user) {
-    return res.render('reset.ejs', { title: 'Reset Password', error: 'Password reset token is invalid or has expired', user: req.session.user })
+    return res.render('reset.ejs', { title: 'Reset Password', user: req.session.user })
   }
 
   res.render('reset.ejs', { title: 'Reset Password', token: token, user: req.session.user })
@@ -180,15 +181,15 @@ function onForgot(req, res) {
 }
 
 function onAccount(req, res) {
-    res.render('account.ejs', {title: 'Account', user: req.session.user})
+    res.render('account.ejs', {title: 'Account', user: req.session.user, error: null})
 }
 
 function onLogin(req, res) {
-  res.render('login.ejs', {title: 'Login', user: req.session.user})
+  res.render('login.ejs', {title: 'Login', user: req.session.user, error: null})
 }
 
 function onLogout(req, res) {
-  req.session.destroy((err) => {
+  req.session.destroy(() => {
     res.redirect('/') 
   })
 
@@ -236,9 +237,7 @@ async function onSubmitInlog(req, res) {
 }
 
 function onRegister(req, res) {
-
   res.render('register.ejs', {title: 'Register', user: req.session.user, error: null})
-
 }
 
 async function onRegisterAccount(req, res) {
@@ -251,12 +250,12 @@ async function onRegisterAccount(req, res) {
 
     const duplicateUser = await collection.findOne({ username: username })
     if (duplicateUser) {
-      return res.render('register.ejs', { title: "register", error: 'Username already taken', user: null })
+      return res.render('register.ejs', { title: "Register", error: 'Username already taken', user: null })
     }
 
-    const duplicateEmail = await collection.findOne({ username: username });
+    const duplicateEmail = await collection.findOne({ email: email })
     if (duplicateEmail) {
-      return res.render('register.ejs', { title: "Your account", error: 'Email already taken', user: null });
+      return res.render('register.ejs', { title: "Register", error: 'Email already taken', user: null })
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -273,7 +272,7 @@ async function onRegisterAccount(req, res) {
       email: email,
       password: hashedPassword
      }
-    res.render('register.ejs', { title: 'Register', user: req.session.user })
+    res.render('register.ejs', { title: 'Register', user: req.session.user, error: null})
   }
 
 
@@ -283,7 +282,6 @@ async function onEditInfo(req, res) {
 
   const email = xss(req.body.email)
   const username = xss(req.body.username)
-  const password = xss(req.body.password)
   const currentUsername = req.session.user.username
 
   const duplicateUser = await collection.findOne({ username: username })
@@ -296,26 +294,43 @@ async function onEditInfo(req, res) {
     return res.render('account.ejs', { title: "Your account", error: 'Email already taken', user: req.session.user })
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10)
-
   await collection.updateOne(
     { username: currentUsername },
     {
       $set: {
         email: email,
         username: username,
-        password: hashedPassword,
       },
     }
-  );
+  )
 
   req.session.user = { 
     username: username,
     email: email,
-    password: hashedPassword
   }
 
-  res.render('account', { title: 'Account', user: req.session.user })
+  res.render('account.ejs', { title: 'Account', user: req.session.user, error: null })
+}
+
+async function onEditPassword(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  const password = xss(req.body.password)
+  const currentUsername = req.session.user.username
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+
+  await collection.updateOne(
+    { username: currentUsername },
+    {
+      $set: {
+        password: hashedPassword,
+      },
+    }
+  )
+  
+  res.render('account.ejs', { title: 'Account', user: req.session.user, error: null })
 }
 
 const transporter = nodemailer.createTransport({
@@ -409,5 +424,5 @@ async function onResetPassword(req, res) {
       password: hashedPassword
     }
 
-    res.render('login.ejs', { title: 'Login', message: 'Password has been reset successfully', user: req.session.user })
+    res.render('login.ejs', { title: 'Login', user: req.session.user })
   }

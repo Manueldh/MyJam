@@ -452,13 +452,14 @@ form > button{
     padding-top: 60px;
 }
 
-    .test input:focus{
-        outline: none;
-    }
+.test input:focus{
+    outline: none;
+}
 
-    .w {
-        color: white;
-    }
+.ErrorMessage {
+    color: var(--main-link-color);
+    margin-bottom: 1em;
+}
 
 /* Genre page */
 

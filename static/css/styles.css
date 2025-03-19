@@ -26,56 +26,67 @@ body {
   
   
 /*NavBar*/
-
-
-nav {
-    display: flex;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    justify-content: space-between;
-    background: var(--nav-primary-color);
-    height: 7vh;
-    align-items: center;
-    margin: 1em;
-    padding: 1em;
-    border-radius: 1em;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    transition: all 0.5s ease-in-out;
+main {
+    padding-top: 6em;
 }
 
-    nav a {
+#menu-container.nav-up {
+	top: -6em
+}
+
+#menu-container {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: top 0.5s linear;
+}
+
+    nav {
         display: flex;
-        text-decoration: none;
-        gap: 0.2rem;
-        padding: 0 0.8rem;
+        justify-content: space-between;
+        background: var(--nav-primary-color);
+        height: 4em;
         align-items: center;
-    }
-
-    nav svg {
-        width: 20px;
-        transition: width 0.5s ease-in-out;
-        fill: var(--nav-secondary-color);
-    }
-
-    nav > a svg {
-        fill: var(--main-link-color);
-        width: 30px;
-    }
-
-    nav > a p {
-        font-size: 1.2em;
-        color: var(--nav-secondary-color);
-        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-    }
-
-    nav ul {
-        display: flex;
-        list-style: none;
-        justify-content: flex-end; 
-        width: auto;
+        margin: 1em;
+        padding: 1em;
+        border-radius: 1em;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         transition: all 0.5s ease-in-out;
     }
+
+        nav a {
+            display: flex;
+            text-decoration: none;
+            gap: 0.2rem;
+            padding: 0 0.8rem;
+            align-items: center;
+        }
+
+        nav svg {
+            width: 20px;
+            transition: width 0.5s ease-in-out;
+            fill: var(--nav-secondary-color);
+        }
+
+        nav > a svg {
+            fill: var(--main-link-color);
+            width: 30px;
+        }
+
+        nav > a p {
+            font-size: 1.2em;
+            color: var(--nav-secondary-color);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: flex-end; 
+            width: auto;
+            transition: all 0.5s ease-in-out;
+        }
 
     nav p {
         white-space: nowrap;
@@ -86,81 +97,91 @@ nav {
         color: var(--nav-secondary-color);
     }
 
-    nav > ul > li > a > p {
-        position: relative;
-        transition: opacity 0.5s ease-in-out;
+        nav p {
+            white-space: nowrap;
+            color: var(--main-text-color);
+            font-weight: 400;
+            font-size: .9em;
+            padding: 0 4px;
+            color: var(--nav-secondary-color);
+            font-weight: 600;
+        }
+
+        nav > ul > li > a > p {
+            position: relative;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        nav > ul > li > a > p::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--nav-secondary-color);
+            transition: width 150ms linear;
+        }
+
+        nav > ul > li > a > p:hover::before {
+            width: 100%;
+        }
+
+    @keyframes expandWidth {
+        from {
+            width: 85%;
+        }
+        to {
+            width: 100%;
+        }
     }
 
-    nav > ul > li > a > p::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 0;
-        height: 2px;
-        background-color: var(--nav-secondary-color);
-        transition: width 150ms linear;
+    @media (max-width: 700px) {
+        nav > a {
+            opacity: 0;
+            transform: scale(0.4);
+            position: absolute;
+            transition: all 0.5s ease-in-out;
+        }
+
+        nav ul li a p {
+            opacity: 0;
+            transform: scale(0.4);
+            position: absolute;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        nav ul {
+            width: 85%;
+            margin-left: auto;
+            justify-content: space-evenly;
+            animation: expandWidth 0.5s ease-in-out forwards;
+        }
+
+        nav ul li a {
+            padding: 0 1rem;
+        }
+
+        nav ul li a svg {
+            width: 30px;
+        }
     }
 
-    nav > ul > li > a > p:hover::before {
-        width: 100%;
-    }
+    @media (min-width: 701px) {
+        nav > a {
+            opacity: 1;
+            transform: scale(1);
+            position: static;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
 
-@keyframes expandWidth {
-    from {
-        width: 85%;
+        nav ul li a p {
+            opacity: 1;
+            transform: scale(1);
+            position: static;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
     }
-    to {
-        width: 100%;
-    }
-}
-
-@media (max-width: 700px) {
-    nav > a {
-        opacity: 0;
-        transform: scale(0.4);
-        position: absolute;
-        transition: all 0.5s ease-in-out;
-    }
-
-    nav ul li a p {
-        opacity: 0;
-        transform: scale(0.4);
-        position: absolute;
-        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-    }
-
-    nav ul {
-        width: 85%;
-        margin-left: auto;
-        justify-content: space-evenly;
-        animation: expandWidth 0.5s ease-in-out forwards;
-    }
-
-    nav ul li a {
-        padding: 0 1rem;
-    }
-
-    nav ul li a svg {
-        width: 30px;
-    }
-}
-
-@media (min-width: 701px) {
-    nav > a {
-        opacity: 1;
-        transform: scale(1);
-        position: static;
-        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-    }
-
-    nav ul li a p {
-        opacity: 1;
-        transform: scale(1);
-        position: static;
-        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-    }
-}
 
 /*LoginIn page*/
 
@@ -509,7 +530,7 @@ form > button{
     max-width: 90%;
     gap: 5%;
     margin: 0 auto;
-    margin-top: 5em;
+    margin-top: 2em;
     justify-self: center;
 }
 
@@ -719,6 +740,8 @@ form > button{
 
         .right-column .results-container .results-top-bar span:nth-of-type(2) {
             grid-column: 4 / 6;
+            display: flex;
+            justify-content: center;
         }
 
         .right-column .results-container .results-top-bar span:nth-of-type(3) {
@@ -771,6 +794,7 @@ form > button{
             grid-column: 4 / 6;
             display: flex;
             align-items: center;
+            justify-content: center;
             color: var(--main-text-color);
         }
 
@@ -794,6 +818,7 @@ form > button{
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                flex-shrink: 0;
                 height: 4em;
                 width: 4em;
                 background-color: var(--main-link-color);

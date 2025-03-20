@@ -260,123 +260,64 @@ form > button{
 
 /* Instrument page */
 
-.kop-instrument, .kop-genre{
+
+.kop-instrument, .kop-genre {
     padding: 50px 70px 0;
 }
 
-.instrument-grid {
+.filter-container ul{
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 kolommen */
+    grid-template-columns: repeat(4, 1fr); 
     gap: 20px;
     padding: 35px 70px;
-}
+} 
+    .filter-container li{
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-.instrument-button {
+        height: 150px;
+        background-size: cover;
+        background-position: center;
+        border: none;
+        border-radius: 10px;
+        background-color: var(--nav-primary-color);
+        color: var(--main-text-color);
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: .2s all ease;
+    }
+        .filter-container li:hover {
+            transform: scale(1.05);
+        }
+
+.filter-container label {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 150px;
-    background-size: cover;
-    background-position: center;
-    border: none;
-    border-radius: 10px;
-    background-color: var(--nav-primary-color);
-    color: var(--main-text-color);
-    font-size: 1.2em;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
-    transition: .2s all ease;
+    position: relative;
+    border-radius: .8em;
 }
+    .filter-container input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+        border: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+        .filter-container label:has(input[type="checkbox"]:checked) {
+            color: var(--main-link-color);
+            border: #FF7300 2px solid;
+            transition: .2s all ease;
+        }
 
-.instrument-button:hover {
-    transform: scale(1.05);
-}
-
-.instrument-button:active {
-    transform: scale(0.95);
-}
-
-.instrument-button.selected {
-    color: var(--main-link-color);
-    border: #FF7300 2px solid;
-}
-
-#Electric-guitar{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/electric-guitar.jpg');
-  background-size: cover;
-}
-
-#Acoustic-guitar{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/acoustic-guitar.jpg');
-  background-size: cover;
-}
-
-#Bass-guitar{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/bass-guitar.jpg');
-  background-size: cover;
-  background-position: bottom;
-}
-
-#Drums{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/drums.jpg');
-  background-size: cover;
-}
-
-#Piano{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/Piano.jpg');
-  background-size: cover;
-}
-
-#Ukelele{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/ukelele.jpg');
-  background-size: cover;
-  background-position: bottom;
-}
-
-#Violin{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/violin.jpg');
-  background-size: cover;
-}
-
-#Saxophone{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/saxophone.jpg');
-  background-size: cover;
-}
-
-#Trumpet{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/trumpet.jpg');
-  background-size: cover;
-}
-
-#Flute{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/flute.jpg');
-  background-size: cover;
-}
-
-#Cello{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/cello.jpg');
-  background-size: cover;
-}
-
-#Accordion{
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('../images/accordion.jpg');
-  background-size: cover;
-}
-/* .selected{
-    color: var(--main-link-color);
-    border: #FF7300 2px solid; 
-} */
 
 /* .instrument-button:focus nog doen */
 
@@ -385,80 +326,24 @@ form > button{
     justify-content: center;
     gap: 20px;
 }
+    .progress-buttons button {
+        padding: 10px 20px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--main-link-color);
+        color: var(--main-text-color);
+        font-family: var(--main-font);
+        font-size: 18px;
+        text-decoration: none;
 
-.progress-buttons a {
-    padding: 10px 20px;
-    margin-bottom: 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--main-link-color);
-    color: var(--main-text-color);
-    font-family: var(--main-font);
-    font-size: 18px;
-    text-decoration: none;
-
-    display: flex;
-}
-
-.progress-buttons a >img{
-    padding: 0 7px;
-}
-
-@media (max-width: 1200px) {
-    .instrument-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 kolommen */
+        display: flex;
     }
-}
-
-@media (max-width: 900px) {
-    .instrument-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 kolommen */
-    }
-}
-
-@media (max-width: 600px) {
-    .instrument-grid {
-        grid-template-columns: 1fr; /* 1 kolom */
-
-        /* progress buttons fixen */
-    }
-}
+        .progress-buttons button > img{
+            padding: 0 7px;
+        }
 
 /* Difficulty page */
-
-.level-grid {
-    display: flex;  
-    justify-content: center;
-    gap: 20px;
-    padding: 35px 70px;
-    flex-direction: column;
-    background-color: none;
-    border-radius: 1em;
-}
-
-.level-btn{
-    background-color: var(--nav-primary-color);
-    color: var(--main-text-color);
-    padding: 20px 70px;
-    border: none;
-    border-radius: 10px;
-    font-family: var(--main-font);
-    font-size: 1.2em;
-    transition: .5s all ease;
-}
-
-.level-btn:hover {
-    transform: scale(1.1);
-}
-
-.level-btn:active {
-    transform: scale(0.95);
-}
-
-.level-btn.selected {
-    color: var(--main-link-color);
-    border: #FF7300 2px solid;
-}
 
 .level{
     display: flex;
@@ -481,47 +366,27 @@ form > button{
     margin-bottom: 1em;
 }
 
-/* Genre page */
-
-.genre-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 kolommen */
-    gap: 20px;
-    padding: 35px 70px;
-}
-
-.genre-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 150px;
-    background-size: cover;
-    background-position: center;
-    border: none;
-    border-radius: 10px;
-    background-color: var(--nav-primary-color);
-    color: var(--main-text-color);
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.genre-button:hover {
+.filter-container li:hover {
     transform: scale(1.05);
 }
+    .level-grid label:has(input[type="checkbox"]:checked) {
+        color: var(--main-link-color);
+        border: #FF7300 2px solid;
+        transition: .2s all ease;
+    }
 
-.genre-button:active {
-    transform: scale(0.95);
-}
 
-.genre-button.selected {
-    color: var(--main-text-color);
-    /* border: #FF7300 2px solid; */
-    background-color: var(--main-link-color);
-}
+.difficulty-container {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+} 
+     .difficulty-container li {
+        height: 100px;
+        width: 80%;
+        max-width: 500px;
+    }
     
-
-
 
 /* Filter & Sorting page */
 

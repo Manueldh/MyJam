@@ -1,7 +1,7 @@
-const btnSelected = document.querySelectorAll('.instrument-button , .level-btn, .genre-button');
-
-btnSelected.forEach(button => {
-  button.addEventListener("click", () => {
-    button.classList.toggle("selected");
+document.addEventListener('DOMContentLoaded', () => {
+    const checkbox = document.getElementById('Electric-guitar'); // Vervang 'Electric-guitar' door het ID van je checkbox
+  
+    checkbox.addEventListener('change', () => {
+      console.log(checkbox.checked); // Logt 'true' als aangevinkt, anders 'false'
+    });
   });
-});

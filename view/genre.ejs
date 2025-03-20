@@ -9,27 +9,90 @@
 
     <main>
      
-        <h1 class="kop-genre">Choose your genre</h1>
+      <h1 class="kop-genre">Choose your genre</h1> 
 
-      <div class="genre-grid">
-        <button class="genre-button">Rock</button>
-        <button class="genre-button">Metal</button>
-        <button class="genre-button">Pop</button>
-        <button class="genre-button">R&B</button>
-        <button class="genre-button">Jazz</button>
-        <button class="genre-button">Soul</button>
-        <button class="genre-button">Classic</button>
-        <button class="genre-button">Country</button>
-        <button class="genre-button">Hip-Hop</button>
-        <button class="genre-button">Electronic</button>
-        <button class="genre-button">Alternative</button>
-        <button class="genre-button">House</button>
-      </div>
+      <form action="#" method="post" class="filter-container">
+        <ul>
+          <li>
+            <label for="Rock">
+              <input type="checkbox" name="Rock" id="Rock" value="Rock">
+              <span>Rock</span>
+            </label>
+          </li>
+          <li>
+            <label for="Metal">
+              <input type="checkbox" name="Metal" id="Metal" value="Metal">
+              <span>Metal</span>
+            </label>
+          </li>
+          <li>
+            <label for="Pop">
+              <input type="checkbox" name="Pop" id="Pop" value="Pop">
+              <span>Pop</span>
+            </label>
+          </li>
+          <li>
+            <label for="R&B">
+              <input type="checkbox" name="R&B" id="R&B" value="R&B">
+              <span>R&B</span>
+            </label>
+          </li>
+          <li>
+            <label for="Jazz">
+              <input type="checkbox" name="Jazz" id="Jazz" value="Jazz">
+              <span>Jazz</span>
+            </label>
+          </li>
+          <li>
+            <label for="Soul">
+              <input type="checkbox" name="Soul" id="Soul" value="Soul">
+              <span>Soul</span>
+            </label>
+          </li>
+          <li>
+            <label for="Classic">
+              <input type="checkbox" name="Classic" id="Classic" value="Classic">
+              <span>Classic</span>
+            </label>
+          </li>
+          <li>
+            <label for="Country">
+              <input type="checkbox" name="Country" id="Country" value="Country">
+              <span>Country</span>
+            </label>
+          </li>
+          <li>
+            <label for="Hip-Hop">
+              <input type="checkbox" name="Hip-Hop" id="Hip-Hop" value="Hip-Hop">
+              <span>Hip-Hop</span>
+            </label>
+          </li>
+          <li>
+            <label for="Electronic">
+              <input type="checkbox" name="Electronic" id="Electronic" value="Electronic">
+              <span>Electronic</span>
+            </label>
+          </li>
+          <li>
+            <label for="Alternative">
+              <input type="checkbox" name="Alternative" id="Alternative" value="Alternative">
+              <span>Alternative</span>
+            </label>
+          </li>
+          <li>
+            <label for="House">
+              <input type="checkbox" name="House" id="House" value="House">
+              <span>House</span>
+            </label>
+          </li>
+        </ul>
 
-      <div class="progress-buttons">
-        <a href="/instrument" class="Previous"><img src="/static/images/arrow-left.svg" alt="">Previous</a>
-        <a href="/difficulty" class="Next">Next <img src="/static/images/arrow-right.svg" alt=""></a>
-      </div>
+        <div class="progress-buttons">
+          <button class="Previous"><img src="/static/images/arrow-left.svg" alt="">Previous</button>
+          <button class="Next" type="submit">Next <img src="/static/images/arrow-right.svg" alt=""></button>
+        </div>
+      </form>
+    
     </main>
 
     <footer></footer>

@@ -16,20 +16,45 @@
 
     <h1 class="kop-difficulty">Choose your difficulty</h1>
 
-    <div class="level">
-        <div class="level-grid">
-            <button class="level-btn">Amateur</button>
-            <button class="level-btn">Beginner</button>
-            <button class="level-btn">Intermediate</button>
-            <button class="level-btn">Experienced</button>
-            <button class="level-btn">Master</button>
-        </div>
-    </div>
+    <form action="#" method="post" class="filter-container">
+        <ul class="difficulty-container">
+          <li>
+            <label for="Amateur">
+              <input type="checkbox" name="difficulty" id="Amateur" value="Amateur">
+              <span>Amateur</span>
+            </label>
+          </li>
+          <li>
+            <label for="Beginner">
+              <input type="checkbox" name="difficulty" id="Beginner" value="Beginner">
+              <span>Beginner</span>
+            </label>
+          </li>
+          <li>
+            <label for="Intermediate">
+              <input type="checkbox" name="difficulty" id="Intermediate" value="Intermediate">
+              <span>Intermediate</span>
+            </label>
+          </li>
+          <li>
+            <label for="Experienced">
+              <input type="checkbox" name="difficulty" id="Experienced" value="Experienced">
+              <span>Experienced</span>
+            </label>
+          </li>
+          <li>
+            <label for="Master">
+              <input type="checkbox" name="difficulty" id="Master" value="Master">
+              <span>Master</span>
+            </label>
+          </li>
+        </ul>
 
         <div class="progress-buttons">
-            <a href="/genre" class="Previous"><img src="/static/images/arrow-left.svg" alt="">Previous</a>
-            <a href="/filter-sorteer" class="Next">Next <img src="/static/images/arrow-right.svg" alt=""></a>
+          <button class="Previous"><img src="/static/images/arrow-left.svg" alt="">Previous</button>
+          <button class="Next" type="submit">Next <img src="/static/images/arrow-right.svg" alt=""></button>
         </div>
+      </form>
         
     </main>
 

@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const checkbox = document.getElementById('Electric-guitar'); // Vervang 'Electric-guitar' door het ID van je checkbox
+    const checkbox = document.getElementById('Electric-guitar'); 
   
     checkbox.addEventListener('change', () => {
-      console.log(checkbox.checked); // Logt 'true' als aangevinkt, anders 'false'
+      console.log(checkbox.checked); 
     });
   });

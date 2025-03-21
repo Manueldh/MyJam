@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function addFilter(checkbox) {
         const filterTag = document.createElement('span')
         filterTag.classList.add('selected-filter')
-        filterTag.dataset.name = checkbox.name
         filterTag.dataset.value = checkbox.value
         
         filterTag.textContent = checkbox.value
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function removeFilter(checkbox) {
-        const filterToRemove = filtersContainer.querySelector(`.selected-filter[data-name='${checkbox.name}'][data-value='${checkbox.value}']`)
+        const filterToRemove = filtersContainer.querySelector(`.selected-filter[data-value='${checkbox.value}']`)
         if (filterToRemove) {
             filterToRemove.remove()
         }

@@ -30,6 +30,7 @@ app
   .get('/difficulty', onDifficulty)
   .get('/filter-sorteer', onFilterSorteer)
   .get('/account', loginCheck, onAccount)
+  .get('/favorites', onFavorites)
   .get('/home', onHome)
   .get('/forgot', onForgot)
 
@@ -210,6 +211,10 @@ function onDifficulty(req, res) {
 
 function onFilterSorteer(req, res) {
   res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user})
+}
+
+function onFavorites(req, res) {
+  res.render('favorites.ejs', {title: 'Favorites', user: req.session.user})
 }
 
 function onHome(req, res) {

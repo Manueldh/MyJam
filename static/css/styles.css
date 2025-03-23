@@ -998,7 +998,7 @@ form > button{
             grid-row: 2 / 3;
             align-items: end;
         }
-
+}
 /* Favorites page */
 .favorite-container {
     margin: 0 15%;

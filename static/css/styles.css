@@ -38,6 +38,7 @@ main {
 #menu-container {
     position: fixed;
     width: 100%;
+    min-width: 450px;
     top: 0;
     z-index: 1000;
     transition: top 0.5s linear;
@@ -63,6 +64,10 @@ main {
             gap: 0.2rem;
             padding: 0 0.8rem;
             align-items: center;
+            opacity: 1;
+            transform: scale(1);
+            position: static;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
         nav svg {
@@ -97,21 +102,16 @@ main {
         font-size: .9em;
         padding: 0 4px;
         color: var(--nav-secondary-color);
+        font-weight: 600;
     }
-
-        nav p {
-            white-space: nowrap;
-            color: var(--main-text-color);
-            font-weight: 400;
-            font-size: .9em;
-            padding: 0 4px;
-            color: var(--nav-secondary-color);
-            font-weight: 600;
-        }
 
         nav > ul > li > a > p {
             position: relative;
             transition: opacity 0.5s ease-in-out;
+            opacity: 1;
+            transform: scale(1);
+            position: static;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
         nav > ul > li > a > p::before {
@@ -131,14 +131,14 @@ main {
 
     @keyframes expandWidth {
         from {
-            width: 85%;
+            width: 80%;
         }
         to {
             width: 100%;
         }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 750px) {
         nav > a {
             opacity: 0;
             transform: scale(0.4);
@@ -154,7 +154,6 @@ main {
         }
 
         nav ul {
-            width: 85%;
             margin-left: auto;
             justify-content: space-evenly;
             animation: expandWidth 0.5s ease-in-out forwards;
@@ -166,22 +165,6 @@ main {
 
         nav ul li a svg {
             width: 30px;
-        }
-    }
-
-    @media (min-width: 701px) {
-        nav > a {
-            opacity: 1;
-            transform: scale(1);
-            position: static;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-        }
-
-        nav ul li a p {
-            opacity: 1;
-            transform: scale(1);
-            position: static;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
     }
 
@@ -391,43 +374,61 @@ form > button{
     
 
 /* Filter & Sorting page */
+@keyframes filtersHidden {
+    from {
+        left: 0;
+    }
+    to {
+        left: -100%;
+    }
+}
+
+@keyframes filtersUnHidden {
+    from {
+        left: -100%;
+    }
+    to {
+        left: 0;
+    }
+}
 
 .filter-sort{
     display: flex;
+    position: relative;
     max-width: 90%;
-    gap: 5%;
     margin: 0 auto;
     margin-top: 2em;
     justify-self: center;
+    transition: all 0.5s ease-in-out;
 }
 
-.left-column {
-    flex: 0 0 auto;
-    min-width: 20em;
-    max-width: 25em;
+#left-column {
+    position: absolute;
+    width: 18em;
+    transition: width 0.5s ease-in-out;
 }
 
-    .left-column section {
+    #left-column section {
         display: flex;
         flex-direction: column;
         background: var(--nav-primary-color);
-        margin: 1em;
+        margin: 1em 0;
         padding: 2em;
         border-radius: 1em;
     }
 
-        .left-column section h2 {
+        #left-column section h2 {
             color: var(--main-text-color);
             font-weight: 200;
             font-size: 2em;
         }
 
-        .left-column section ul {
+        #left-column section ul {
             list-style: none;
             padding: 1em 0;
         }
 
-            .left-column section li {
+            #left-column section li {
                 display: flex;
                 align-items: center;
                 height: 2em;
@@ -436,14 +437,14 @@ form > button{
                 transition: height 0.5s ease-in-out, visibility 0.5s;
             }
 
-            .left-column section .hidden-option {
+            #left-column section .hidden-option {
                 visibility: hidden;
                 height: 0;
                 overflow: hidden;
                 transition: height 0.5s ease-in-out, visibility 0.5s;
             }
 
-                .left-column section li input {
+                #left-column section li input {
                     appearance: none;
                     -webkit-appearance: none;
                     -moz-appearance: none;
@@ -455,26 +456,27 @@ form > button{
                     padding: 10px;
                 }
 
-                .left-column section li input:checked {
+                #left-column section li input:checked {
                     background-color: var(--main-link-color);
                 }
 
-                .left-column section li label {
+                #left-column section li label {
                     color: var(--main-text-color);
                     font-weight: 200;
                     font-size: 1.3em;
+                    transition: font-size 0.5s ease-in-out;
                 }
 
-            .left-column section button svg {
+            #left-column section button svg {
                 transition: transform 0.5s ease-out;
             }
             
-            .left-column section button p {
+            #left-column section button p {
                 transition: opacity 0.3s ease-out;
             }
 
 
-        .left-column section button {
+        #left-column section button {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -488,7 +490,7 @@ form > button{
             height: 2em;
         }
 
-        .left-column section button svg {
+        #left-column section button svg {
             fill: var(--main-text-color);
             width: 1em;
             margin-left: 0.5em;
@@ -497,6 +499,12 @@ form > button{
 .right-column {
     flex: 1;
     min-width: 0;
+    margin-left: 20em;
+    transition: margin-left 0.5s ease-in-out;
+}
+
+.right-column > div {
+    width: 100%;
 }
 
     .right-column .selected-filters-container {
@@ -506,6 +514,7 @@ form > button{
         .right-column .selected-filters-container h3 {
             visibility: hidden;
             height: 0;
+            width: 0;
         }
 
         .right-column .selected-filters-container .selected-filter {
@@ -518,24 +527,46 @@ form > button{
             display: inline-flex;
             align-items: center;
             gap: 0.5em;
+            transition: font-size 0.5s ease-in-out;
         }
 
         .right-column .selected-filters-container .selected-filter svg {
             width: 1.3em;
             fill: var(--nav-secondary-color);
+            transition: width 0.5s ease-in-out;
         }
 
         .right-column .selected-filters-container .selected-filter svg:hover {
-            width: 1.3em;
             fill: var(--main-link-color);
         }
 
     .right-column .sort-container {
         display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        margin-top: 1em;
+    }
+
+    .right-column .sort-container button {
+        background-color: var(--main-link-color);
+        color: var(--main-text-color);
+        font-size: 1.1em;
+        font-weight: 400;
+        padding: 0.5em 1em;
+        border: none;
+        border-radius: 0.3em;
+        cursor: pointer;
+        visibility: hidden;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.5s ease-in-out;
+    }
+        
+    .right-column .sort-container .sort {
+        display: flex;
         justify-content: end;
         align-items: center;
         gap: 1em;
-        margin-top: 1em;
     }
 
         .right-column .sort-container h3 {
@@ -582,9 +613,9 @@ form > button{
             .right-column .sort-container #select-style.open svg {
                 transform: translateY(-50%) rotate(180deg);
             }
-
+    
     .right-column .results-container h3 {
-        visibility: hidden;
+        opacity: 0;
         height: 0;
     }
 
@@ -593,6 +624,8 @@ form > button{
         grid-template-columns: repeat(8, 1fr);
         border-bottom: 2px solid #5F5F5F;
         margin: 1em 0;
+        height: 2em;
+        transition: all 0.5s ease-in-out;
     }
 
         .right-column .results-container .results-top-bar span {
@@ -639,6 +672,7 @@ form > button{
                 height: 6em;
                 width: 6em;
                 border-radius: 1em;
+                transition: all 0.5s ease-in-out;
             }
 
             .right-column .results-container .song .song-info {
@@ -698,6 +732,272 @@ form > button{
                     fill: var(--main-text-color);
                     width: 1.7em;
                 }
+
+@media (max-width: 1100px) {
+    .filter-sort{
+        margin-top: 1em;
+        transition: all 0.5s ease-in-out;
+    }
+    
+    #left-column {
+        width: 16em;
+        transition: width 0.5s ease-in-out;
+    }
+
+        #left-column section li label {
+            font-size: 1.2em;
+            transition: font-size 0.5s ease-in-out;
+        }
+
+    .right-column .selected-filters-container .selected-filter {
+        font-size: 1.1em;
+        transition: font-size 0.5s ease-in-out;
+    }
+
+    .right-column .selected-filters-container .selected-filter svg {
+        width: 1.1em;
+        transition: width 0.5s ease-in-out;
+    }
+
+    .right-column {
+        margin-left: 18em;
+        transition: margin-left 0.5s ease-in-out;
+    }
+    
+        .right-column .results-container .results-top-bar {
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+            .right-column .results-container .results-top-bar span:nth-of-type(1) {
+                grid-column: 1 / 3;
+            }
+
+            .right-column .results-container .results-top-bar span:nth-of-type(2) {
+                grid-column: 3 / 5;
+                justify-content: center;
+            }
+
+            .right-column .results-container .results-top-bar span:nth-of-type(3) {
+                grid-column: 5 / 7;
+                justify-content: end;
+            }
+
+        .right-column .results-container .song {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            margin-bottom: 1em;
+        }
+
+            .right-column .results-container .song .song-info-container {
+                grid-column: 1 / 5;
+                grid-row: 1 / 3;
+                flex-direction: column;
+                align-items: start;
+                gap: 1em;
+            }
+
+                .right-column .results-container .song .song-info {
+                    grid-column: 1 / 5;
+                }
+
+            .right-column .results-container .song .date-added {
+                grid-column: 3 / 5;
+                grid-row: 1 / 2;
+                align-items: start;
+            }
+
+            .right-column .results-container .song .duration {
+                grid-column: 5 / 7;
+                grid-row: 1 / 2;
+                align-items: start;
+                justify-content: end;
+            }
+
+            .right-column .results-container .song .actions {
+                grid-column: 5 / 7;
+                grid-row: 2 / 3;
+                align-items: end;
+            }
+}
+
+@media (max-width: 750px) {
+    body.no-scroll {
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .filter-sort {
+        position: relative;
+        margin-top: 0.5em;
+        transition: all 0.5s ease-in-out;
+    }
+    
+    #left-column {
+        z-index: 500;
+        width: 50%;
+        height: 90vh;
+        padding-bottom: 2em;
+        min-width: 16em;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        animation: filtersHidden 0.5s ease-in-out forwards;
+    }
+
+    .filter-sort .filterMenuClosed, .filter-sort .filterMenuOpen {
+        display: flex;
+        position: fixed;
+        justify-content: end;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 250;
+    }
+    
+    .filter-sort .filterMenuClosed {
+        left: -100%;
+        background-color: rgba(0, 0, 0, 0);
+        transition: background-color 0.5s ease-in-out, left 0s ease-in-out 0.5s;
+    }
+
+    .filter-sort .filterMenuOpen {
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        transition: background-color 1s ease-in-out, left 0s ease-in-out;
+    }
+
+        .filter-sort > div:nth-of-type(3) > button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 9em;
+            margin-right: 5%;
+            flex-shrink: 0;
+            height: 4em;
+            width: 4em;
+            background-color: var(--main-link-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .filter-sort .filterMenuClosed button {
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .filter-sort .filterMenuOpen button {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+            .filter-sort > div:nth-of-type(3) > button svg {
+                stroke: var(--color-light);
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke-width: 2;
+                width: 1.7em;
+            }
+
+    #left-column.showFilterMenu {
+        transition: all 0.5s ease-in-out;
+        animation: filtersUnHidden 0.5s ease-in-out forwards;
+    }
+
+    .right-column {
+        display: flex;
+        justify-content: end;
+        width: 100%;
+        margin-left: 0;
+        transition: margin-left 0.5s ease-in-out;
+    }
+
+    .right-column .sort-container button {
+        visibility: visible;
+        opacity: 1;
+        transform: scale(1);
+        transition: all 0.5s ease-in-out;
+    }
+
+    .right-column .selected-filters-container {
+        display: flex;
+        overflow-x: scroll;
+        white-space: nowrap;
+        cursor: grab;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
+    .right-column .selected-filters-container.active {
+        cursor: grabbing;
+    }
+
+    .selected-filters-container.no-scroll {
+        cursor: default;
+      }
+
+    .right-column .selected-filters-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .right-column .selected-filters-container svg {
+        cursor: pointer;
+    }
+}
+
+@media (min-width: 751px) {
+    #left-column {
+        animation: filtersUnHidden 0.5s ease-in-out forwards;
+    }
+}
+
+@media (max-width: 600px) {    
+    .right-column .results-container .results-top-bar {
+        opacity: 0;
+        height: 0;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .right-column .results-container .song {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        margin-bottom: 1em;
+    }
+
+        .right-column .results-container .song .song-info-container {
+            grid-column: 1 / 5;
+            grid-row: 1 / 3;
+            flex-direction: row;
+            gap: 1em;
+        }
+
+            .right-column .results-container .song .cover {
+                height: 9em;
+                width: 9em;
+                transition: all 0.5s ease-in-out;
+            }
+
+        .right-column .results-container .song .date-added {
+            visibility: hidden;
+        }
+
+        .right-column .results-container .song .duration {
+            grid-column: 5 / 6;
+            grid-row: 1 / 2;
+            align-items: start;
+            justify-content: end;
+        }
+
+        .right-column .results-container .song .actions {
+            grid-column: 3 / 6;
+            grid-row: 2 / 3;
+            align-items: end;
+        }
 
 /* Favorites page */
 .favorite-container {

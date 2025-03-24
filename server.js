@@ -29,11 +29,11 @@ app
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
   .get('/filter-sorteer', onFilterSorteer)
+  .get('/api/tracks', tracksToFrontend)
   .get('/account', loginCheck, onAccount)
   .get('/favorites', onFavorites)
   .get('/home', onHome)
   .get('/forgot', onForgot)
-
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
@@ -210,6 +210,20 @@ function onDifficulty(req, res) {
 }
 
 function onFilterSorteer(req, res) {
+  res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user})
+}
+
+async function tracksToFrontend(req, res) {
+  try {
+    const dataBase = client.db(process.env.DB_NAME);
+    const collection = dataBase.collection('music-data'); // Zorg dat dit de juiste collectie is
+
+    const tracks = await collection.find().toArray(); // Haal alle tracks op
+    res.json(tracks); // Stuur de tracks als JSON naar de frontend
+  } catch (err) {
+    console.error('❌ Failed to fetch tracks:', err);
+    res.status(500).json({ error: 'Failed to fetch tracks' });
+  }
   res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user})
 }
 

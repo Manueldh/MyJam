@@ -33,6 +33,7 @@ app
   .get('/favorites', onFavorites)
   .get('/home', onHome)
   .get('/forgot', onForgot)
+  .get('/friends', onFriends)
 
 
   .post('/submitInlog', onSubmitInlog)
@@ -41,6 +42,7 @@ app
   .post('/editPassword', onEditPassword)
   .post('/forgotAuth', onForgotAuth)
   .post('/resetPassword', onResetPassword)
+  .post('/addFriend', onAddFriend)
 
   .listen(4497)
 
@@ -182,8 +184,12 @@ function onForgot(req, res) {
   res.render('forgot.ejs', {title: 'Forgot', user: req.session.user})
 }
 
-function onAccount(req, res) {
-    res.render('account.ejs', {title: 'Account', user: req.session.user, error: null})
+async function onAccount(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+  const user = await collection.findOne({ username: req.session.user.username })
+  
+  res.render('account.ejs', {title: 'Account', user: req.session.user, friends: user.friends, error: null})
 }
 
 function onLogin(req, res) {
@@ -435,4 +441,27 @@ async function onResetPassword(req, res) {
     }
 
     res.render('login.ejs', { title: 'Login', user: req.session.user })
+  }
+
+  async function onFriends(req, res) {
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+    const users = await collection.find().toArray()
+    res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user})
+  }
+
+  async function onAddFriend(req, res) {
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+    const friend = req.body.friend
+    const user = req.session.user.username
+
+   await collection.updateOne(
+     { username: user },
+      { $addToSet: { friends: friend } }
+    )
+
+
+    res.redirect('/friends')
   }

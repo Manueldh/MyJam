@@ -1283,3 +1283,9 @@ form > button{
 .confirm > h1{
     font-weight: 400;
 }
+
+/* friends pagina */
+
+.friends {
+    color: var(--main-color-grey);
+}

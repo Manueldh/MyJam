@@ -11,6 +11,15 @@
     
      <h1>Hallo, <%= user.username %></h1>
      <a href="/logout">log out</a>
+     <button class="show-friends"><%= friends.length %> friends</button>
+     <dialog>
+      <h2>Your friends</h2>
+      <ul>
+      <% friends.forEach(friend => { %>})
+        <li><a href="/profile/<%= friend %>"><%= friend %></a></li>
+        <% }) %>
+      </ul>
+      </dialog>
         <button class="edit-details">edit details</button>
         <form class="test" action="/editInfo" method="POST">
           <label for="email">Email</label>

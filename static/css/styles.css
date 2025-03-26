@@ -728,10 +728,55 @@ form > button{
                 cursor: pointer;
             }
 
+            .right-column .results-container .song .actions button.playUnavailable {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
                 .right-column .results-container .song .actions button svg {
                     fill: var(--main-text-color);
                     width: 1.7em;
                 }
+
+    .right-column #pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 2em 0;
+    }
+
+        .right-column #pagination button {
+            appearance: none;
+            color: var(--main-text-color);
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            font-family: var(--main-font);
+            cursor: pointer;
+        }
+
+        .right-column #pagination button.active {
+            border-bottom: 2px solid var(--main-text-color);
+            scale: 1.2;
+        }
+
+        .right-column #pagination button.previousBtn, .right-column #pagination button.nextBtn {
+            fill: var(--main-link-color);
+            width: 1em;
+        }
+
+        .right-column #pagination button.previousBtn {
+            rotate: 90deg;
+        }
+
+        .right-column #pagination button.nextBtn {
+            rotate: -90deg;
+        }
+
+        .right-column #pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
 @media (max-width: 1100px) {
     .filter-sort{

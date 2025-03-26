@@ -46,15 +46,47 @@ function checkIfScrollable() {
     } else {
       scrollContainer.classList.remove('no-scroll')
     }
-  }
+}
   
   checkIfScrollable()
   
-  window.addEventListener('resize', checkIfScrollable)
+function addFilterMenuBackground() {
+    if (window.innerWidth <= 750) {
+        if (!filterSortContent.contains(filterMenuBackground)) {
+            filterSortContent.appendChild(filterMenuBackground)
+            filterMenuBackground.classList.add('filterMenuClosed')
+
+            if (!filterMenuBackground.querySelector('.closeFiltersBtn')) {
+                const filterCloseBtn = document.createElement('button')
+                filterMenuBackground.appendChild(filterCloseBtn)
+                filterCloseBtn.classList.add('closeFiltersBtn')
+
+                const closeBtnImg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+                closeBtnImg.setAttribute("viewBox", "6 6 12 12")
+                closeBtnImg.setAttribute("xmlns", "http://www.w3.org/2000/svg")
+                closeBtnImg.innerHTML = `<path d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16"/>`
+                filterCloseBtn.appendChild(closeBtnImg)
+            }
+        }
+    } else {
+        if (filterSortContent.contains(filterMenuBackground)) {
+            filterMenuBackground.remove()
+        }
+    }
+}
+
+window.addEventListener('resize', checkIfScrollable)
 
 document.addEventListener('DOMContentLoaded', function () {
     const filtersContainer = document.querySelector('#selected-filters')
     const checkboxes = document.querySelectorAll("input[type='checkbox']")
+
+    const itemsPerPage = 20
+    let currentPage = 1
+
+    const container = document.querySelector("#results")
+    const tracks = Array.from(container.children)
+    const paginationContainer = document.querySelector('#pagination')
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
@@ -99,6 +131,68 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function showPage(page) {
+        let start = (page - 1) * itemsPerPage
+        let end = start + itemsPerPage
+
+        tracks.forEach((track, index) => {
+            track.style.display = index >= start && index < end ? "" : "none"
+        })
+
+        renderPagination()
+    }
+
+    function renderPagination() {
+        paginationContainer.innerHTML = ""
+        let totalPages = Math.ceil(tracks.length / itemsPerPage)
+
+        if (totalPages <= 1) return
+
+        const prev = document.createElement("button")
+        const inBtnArrowLeft = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+        prev.classList.add('previousBtn')
+        inBtnArrowLeft.setAttribute("viewBox", "0 0 12 9")
+        inBtnArrowLeft.setAttribute("xmlns", "http://www.w3.org/2000/svg")
+        inBtnArrowLeft.innerHTML = `<path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>`
+        prev.disabled = currentPage === 1
+        prev.addEventListener("click", () => {
+            currentPage--
+            showPage(currentPage)
+        })
+        prev.appendChild(inBtnArrowLeft)
+        paginationContainer.appendChild(prev)
+
+        for (let i = 1; i <= totalPages; i++) {
+            let btn = document.createElement("button")
+            btn.innerText = i
+            if (currentPage === i) {
+                btn.classList.add("active")
+            }
+            btn.addEventListener("click", () => {
+                currentPage = i
+                showPage(currentPage)
+            })
+            paginationContainer.appendChild(btn)
+        }
+
+        const next = document.createElement("button")
+        const inBtnArrowRight = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+        prev.classList.add('previousBtn')
+        inBtnArrowRight.setAttribute("viewBox", "0 0 12 9")
+        inBtnArrowRight.setAttribute("xmlns", "http://www.w3.org/2000/svg")
+        inBtnArrowRight.innerHTML = `<path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>`
+        next.classList.add('nextBtn')
+        next.disabled = currentPage === totalPages
+        next.addEventListener("click", () => {
+            currentPage++
+            showPage(currentPage)
+        })
+        next.appendChild(inBtnArrowRight)
+        paginationContainer.appendChild(next)
+    }
+
+    showPage(currentPage)
+
     function restoreFilters() {
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
@@ -110,47 +204,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     restoreFilters()
 })
-/*
-function addFilterMenuBackground() {
-    if (window.innerWidth <= 750) {
-        filterSortContent.appendChild(filterMenuBackground)
-        filterMenuBackground.classList.add('filterMenuClosed')
-
-        const filterCloseBtn = document.createElement('button')
-        filterMenuBackground.appendChild(filterCloseBtn)
-        filterCloseBtn.classList.add('closeFiltersBtn')
-
-        const closeBtnImg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-        closeBtnImg.setAttribute("viewBox", "0 0 24 24")
-        closeBtnImg.innerHTML = `<path d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16"/>`
-        filterCloseBtn.appendChild(closeBtnImg)
-    }
-}*/
-
-function addFilterMenuBackground() {
-    if (window.innerWidth <= 750) {
-        if (!filterSortContent.contains(filterMenuBackground)) {
-            filterSortContent.appendChild(filterMenuBackground)
-            filterMenuBackground.classList.add('filterMenuClosed')
-
-            if (!filterMenuBackground.querySelector('.closeFiltersBtn')) {
-                const filterCloseBtn = document.createElement('button')
-                filterMenuBackground.appendChild(filterCloseBtn)
-                filterCloseBtn.classList.add('closeFiltersBtn')
-
-                const closeBtnImg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-                closeBtnImg.setAttribute("viewBox", "6 6 12 12")
-                closeBtnImg.setAttribute("xmlns", "http://www.w3.org/2000/svg")
-                closeBtnImg.innerHTML = `<path d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16"/>`
-                filterCloseBtn.appendChild(closeBtnImg)
-            }
-        }
-    } else {
-        if (filterSortContent.contains(filterMenuBackground)) {
-            filterMenuBackground.remove()
-        }
-    }
-}
 
 buttonInstruments.addEventListener('click', showInstrumentOptions)
 buttonGenre.addEventListener('click', showGenreOptions)

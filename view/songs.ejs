@@ -1,71 +1,34 @@
-<div class="song">
-    <div class="song-info-container">
-        <img class="cover" src="/static/Images/song-cover-test.jpg" alt="Song cover">  <!-- Song Image -->
-        <div class="song-info">
-            <span class="title">All My Love</span>  <!-- Song Title -->
-            <span class="artist">Led Zeppelin</span>  <!-- Song Artist -->
+<% tracks.forEach(track => { %>
+    <div class="song" data-spotify-id="<%= track.spotifyId %>">
+        <div class="song-info-container">
+            <img class="cover" src="<%= track.albumCover %>" alt="<%= track.album %> cover">  <!-- Song Image -->
+            <div class="song-info">
+                <span class="title"><%= track.trackName %></span>  <!-- Song Title -->
+                <span class="artist"><%= track.artist %></span>  <!-- Song Artist -->
+            </div>
+        </div>
+        <span class="date-added"><%= track.releaseDate %></span>  <!-- Song Date added -->
+        <span class="duration"><%= Math.floor(track.duration / 60000) %>:<%= (Math.floor((track.duration % 60000) / 1000)).toString().padStart(2, '0') %></span>  <!-- Song Duration -->
+        <div class="actions">
+            <button class="favorite">
+                <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
+                </svg>
+            </button>
+            <% if (track.previewUrl) { %>
+                <audio id="audio-<%= track._id %>" src="<%= track.previewUrl %>"></audio>
+                <button class="play" onclick="document.getElementById('audio-<%= track._id %>').play()">
+                    <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
+                    </svg>
+                </button>
+            <% } else { %>
+                <button class="playUnavailable">
+                    <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
+                    </svg>
+                </button>
+            <% } %>
         </div>
     </div>
-    <span class="date-added">28 Feb 2025</span>  <!-- Song Date added -->
-    <span class="duration">5:15</span>  <!-- Song Duration -->
-    <div class="actions">
-        <button class="favorite">
-            <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
-            </svg>
-        </button>
-        <button class="play">
-            <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
-            </svg>
-        </button>
-    </div>
-</div>
-
-<!-- Tijdelijk voor vulling en styling -->
-<div class="song">
-    <div class="song-info-container">
-        <img class="cover" src="/static/Images/song-cover-test2.jpg" alt="Song cover">
-        <div class="song-info">
-            <span class="title">Under the Bridge</span>
-            <span class="artist">Red Hot Chili Peppers</span>
-        </div>
-    </div>
-    <span class="date-added">28 Feb 2025</span>
-    <span class="duration">4:24</span>
-    <div class="actions">
-        <button class="favorite">
-            <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
-            </svg>
-        </button>
-        <button class="play">
-            <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
-            </svg>
-        </button>
-    </div>
-</div>
-<div class="song">
-    <div class="song-info-container">
-        <img class="cover" src="/static/Images/song-cover-test3.jpg" alt="Song cover">
-        <div class="song-info">
-            <span class="title">Fat Bottomed Girls</span>
-            <span class="artist">Queen</span>
-        </div>
-    </div>
-    <span class="date-added">27 Feb 2025</span>
-    <span class="duration">4:15</span>
-    <div class="actions">
-        <button class="favorite">
-            <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
-            </svg>
-        </button>
-        <button class="play">
-            <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.753 8.21545C12.9692 8.04818 13.1441 7.83365 13.2645 7.5883C13.3848 7.34294 13.4474 7.07329 13.4474 6.8C13.4474 6.52671 13.3848 6.25706 13.2645 6.0117C13.1441 5.76635 12.9692 5.55182 12.753 5.38455C9.95406 3.21952 6.82905 1.51268 3.49474 0.327781L2.88505 0.111169C1.71982 -0.302448 0.488311 0.485572 0.33052 1.68908C-0.110173 5.08211 -0.110173 8.51789 0.33052 11.9109C0.489244 13.1144 1.71982 13.9024 2.88505 13.4888L3.49474 13.2722C6.82905 12.0873 9.95406 10.3805 12.753 8.21545Z"/>
-            </svg>
-        </button>
-    </div>
-</div>
+<% }) %>

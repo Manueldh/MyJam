@@ -34,6 +34,7 @@ app
   .get('/home', onHome)
   .get('/forgot', onForgot)
   .get('/friends', onFriends)
+  .get('/profile/:username', onProfile)
 
 
   .post('/submitInlog', onSubmitInlog)
@@ -464,4 +465,14 @@ async function onResetPassword(req, res) {
 
 
     res.redirect('/friends')
+  }
+
+  async function onProfile(req, res){
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+    const user = await collection.findOne({ username: req.params.username })
+
+    res.render('profile.ejs', { title: 'Profile', user: req.session.user, profile: user })
+
   }

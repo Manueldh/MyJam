@@ -219,8 +219,24 @@ async function tracksToFrontend(req, res) {
   try {
     const dataBase = client.db(process.env.DB_NAME)
     const collection = dataBase.collection('music-data') // Zorg dat dit de juiste collectie is
+    const usersCollection = dataBase.collection(process.env.DB_COLLECTION)
 
-    const tracks = await collection.find().toArray() // Haal alle tracks op
+    let user = null
+    let favorites = []
+
+    const tracks = await collection.find().toArray() // Haal alle tracks op)
+
+    if (req.session.user) {
+      user = await usersCollection.findOne({ username: req.session.user.username });
+      favorites = user.favorites
+      tracks.forEach(track => {
+        track.isFavorite = favorites.includes(track.spotifyId);
+      });
+    } else {
+      tracks.forEach(track => {
+        track.isFavorite = false;
+      });
+    }
 
     const enrichedTracks = await Promise.all(
       tracks.map(async (track) => {

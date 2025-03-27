@@ -193,7 +193,20 @@ h1{
     display: flex;
     justify-content: center;
     align-items: center; 
-    margin-top: 150px;
+    margin-top: 120px;
+    margin-bottom: 100px;
+}
+
+.form-links {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.5em;
+}
+
+.form-links a{
+    color: var(--color-light);
+    font-family: var(--main-font);
+    font-size: .8em;
 }
 
 
@@ -242,6 +255,40 @@ form > button{
         font-size: 14px;
     }
 
+
+    @media (max-width: 1024px) {
+        .inner-login {
+            width: 60%; 
+            padding: 2em; 
+        }
+    
+        .login {
+            margin-top: 100px; 
+        }
+    }
+    
+
+    @media (max-width: 768px) {
+        .inner-login {
+            width: 80%; 
+            padding: 2em; 
+        }
+    
+        .login {
+            margin-top: 80px; 
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .inner-login {
+            width: 90%; 
+            padding: 2em; 
+        }
+    
+        .login {
+            margin-top: 50px; 
+        }
+    }
 
 /* Instrument page */
 

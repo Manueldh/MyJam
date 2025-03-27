@@ -28,14 +28,14 @@ app
   .get('/genre', onGenre)
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
-  .get('/filter-sorteer', onFilterSorteer)
+  .get('/filter-sorteer', tracksToFrontend)
+  .get('/api/tracks', tracksToFrontend)
   .get('/account', loginCheck, onAccount)
   .get('/favorites', onFavorites)
   .get('/home', onHome)
   .get('/forgot', onForgot)
   .get('/friends', onFriends)
   .get('/profile/:username', onProfile)
-
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
@@ -49,7 +49,7 @@ app
 
 
 // ********************************************************************************************************
-// ******************************************************************************************************** 
+// ********************************************************************************************************
 // *******************************************SPOTIFY API**************************************************
 // ********************************************************************************************************
 // ********************************************************************************************************
@@ -218,6 +218,59 @@ function onDifficulty(req, res) {
 
 function onFilterSorteer(req, res) {
   res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user})
+}
+
+async function tracksToFrontend(req, res) {
+  try {
+    const dataBase = client.db(process.env.DB_NAME)
+    const collection = dataBase.collection('music-data') // Zorg dat dit de juiste collectie is
+
+    const tracks = await collection.find().toArray() // Haal alle tracks op
+
+    const enrichedTracks = await Promise.all(
+      tracks.map(async (track) => {
+        // Controleer of de gegevens al in de database staan
+        if (track.album && track.albumCover && track.duration && track.releaseDate && track.popularity) {
+          return track; // Gebruik de opgeslagen gegevens
+        }
+
+        try {
+          const spotifyData = await spotifyApi.getTrack(track.spotifyId);
+
+          // Update de track in de database met de nieuwe gegevens
+          await collection.updateOne(
+            { _id: track._id },
+            {
+              $set: {
+                album: spotifyData.body.album.name,
+                albumCover: spotifyData.body.album.images[0]?.url,
+                duration: spotifyData.body.duration_ms,
+                releaseDate: spotifyData.body.album.release_date,
+                popularity: spotifyData.body.popularity
+              }
+            }
+          )
+
+          return {
+            ...track,
+            album: spotifyData.body.album.name,
+            albumCover: spotifyData.body.album.images[0]?.url,
+            duration: spotifyData.body.duration_ms,
+            releaseDate: spotifyData.body.album.release_date,
+            popularity: spotifyData.body.popularity
+          }
+        } catch (err) {
+          console.error(`❌ Fout bij ophalen Spotify-gegevens voor track ${track.spotifyId}:`, err)
+          return track; // Retourneer het originele track-object als er een fout optreedt
+        }
+      })
+    )
+
+    res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user, tracks: enrichedTracks,}) // Stuur de tracks als JSON naar de frontend
+  } catch (err) {
+    console.error('❌ Failed to fetch tracks:', err)
+    res.status(500).json({ error: 'Failed to fetch tracks' })
+  }
 }
 
 function onFavorites(req, res) {

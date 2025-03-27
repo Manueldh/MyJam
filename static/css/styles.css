@@ -193,7 +193,20 @@ h1{
     display: flex;
     justify-content: center;
     align-items: center; 
-    margin-top: 150px;
+    margin-top: 120px;
+    margin-bottom: 100px;
+}
+
+.form-links {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1.5em;
+}
+
+.form-links a{
+    color: var(--color-light);
+    font-family: var(--main-font);
+    font-size: .8em;
 }
 
 
@@ -243,6 +256,40 @@ form > button{
     }
 
 
+    @media (max-width: 1024px) {
+        .inner-login {
+            width: 60%; 
+            padding: 2em; 
+        }
+    
+        .login {
+            margin-top: 100px; 
+        }
+    }
+    
+
+    @media (max-width: 768px) {
+        .inner-login {
+            width: 80%; 
+            padding: 2em; 
+        }
+    
+        .login {
+            margin-top: 80px; 
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .inner-login {
+            width: 90%; 
+            padding: 2em; 
+        }
+    
+        .login {
+            margin-top: 50px; 
+        }
+    }
+
 /* Instrument page */
 
 
@@ -266,7 +313,7 @@ form > button{
         background-size: cover;
         background-position: center;
         border: none;
-        border-radius: 10px;
+        border-radius: .8em;
         background-color: var(--nav-primary-color);
         color: var(--main-text-color);
         font-size: 1.2em;
@@ -292,6 +339,7 @@ form > button{
         appearance: none;
         border: none;
         position: absolute;
+        cursor: pointer;
         width: 100%;
         height: 100%;
         top: 0;
@@ -303,6 +351,55 @@ form > button{
             transition: .2s all ease;
         }
 
+        @media (max-width: 1024px) {
+            .filter-container ul {
+                grid-template-columns: repeat(3, 1fr); 
+                padding: 20px 50px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .filter-container ul {
+                grid-template-columns: repeat(2, 1fr); 
+                padding: 15px 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .filter-container ul {
+                grid-template-columns: 1fr; 
+                padding: 10px 20px;
+            }
+
+            .kop-instrument, .kop-genre, .kop-difficulty {
+                text-align: center; 
+                padding: 15px 10px 0;
+                font-size: 1.5rem; 
+            }
+        }
+
+        /* Animatie filter opties */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px); 
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0); 
+            }
+        }
+        
+        .item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .item.animate {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
 
 /* .instrument-button:focus nog doen */
 
@@ -326,6 +423,82 @@ form > button{
     }
         .progress-buttons button > img{
             padding: 0 7px;
+        }
+
+
+/* Instrument images */
+        #Electric-guitar{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/electric-guitar.jpg');
+          background-size: cover;
+        }
+
+        #Acoustic-guitar{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/acoustic-guitar.jpg');
+          background-size: cover;
+        }
+        
+        #Bass-guitar{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/bass-guitar.jpg');
+          background-size: cover;
+          background-position: bottom;
+        }
+        
+        #Drums{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/drums.jpg');
+          background-size: cover;
+        }
+        
+        #Piano{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/Piano.jpg');
+          background-size: cover;
+        }
+        
+        #Ukelele{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/ukelele.jpg');
+          background-size: cover;
+          background-position: bottom;
+        }
+        
+        #Violin{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/violin.jpg');
+          background-size: cover;
+        }
+        
+        #Saxophone{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/saxophone.jpg');
+          background-size: cover;
+        }
+        
+        #Trumpet{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/trumpet.jpg');
+          background-size: cover;
+        }
+        
+        #Flute{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/flute.jpg');
+          background-size: cover;
+        }
+        
+        #Cello{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/cello.jpg');
+          background-size: cover;
+        }
+        
+        #Accordion{
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                      url('../images/accordion.jpg');
+          background-size: cover;
         }
 
 /* Difficulty page */
@@ -371,6 +544,92 @@ form > button{
         width: 80%;
         max-width: 500px;
     }
+
+    .difficulty-container {
+        display: flex;
+        flex-direction: column; /* Zorg ervoor dat de items onder elkaar staan */
+        align-items: center;
+        gap: 20px; /* Ruimte tussen de items */
+        padding: 20px;
+        list-style: none; /* Verwijder standaard bullet points */
+        margin: 0;
+    }
+    
+    .difficulty-container li {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        width: 80%; /* Zorg ervoor dat de items een breedte hebben */
+        max-width: 500px; /* Maximale breedte */
+        background-size: cover;
+        background-position: center;
+        border: none;
+        border-radius: 10px;
+        background-color: var(--nav-primary-color);
+        color: var(--main-text-color);
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: transform 0.2s, border 0.2s;
+    }
+    
+    .difficulty-container li:hover {
+        transform: scale(1.05); /* Vergroot het item bij hover */
+    }
+    
+    .difficulty-container label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        position: relative;
+        border-radius: 10px;
+    }
+    
+    .difficulty-container input[type="checkbox"] {
+        -webkit-appearance: none; /* Verwijder standaardstijl in WebKit-browsers */
+        appearance: none; /* Verwijder standaardstijl in moderne browsers */
+        border: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0; /* Maak de checkbox onzichtbaar */
+    }
+        .difficulty-container label:has(input[type="checkbox"]:checked) {
+            color: var(--main-link-color);
+            border: #FF7300 2px solid;
+            transition: .2s all ease;
+        }
+    
+
+
+    @media (max-width: 1024px) {
+    .filter-container ul {
+        grid-template-columns: repeat(3, 1fr); /* 3 kolommen */
+        padding: 20px 50px;
+    }
+}
+
+/* Kleine schermen (mobiele telefoons) */
+@media (max-width: 768px) {
+    .filter-container ul {
+        grid-template-columns: repeat(2, 1fr); /* 2 kolommen */
+        padding: 15px 30px;
+    }
+}
+
+/* Zeer kleine schermen */
+@media (max-width: 480px) {
+    .filter-container ul {
+        grid-template-columns: 1fr; /* 1 kolom */
+        padding: 10px 20px;
+    }
+}
     
 
 /* Filter & Sorting page */
@@ -1282,6 +1541,22 @@ form > button{
         }
 }
 
+.random{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-link-color);
+    color: var(--color-light);
+    font-family: var(--main-font);
+    cursor: pointer;
+    margin-top: 10em;
+}
+
+#liedjeWeergave{
+    color: var(--color-light);
+
+}
+
 /* Home page */
 .home{
     display: flex;
@@ -1325,6 +1600,12 @@ form > button{
     text-align: center;
 }
 
-.confirm > h1{
+.confirm h1{
     font-weight: 400;
+}
+
+/* friends pagina */
+
+.friends {
+    color: var(--main-color-grey);
 }

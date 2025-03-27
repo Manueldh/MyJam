@@ -13,8 +13,23 @@
     </header>
 
     <main>
+        <h1><%= profile.username %> profile</h1>
+        <button class="showFriends"><%= profile.friends ? profile.friends.length : 0%> friend(s)</button>
+        <dialog class="showFriendsModal">
+         <h2>Your friends</h2>
+         <ul>
+            <% if (profile.friends) { %>
+                <% profile.friends.forEach(friend => { %>
+                  <li><a href="/profile/<%= friend %>"><%= friend %></a></li>
+                <% }) %>
+              <% } else { %>
+                <li>No friends added yet.</li>
+              <% } %>
+           </ul>
+         <button class="modalClose">x</button>
+        </dialog>
         <section class="favorite-container">
-            <h2>Favorites</h2>
+            <h2> <%= profile.username %> Favorites</h2>
             <div class="favorite-top-bar">
                 <span>Title</span>
                 <span>Date added</span>
@@ -27,16 +42,11 @@
             <div id="favorite-songs">
                 <%- include ('songs') %>
             </div>
-
-            <button class="random" id="liedjeWeergave">Spin random</button>
-
         </section>
     </main>
 
     <footer></footer>
-
-    <script src="static/scripts/randomizer.js"></script>
-
+    <script src="/static/scripts/index.js"></script> 
 </body>
 
 

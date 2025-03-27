@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <%- include ('head') %>
+  </head>
+
+<body>
+    
+    <header>
+
+        <%- include ('menu') %>
+    </header>
+
+    <main>
+
+        <h1>Add your friends!</h1>
+
+        <div id="user-list">
+            <input class="search" placeholder="Search for friends..." />
+            <ul class="list">
+                <% users.forEach(user => { %>
+                    <li class="friendProfile">
+                        <p class="friends"><%= user.username %></p>
+                        <form action="/addFriend" method="POST">
+                            <input type="hidden" name="friend" value="<%= user.username %>">
+                            <button type="submit">Add Friend</button>
+                        </form>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+    <script src="static/scripts/friends.js"></script>
+
+</body>
+
+
+</html>

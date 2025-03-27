@@ -264,7 +264,7 @@ async function tracksToFrontend(req, res) {
                 albumCover: spotifyData.body.album.images[0]?.url,
                 duration: spotifyData.body.duration_ms,
                 releaseDate: spotifyData.body.album.release_date,
-                popularity: spotifyData.body.popularity
+                popularity: spotifyData.body.popularity,
               }
             }
           )

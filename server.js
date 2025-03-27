@@ -41,6 +41,7 @@ app
   .post('/editPassword', onEditPassword)
   .post('/forgotAuth', onForgotAuth)
   .post('/resetPassword', onResetPassword)
+  .post('/addToFavorites', addToFavorites)
 
   .listen(4497)
 
@@ -489,3 +490,28 @@ async function onResetPassword(req, res) {
 
     res.render('login.ejs', { title: 'Login', user: req.session.user })
   }
+
+
+async function addToFavorites(req, res) {
+  console.log("hij laadt")
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  try {
+    await collection.updateOne(
+      { username: req.session.user.username },
+      {
+        $addToSet: {
+          favorites: req.body.spotifyId
+        }
+      }
+    )
+    console.log("Updaten gaat goed")
+    res.redirect('/filter-sorteer')
+  } catch {
+    console.log('Updaten gaat niet goed')
+    res.redirect('/filter-sorteer')
+  }
+}
+
+

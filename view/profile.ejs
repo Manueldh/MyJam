@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <%- include ('head') %>
+  </head>
+
+<body>
+    
+    <header>
+
+        <%- include ('menu') %>
+    </header>
+
+    <main>
+        <h1><%= profile.username %> profile</h1>
+        <button class="showFriends"><%= profile.friends ? profile.friends.length : 0%> friend(s)</button>
+        <dialog class="showFriendsModal">
+         <h2>Your friends</h2>
+         <ul>
+            <% if (profile.friends) { %>
+                <% profile.friends.forEach(friend => { %>
+                  <li><a href="/profile/<%= friend %>"><%= friend %></a></li>
+                <% }) %>
+              <% } else { %>
+                <li>No friends added yet.</li>
+              <% } %>
+           </ul>
+         <button class="modalClose">x</button>
+        </dialog>
+        <section class="favorite-container">
+            <h2> <%= profile.username %> Favorites</h2>
+            <div class="favorite-top-bar">
+                <span>Title</span>
+                <span>Date added</span>
+                <span>
+                    <svg viewBox="0 0 15 17" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.60256 1.6H8.80256C9.24256 1.6 9.60256 1.24 9.60256 0.8C9.60256 0.36 9.24256 0 8.80256 0H5.60256C5.16256 0 4.80256 0.36 4.80256 0.8C4.80256 1.24 5.16256 1.6 5.60256 1.6ZM12.8266 5.112L13.4266 4.512C13.5745 4.36316 13.6575 4.16184 13.6575 3.952C13.6575 3.74216 13.5745 3.54084 13.4266 3.392L13.4186 3.384C13.2697 3.23607 13.0684 3.15305 12.8586 3.15305C12.6487 3.15305 12.4474 3.23607 12.2986 3.384L11.6986 3.984C10.4245 2.95855 8.83805 2.39962 7.20256 2.4C3.36256 2.4 0.0985606 5.568 0.00256063 9.408C-0.0230899 10.3696 0.14419 11.3265 0.494522 12.2223C0.844854 13.1181 1.37114 13.9347 2.04229 14.6237C2.71344 15.3128 3.51586 15.8604 4.40216 16.2342C5.28846 16.6079 6.24067 16.8003 7.20256 16.8C8.55801 16.8007 9.8861 16.4186 11.0339 15.6976C12.1816 14.9766 13.1024 13.946 13.6901 12.7246C14.2778 11.5032 14.5086 10.1406 14.3558 8.7938C14.203 7.44699 13.6729 6.17073 12.8266 5.112ZM8.00256 9.6C8.00256 10.04 7.64256 10.4 7.20256 10.4C6.76256 10.4 6.40256 10.04 6.40256 9.6V6.4C6.40256 5.96 6.76256 5.6 7.20256 5.6C7.64256 5.6 8.00256 5.96 8.00256 6.4V9.6Z"/>
+                    </svg>
+                </span>
+            </div>
+            <div id="favorite-songs">
+                <%- include ('songs') %>
+            </div>
+        </section>
+    </main>
+
+    <footer></footer>
+    <script src="/static/scripts/index.js"></script> 
+</body>
+
+
+</html>

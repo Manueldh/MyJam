@@ -1,4 +1,7 @@
 
+const showfriends = document.querySelector('.showFriends')
+const showfriendsModal = document.querySelector('.showFriendsModal')
+const showfriendsClose = document.querySelector('.modalClose')
 const editDetails = document.querySelector('.edit-details'); 
 
 let originalValues = {}; // Hier bewaren we de originele waarden
@@ -35,3 +38,13 @@ function toggleEditing() {
 editDetails.addEventListener('click', toggleEditing);
 
 
+if (showfriends && showfriendsModal && showfriendsClose) {
+  showfriends.addEventListener('click', () => {
+    showfriendsModal.showModal()
+  })
+
+
+  showfriendsClose.addEventListener('click', () => {
+    showfriendsModal.close()
+  })
+}

@@ -1,23 +1,37 @@
-const editDetails = document.querySelector('.edit-details')
+
+const editDetails = document.querySelector('.edit-details'); 
+
+let originalValues = {}; // Hier bewaren we de originele waarden
 
 function toggleEditing() {
+  const emailField = document.querySelector('.email');
+  const usernameField = document.querySelector('.username');
 
-  const emailField = document.querySelector('.email')
-  const usernameField = document.querySelector('.username')
-  const passwordField = document.querySelector('.password')
-
-
-  emailField.toggleAttribute('readonly');
-  usernameField.toggleAttribute('readonly')
-  passwordField.toggleAttribute('readonly')
-
+  // Als we naar bewerkmodus gaan, sla de originele waarden op. 
+  // If else statement om te checken of het readonly is of niet.
   if (emailField.hasAttribute('readonly')) {
-    editDetails.textContent = 'change info'
+    originalValues.email = emailField.value;
+    originalValues.username = usernameField.value;
   } else {
-    editDetails.textContent = 'cancel'
-  };
+    // Als we annuleren, zet de oude waarden terug
+    emailField.value = originalValues.email;
+    usernameField.value = originalValues.username;
+  }
+
+  // Toggle de readonly status, wat betekent of je het invoerveld kan bewerken of niet. 
+  // Als het readonly is, kan je het niet bewerken.
+  emailField.toggleAttribute('readonly');
+  usernameField.toggleAttribute('readonly');
+
+  // Pas de knoptekst aan
+  if (emailField.hasAttribute('readonly')) {
+    editDetails.textContent = 'edit details';
+  } else {
+    editDetails.textContent = 'cancel';
+  }
 }
 
-editDetails.addEventListener('click', toggleEditing)
+// Event listener voor de knop
+editDetails.addEventListener('click', toggleEditing);
 
 

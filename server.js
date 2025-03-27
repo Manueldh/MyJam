@@ -42,6 +42,7 @@ app
   .post('/forgotAuth', onForgotAuth)
   .post('/resetPassword', onResetPassword)
   .post('/addToFavorites', addToFavorites)
+  .post('/removeFromFavorites', removeFromFavorites)
 
   .listen(4497)
 
@@ -514,4 +515,21 @@ async function addToFavorites(req, res) {
   }
 }
 
+async function removeFromFavorites(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
 
+  try {
+    await collection.updateOne(
+      { username: req.session.user.username },
+      {
+        $pull: {
+          favorites: req.body.spotifyId
+        }
+      }
+    )
+    res.redirect('/filter-sorteer')
+  } catch {
+    res.redirect('/filter-sorteer')
+  }
+}

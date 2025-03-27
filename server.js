@@ -43,6 +43,8 @@ app
   .post('/editPassword', onEditPassword)
   .post('/forgotAuth', onForgotAuth)
   .post('/resetPassword', onResetPassword)
+  .post('/addToFavorites', addToFavorites)
+  .post('/removeFromFavorites', removeFromFavorites)
   .post('/addFriend', onAddFriend)
 
   .listen(4497)
@@ -224,8 +226,24 @@ async function tracksToFrontend(req, res) {
   try {
     const dataBase = client.db(process.env.DB_NAME)
     const collection = dataBase.collection('music-data') // Zorg dat dit de juiste collectie is
+    const usersCollection = dataBase.collection(process.env.DB_COLLECTION)
 
-    const tracks = await collection.find().toArray() // Haal alle tracks op
+    let user = null
+    let favorites = []
+
+    const tracks = await collection.find().toArray() // Haal alle tracks op)
+
+    if (req.session.user) {
+      user = await usersCollection.findOne({ username: req.session.user.username });
+      favorites = user.favorites
+      tracks.forEach(track => {
+        track.isFavorite = favorites.includes(track.spotifyId);
+      });
+    } else {
+      tracks.forEach(track => {
+        track.isFavorite = false;
+      });
+    }
 
     const enrichedTracks = await Promise.all(
       tracks.map(async (track) => {
@@ -497,35 +515,77 @@ async function onResetPassword(req, res) {
     res.render('login.ejs', { title: 'Login', user: req.session.user })
   }
 
-  async function onFriends(req, res) {
-    const dataBase = client.db(process.env.DB_NAME)
-    const collection = dataBase.collection(process.env.DB_COLLECTION)
-    const users = await collection.find().toArray()
-    res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user})
-  }
 
-  async function onAddFriend(req, res) {
-    const dataBase = client.db(process.env.DB_NAME)
-    const collection = dataBase.collection(process.env.DB_COLLECTION)
+async function addToFavorites(req, res) {
+  console.log("hij laadt")
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
 
-    const friend = req.body.friend
-    const user = req.session.user.username
-
-   await collection.updateOne(
-     { username: user },
-      { $addToSet: { friends: friend } }
+  try {
+    await collection.updateOne(
+      { username: req.session.user.username },
+      {
+        $addToSet: {
+          favorites: req.body.spotifyId
+        }
+      }
     )
-
-
-    res.redirect('/friends')
+    console.log("Updaten gaat goed")
+    res.redirect('/filter-sorteer')
+  } catch {
+    console.log('Updaten gaat niet goed')
+    res.redirect('/filter-sorteer')
   }
+}
 
-  async function onProfile(req, res){
-    const dataBase = client.db(process.env.DB_NAME)
-    const collection = dataBase.collection(process.env.DB_COLLECTION)
+async function removeFromFavorites(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
 
-    const user = await collection.findOne({ username: req.params.username })
-
-    res.render('profile.ejs', { title: 'Profile', user: req.session.user, profile: user })
-
+  try {
+    await collection.updateOne(
+      { username: req.session.user.username },
+      {
+        $pull: {
+          favorites: req.body.spotifyId
+        }
+      }
+    )
+    res.redirect('/filter-sorteer')
+  } catch {
+    res.redirect('/filter-sorteer')
   }
+}
+
+async function onFriends(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+  const users = await collection.find().toArray()
+  res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user})
+}
+
+async function onAddFriend(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  const friend = req.body.friend
+  const user = req.session.user.username
+
+ await collection.updateOne(
+   { username: user },
+    { $addToSet: { friends: friend } }
+  )
+
+
+  res.redirect('/friends')
+}
+
+async function onProfile(req, res){
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  const user = await collection.findOne({ username: req.params.username })
+
+  res.render('profile.ejs', { title: 'Profile', user: req.session.user, profile: user })
+
+}

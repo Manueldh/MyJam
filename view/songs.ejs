@@ -10,11 +10,25 @@
         <span class="date-added"><%= track.releaseDate %></span>  <!-- Song Date added -->
         <span class="duration"><%= Math.floor(track.duration / 60000) %>:<%= (Math.floor((track.duration % 60000) / 1000)).toString().padStart(2, '0') %></span>  <!-- Song Duration -->
         <div class="actions">
-            <button class="favorite">
-                <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
-                </svg>
-            </button>
+        <% if (track.isFavorite) { %>
+            <form action="/removeFromFavorites" method="POST">
+                <input type="hidden" name="spotifyId" value="<%= track.spotifyId %>">
+                <button style="background-color: red;" class="favorite">
+                    <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
+                    </svg>
+                </button>
+            </form>
+            <% } else { %>
+            <form action="/addToFavorites" method="POST">
+                <input type="hidden" name="spotifyId" value="<%= track.spotifyId %>">
+                <button class="favorite">
+                    <svg viewBox="0 0 16 14" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.197 0C9.63962 0 8.29486 0.912 7.61905 2.24229C6.94324 0.912 5.59848 0 4.04114 0C1.80876 0 0 1.872 0 4.176C0 6.48 1.38438 8.592 3.17333 10.3269C4.96229 12.0617 7.61905 13.7143 7.61905 13.7143C7.61905 13.7143 10.1897 12.0891 12.0648 10.3269C14.0648 8.448 15.2381 6.48686 15.2381 4.176C15.2381 1.86514 13.4293 0 11.197 0Z"/>
+                    </svg>
+                </button>
+            </form>
+            <% } %>
             <% if (track.previewUrl) { %>
                 <audio id="audio-<%= track._id %>" src="<%= track.previewUrl %>"></audio>
                 <button class="play" onclick="document.getElementById('audio-<%= track._id %>').play()">

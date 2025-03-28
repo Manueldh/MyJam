@@ -1,5 +1,13 @@
 <% tracks.forEach(track => { %>
-    <div class="song" data-spotify-id="<%= track.spotifyId %>">
+    <div class="song" 
+        data-spotify-id="<%= track.spotifyId %>"
+        data-genre="<%= track.genre %>" 
+        data-instruments="<%= Object.keys(track.difficulty).join(',') %>"
+        data-difficulty="<%= JSON.stringify(track.difficulty) %>"
+        data-release-date="<%= track.releaseDate %>" 
+        data-duration="<%= track.duration %>" 
+        data-popularity="<%= track.popularity %>">
+
         <div class="song-info-container">
             <img class="cover" src="<%= track.albumCover %>" alt="<%= track.album %> cover">  <!-- Song Image -->
             <div class="song-info">

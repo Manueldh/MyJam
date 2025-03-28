@@ -997,6 +997,10 @@ form > button{
                     width: 1.7em;
                 }
 
+    .right-column #results .filtered-out {
+        display: none;
+    }
+
     .right-column #pagination {
         display: flex;
         justify-content: center;

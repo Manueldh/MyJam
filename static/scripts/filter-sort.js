@@ -80,22 +80,87 @@ window.addEventListener('resize', checkIfScrollable)
 document.addEventListener('DOMContentLoaded', function () {
     const filtersContainer = document.querySelector('#selected-filters')
     const checkboxes = document.querySelectorAll("input[type='checkbox']")
+    const songs = document.querySelectorAll(".song");
 
     const itemsPerPage = 20
     let currentPage = 1
 
-    const container = document.querySelector("#results")
-    const tracks = Array.from(container.children)
     const paginationContainer = document.querySelector('#pagination')
+
+    function filterSongs() {
+        const selectedFilters = {
+            instruments: [],
+            genre: [],
+            difficulty: {}
+        };
+
+        let anyFilterSelected = false
+
+        // Verzamel geselecteerde filters
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                anyFilterSelected = true
+                const category = checkbox.name; // 'instruments', 'genre' of 'difficulty'
+                const value = checkbox.value.toLowerCase();
+                
+                if (category === "difficulty") {
+                    selectedFilters.difficulty[value] = true;
+                } else {
+                    selectedFilters[category].push(value);
+                }
+            }
+        });
+
+        songs.forEach(song => {
+            if (!anyFilterSelected) {
+                // Geen filters? Laat alles zien
+                song.classList.remove("filtered-out");
+                return;
+            }
+
+            // Loop door alle nummers en bepaal of ze zichtbaar moeten zijn
+            const songGenre = song.dataset.genre.toLowerCase();
+            const songInstruments = song.dataset.instruments.toLowerCase().split(",");
+            const songDifficulty = JSON.parse(song.dataset.difficulty.toLowerCase());
+
+            let matches = false;
+
+            // Controleer of er een overeenkomst is met genre, instrument of moeilijkheid
+            if (selectedFilters.genre.includes(songGenre)) matches = true;
+            if (songInstruments.some(instr => selectedFilters.instruments.includes(instr))) matches = true;
+
+            if (Object.keys(selectedFilters.difficulty).length > 0) {
+                for (const instrument in songDifficulty) {
+                    if (selectedFilters.difficulty[songDifficulty[instrument]]) {
+                        matches = true;
+                        break;
+                    }
+                }
+            }
+
+            // Voeg class toe als het niet matcht
+            song.classList.toggle("filtered-out", !matches);
+        });
+        currentPage = 1 // Zet de pagina weer op 1
+        showPage(currentPage) // Laad de eerste pagina na het filteren
+    }
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", filterSongs);
+    });
+
+    filterSongs()
 
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function () {
             if (checkbox.checked) {
                 addFilter(checkbox)
                 checkIfScrollable()
+                filterSongs()
             } else {
                 removeFilter(checkbox)
                 checkIfScrollable()
+                filterSongs()
             }
         })
     })
@@ -116,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
             checkbox.checked = false
             filterTag.remove()
             checkIfScrollable()
+            filterSongs()
         });
 
         filterTag.appendChild(removeBtn)
@@ -132,6 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function showPage(page) {
+        const tracks = document.querySelectorAll('#results .song:not(.filtered-out)')
         let start = (page - 1) * itemsPerPage
         let end = start + itemsPerPage
 
@@ -139,12 +206,12 @@ document.addEventListener('DOMContentLoaded', function () {
             track.style.display = index >= start && index < end ? "" : "none"
         })
 
-        renderPagination()
+        renderPagination(tracks.length)
     }
 
-    function renderPagination() {
+    function renderPagination(totalTracks) {
         paginationContainer.innerHTML = ""
-        let totalPages = Math.ceil(tracks.length / itemsPerPage)
+        let totalPages = Math.ceil(totalTracks / itemsPerPage)
 
         if (totalPages <= 1) return
 
@@ -163,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.appendChild(prev)
 
         for (let i = 1; i <= totalPages; i++) {
-            let btn = document.createElement("button")
+            const btn = document.createElement("button")
             btn.innerText = i
             if (currentPage === i) {
                 btn.classList.add("active")
@@ -203,6 +270,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     restoreFilters()
+    showPage()
+    filterSongs()
 })
 
 buttonInstruments.addEventListener('click', showInstrumentOptions)

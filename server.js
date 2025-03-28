@@ -245,54 +245,37 @@ async function tracksToFrontend(req, res) {
       });
     }
 
-    const enrichedTracks = await Promise.all(
-      tracks.map(async (track) => {
-        // Controleer of de gegevens al in de database staan
-        if (track.album && track.albumCover && track.duration && track.releaseDate && track.popularity) {
-          return track; // Gebruik de opgeslagen gegevens
-        }
-
-        try {
-          const spotifyData = await spotifyApi.getTrack(track.spotifyId);
-
-          // Update de track in de database met de nieuwe gegevens
-          await collection.updateOne(
-            { _id: track._id },
-            {
-              $set: {
-                album: spotifyData.body.album.name,
-                albumCover: spotifyData.body.album.images[0]?.url,
-                duration: spotifyData.body.duration_ms,
-                releaseDate: spotifyData.body.album.release_date,
-                popularity: spotifyData.body.popularity
-              }
-            }
-          )
-
-          return {
-            ...track,
-            album: spotifyData.body.album.name,
-            albumCover: spotifyData.body.album.images[0]?.url,
-            duration: spotifyData.body.duration_ms,
-            releaseDate: spotifyData.body.album.release_date,
-            popularity: spotifyData.body.popularity
-          }
-        } catch (err) {
-          console.error(`❌ Fout bij ophalen Spotify-gegevens voor track ${track.spotifyId}:`, err)
-          return track; // Retourneer het originele track-object als er een fout optreedt
-        }
-      })
-    )
-
-    res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user, tracks: enrichedTracks,}) // Stuur de tracks als JSON naar de frontend
+    res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user, tracks: tracks,}) // Stuur de tracks als JSON naar de frontend
   } catch (err) {
     console.error('❌ Failed to fetch tracks:', err)
     res.status(500).json({ error: 'Failed to fetch tracks' })
   }
 }
 
-function onFavorites(req, res) {
-  res.render('favorites.ejs', {title: 'Favorites', user: req.session.user})
+async function onFavorites(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection('music-data') // Zorg dat dit de juiste collectie is
+  
+  const usersCollection = dataBase.collection(process.env.DB_COLLECTION)
+  let user = null
+  let favorites = []
+
+  if (req.session.user) {
+    user = await usersCollection.findOne({ username: req.session.user.username });
+    favorites = user.favorites
+  }
+  
+  // Kijk in user database naar de favorites en store die in een variabele 
+  // Laat alleen de tracks zien die hetzelfde spotifyId hebben als de favorites.
+
+  const tracks = await collection.find({ spotifyId: { $in: favorites } }).toArray();
+  if (req.session.user) {
+    tracks.forEach(track => {
+      track.isFavorite = favorites.includes(track.spotifyId);
+    });
+  }
+
+  res.render('favorites.ejs', {title: 'Favorites', user: req.session.user, tracks: tracks})
 }
 
 function onHome(req, res) {
@@ -531,10 +514,10 @@ async function addToFavorites(req, res) {
       }
     )
     console.log("Updaten gaat goed")
-    res.redirect('/filter-sorteer')
+    res.redirect(req.get('Referer') || '/');
   } catch {
     console.log('Updaten gaat niet goed')
-    res.redirect('/filter-sorteer')
+    res.redirect(req.get('Referer') || '/');
   }
 }
 
@@ -551,9 +534,9 @@ async function removeFromFavorites(req, res) {
         }
       }
     )
-    res.redirect('/filter-sorteer')
+    res.redirect(req.get('Referer') || '/');
   } catch {
-    res.redirect('/filter-sorteer')
+    res.redirect(req.get('Referer') || '/');
   }
 }
 

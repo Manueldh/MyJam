@@ -6,10 +6,11 @@ const filterSortContent = document.querySelector('.filter-sort')
 const filterMenu = document.querySelector('#left-column')
 
 const filterMenuBackground = document.createElement('div')
-
 const scrollContainer = document.querySelector('.selected-filters-container')
+const body = document.body
 
-const body = document.body;
+let currentAudio = null
+let currentButton = null
 
 function showInstrumentOptions() {
     const hiddenOptions = document.querySelectorAll('.section-instruments .hidden-option')
@@ -467,3 +468,27 @@ scrollContainer.addEventListener("touchmove", (e) => {
   scrollContainer.scrollLeft = scrollLeft - walk
 })
 
+function play(trackId) {
+    const audioElement = document.getElementById(`audio-${trackId}`)
+    const buttonElement = document.querySelector(`[onclick="play('${trackId}')"]`)
+
+    if (currentAudio && currentAudio !== audioElement) {
+        currentAudio.pause()
+        currentAudio.currentTime = 0
+        currentButton.classList.remove('playing')
+    }
+
+    if (audioElement.paused) {
+        audioElement.play()
+        console.log('Playing:', audioElement.src)
+        buttonElement.classList.add('playing')
+        currentAudio = audioElement
+        currentButton = buttonElement
+    } else {
+        audioElement.pause()
+        console.log('Paused:', audioElement.src)
+        buttonElement.classList.remove('playing')
+        currentAudio = null
+        currentButton = null
+    }
+}

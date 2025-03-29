@@ -974,18 +974,23 @@ form > button{
             gap: 1em;
         }
 
-            .right-column .results-container .song .actions button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-                height: 4em;
-                width: 4em;
-                background-color: var(--main-link-color);
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
+            .right-column .results-container .song .actions form{
+                margin: 0;
             }
+
+                .right-column .results-container .song .actions button {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    height: 4em;
+                    width: 4em;
+                    margin: 0;
+                    background-color: var(--main-link-color);
+                    border: none;
+                    border-radius: 50%;
+                    cursor: pointer;
+                }
 
             .right-column .results-container .song .actions button.playUnavailable,
             .right-column .results-container .song .actions button.playUnavailable svg,
@@ -998,6 +1003,34 @@ form > button{
                     fill: var(--main-text-color);
                     width: 1.7em;
                 }
+
+            .right-column .results-container .song .actions button.play {
+                position: relative;
+            }
+
+                .right-column .results-container .song .actions button.play svg {
+                    position: absolute;
+                    top: 50%; 
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: opacity 0.3s ease;
+                }
+
+                    .right-column .results-container .song .actions button.play svg.playIcon {
+                        opacity: 1;
+                    }
+
+                    .right-column .results-container .song .actions button.play svg.pauseIcon {
+                        opacity: 0;
+                    }
+
+                    .right-column .results-container .song .actions button.playing svg.playIcon {
+                        opacity: 0;
+                    }
+
+                    .right-column .results-container .song .actions button.playing svg.pauseIcon {
+                        opacity: 1;
+                    }
 
     .right-column #results .filtered-out {
         display: none;

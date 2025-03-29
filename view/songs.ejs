@@ -2,11 +2,8 @@
     <div class="song" 
         data-spotify-id="<%= track.spotifyId %>"
         data-genre="<%= track.genre %>" 
-        data-instruments="<%= Object.keys(track.difficulty).join(',') %>"
-        data-difficulty="<%= JSON.stringify(track.difficulty) %>"
-        data-release-date="<%= track.releaseDate %>" 
-        data-duration="<%= track.duration %>" 
-        data-popularity="<%= track.popularity %>">
+        data-instruments="<%= track.instruments.join(',') %>"
+        data-difficulty="<%= track.difficulty %>">
 
         <div class="song-info-container">
             <img class="cover" src="<%= track.albumCover %>" alt="<%= track.album %> cover">  <!-- Song Image -->
@@ -17,6 +14,7 @@
         </div>
         <span class="date-added"><%= track.releaseDate %></span>  <!-- Song Date added -->
         <span class="duration"><%= Math.floor(track.duration / 60000) %>:<%= (Math.floor((track.duration % 60000) / 1000)).toString().padStart(2, '0') %></span>  <!-- Song Duration -->
+
         <div class="actions">
         <% if (track.isFavorite) { %>
             <form action="/removeFromFavorites" method="POST">
@@ -54,6 +52,22 @@
                     }
                 }
             </script>
+        </div>
+        <div class="extraSongInfo">
+            <div class="topRow">
+                <span>Genre: <span class="extraSongInfoBG"><%= track.genre %></span></span>
+                <span>Difficulty: <% if (track.difficulty == 1) { %><span class="extraSongInfoBG">Amateur</span>
+                    <% } else if (track.difficulty == 2) { %> <span class="extraSongInfoBG">Beginner</span>
+                    <% } else if (track.difficulty == 3) { %> <span class="extraSongInfoBG">Intermediate</span>
+                    <% } else if (track.difficulty == 4) { %> <span class="extraSongInfoBG">Experienced</span>
+                    <% } else { %> <span class="extraSongInfoBG">Master</span>
+                    <% } %>
+                </span>
+                <span>popularity: <span class="extraSongInfoBG"><%= track.popularity %>/100</span></span>
+            </div>
+            <div class="bottomRow">Instruments: 
+                <%- track.instruments.map(instrument => `<span class="extraSongInfoBG">${instrument}</span>`).join(' ') %>
+            </div>
         </div>
     </div>
 <% }) %>

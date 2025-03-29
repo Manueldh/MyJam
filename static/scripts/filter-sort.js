@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Loop door alle nummers en bepaal of ze zichtbaar moeten zijn
             const songGenre = song.dataset.genre.toLowerCase();
             const songInstruments = song.dataset.instruments.toLowerCase().split(",");
-            const songDifficulty = JSON.parse(song.dataset.difficulty.toLowerCase());
+            const songDifficulty = song.dataset.difficulty.toLowerCase();
 
             let matches = false;
 
@@ -166,11 +166,14 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     function addFilter(checkbox) {
+        const label =checkbox.closest('li').querySelector('label')
+        const filterText = label.textContent
+        
         const filterTag = document.createElement('span')
         filterTag.classList.add('selected-filter')
         filterTag.dataset.value = checkbox.value
         
-        filterTag.textContent = checkbox.value
+        filterTag.textContent = filterText
 
         const removeBtn = document.createElementNS("http://www.w3.org/2000/svg", "svg")
         removeBtn.setAttribute("viewBox", "0 0 21 20")
@@ -182,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
             filterTag.remove()
             checkIfScrollable()
             filterSongs()
+            highlightMatchingSpans()
         });
 
         filterTag.appendChild(removeBtn)
@@ -244,11 +248,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const next = document.createElement("button")
         const inBtnArrowRight = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-        prev.classList.add('previousBtn')
+        next.classList.add('nextBtn')
         inBtnArrowRight.setAttribute("viewBox", "0 0 12 9")
         inBtnArrowRight.setAttribute("xmlns", "http://www.w3.org/2000/svg")
         inBtnArrowRight.innerHTML = `<path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>`
-        next.classList.add('nextBtn')
         next.disabled = currentPage === totalPages
         next.addEventListener("click", () => {
             currentPage++
@@ -257,8 +260,6 @@ document.addEventListener('DOMContentLoaded', function () {
         next.appendChild(inBtnArrowRight)
         paginationContainer.appendChild(next)
     }
-
-    showPage(currentPage)
 
     function restoreFilters() {
         checkboxes.forEach(checkbox => {
@@ -269,9 +270,125 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
+    function sortSongs() {
+        const sortOption = document.getElementById("sort").value;
+        const resultsContainer = document.getElementById("results");
+
+        // **1. Haal ALLE nummers op (niet alleen die zichtbaar zijn)**
+        let tracks = Array.from(document.querySelectorAll('#results .song'));
+
+        tracks.sort((a, b) => {
+            switch (sortOption) {
+                case "popular":
+                    const popA = parseInt(a.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim());
+                    const popB = parseInt(b.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim());
+                    return popB - popA; // Hoogste populariteit eerst
+
+                case "recent":
+                    const dateA = new Date(a.querySelector(".date-added").innerText.trim());
+                    const dateB = new Date(b.querySelector(".date-added").innerText.trim());
+                    return dateB - dateA; // Nieuwste eerst
+
+                case "durationLong":
+                    const durationA = getDurationInSeconds(a.querySelector(".duration").innerText.trim());
+                    const durationB = getDurationInSeconds(b.querySelector(".duration").innerText.trim());
+                    return durationB - durationA; // Langste nummers eerst
+
+                case "durationShort":
+                    const durA = getDurationInSeconds(a.querySelector(".duration").innerText.trim());
+                    const durB = getDurationInSeconds(b.querySelector(".duration").innerText.trim());
+                    return durA - durB; // Kortste nummers eerst
+
+                default:
+                    return 0;
+            }
+        });
+
+        // **2. Ga altijd terug naar de eerste pagina NA het sorteren**
+        currentPage = 1;
+
+        // **3. Herhaal de filters NA het sorteren zodat alleen relevante nummers blijven**
+        resultsContainer.innerHTML = "";
+        tracks.forEach(track => resultsContainer.appendChild(track));
+
+        filterSongs(); // **Herhaal de filters**
+
+        // **4. Update paginatie en toon pagina 1**
+        showPage(currentPage);
+    }
+
+    // Hulpfunctie: Zet tijd om van "mm:ss" naar seconden
+    function getDurationInSeconds(durationString) {
+        const [minutes, seconds] = durationString.split(":").map(Number);
+        return (minutes * 60) + seconds;
+    }
+
+    document.getElementById("sort").addEventListener("change", () => {
+        sortSongs();
+    });
+
+    let allSongs = document.querySelectorAll(".song");
+
+    allSongs.forEach(song => {
+        song.addEventListener("click", function(event) {
+            // Controleer of de klik in een .actions-element is
+            if (event.target.closest(".actions")) return;
+
+            let extraInfo = song.querySelector(".extraSongInfo");
+
+            // Als de geklikte song al openstaat, sluit hem dan
+            if (extraInfo.classList.contains("visible")) {
+                extraInfo.classList.remove("visible");
+            } else {
+                // Sluit alle andere extraSongInfo's
+                allSongs.forEach(otherSong => {
+                    let otherExtraInfo = otherSong.querySelector(".extraSongInfo");
+                    otherExtraInfo.classList.remove("visible");
+                });
+                // Open de geklikte song
+                extraInfo.classList.add("visible");
+            }
+            // Voorkom dat de klik verder wordt doorgegeven (optioneel)
+            event.stopPropagation();
+        });
+    });
+
+    function getSelectedFilters() {
+        const selectedFilters = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+            .map(checkbox => checkbox.nextElementSibling.textContent.trim().toLowerCase());
+        return selectedFilters;
+    }
+
+    function highlightMatchingSpans() {
+        const selectedFilters = getSelectedFilters();
+
+        document.querySelectorAll(".extraSongInfoBG").forEach(span => {
+            const spanText = span.textContent.trim().toLowerCase();
+
+            if (selectedFilters.includes(spanText)) {
+                if (!span.classList.contains("highlight")) {
+                    span.classList.add("highlight");
+                } else {
+            }
+            } else {
+                if (span.classList.contains("highlight")) {
+                    span.classList.remove("highlight");
+                }
+            }
+        });
+    }
+
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener("change", () => {
+            highlightMatchingSpans();
+        });
+    });
+  
     restoreFilters()
-    showPage()
     filterSongs()
+    sortSongs()
+    showPage(currentPage)
+    highlightMatchingSpans()
 })
 
 buttonInstruments.addEventListener('click', showInstrumentOptions)

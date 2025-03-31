@@ -565,10 +565,30 @@ async function onAddFriend(req, res) {
 
 async function onProfile(req, res){
   const dataBase = client.db(process.env.DB_NAME)
-  const collection = dataBase.collection(process.env.DB_COLLECTION)
+  const collection = dataBase.collection('music-data') // Zorg dat dit de juiste collectie is
+  
+  const usersCollection = dataBase.collection(process.env.DB_COLLECTION)
+  let user = null
+  let favorites = []
 
-  const user = await collection.findOne({ username: req.params.username })
+  user = await usersCollection.findOne({ username: req.params.username })
+  favorites = user.favorites
 
-  res.render('profile.ejs', { title: 'Profile', user: req.session.user, profile: user })
+  favorites = user.favorites || []
+
+  if (favorites.length === 0) {
+    // Render profile2.ejs if the user has no favorites
+    return res.render('noFavorites.ejs', { title: 'Profile', user: req.session.user, profile: user, })
+  }
+  
+  // Kijk in user database naar de favorites en store die in een variabele 
+  // Laat alleen de tracks zien die hetzelfde spotifyId hebben als de favorites.
+
+  const tracks = await collection.find({ spotifyId: { $in: favorites } }).toArray();
+    tracks.forEach(track => {
+      track.isFavorite = favorites.includes(track.spotifyId);
+    })
+
+  res.render('profile.ejs', { title: 'Profile', user: req.session.user, profile: user, tracks: tracks })
 
 }

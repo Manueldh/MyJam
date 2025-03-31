@@ -12,6 +12,7 @@ const body = document.body
 let currentAudio = null
 let currentButton = null
 
+/********** Verstoppen en tonen van de filteropties **********/
 function showInstrumentOptions() {
     const hiddenOptions = document.querySelectorAll('.section-instruments .hidden-option')
     const isVisible = hiddenOptions[0].style.visibility === 'visible'
@@ -38,6 +39,7 @@ function showGenreOptions() {
     this.querySelector('svg').style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)'
 }
 
+/********** Checkt of selected-filters scrolbaar zijn bij smal scherm **********/
 function checkIfScrollable() {
     const containerWidth = scrollContainer.offsetWidth;
     const contentWidth = scrollContainer.scrollWidth;
@@ -51,6 +53,7 @@ function checkIfScrollable() {
   
   checkIfScrollable()
   
+/********** Voegt faded overlay toe wanneer filter menu open is, bij smal scherm **********/  
 function addFilterMenuBackground() {
     if (window.innerWidth <= 750) {
         if (!filterSortContent.contains(filterMenuBackground)) {
@@ -88,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const paginationContainer = document.querySelector('#pagination')
 
+    /********** Voor het filteren van de content **********/
     function filterSongs() {
         const selectedFilters = {
             instruments: [],
@@ -101,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 anyFilterSelected = true
-                const category = checkbox.name; // 'instruments', 'genre' of 'difficulty'
+                const category = checkbox.name;
                 const value = checkbox.value.toLowerCase();
                 
                 if (category === "difficulty") {
@@ -114,19 +118,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         songs.forEach(song => {
             if (!anyFilterSelected) {
-                // Geen filters? Laat alles zien
                 song.classList.remove("filtered-out");
                 return;
             }
 
-            // Loop door alle nummers en bepaal of ze zichtbaar moeten zijn
             const songGenre = song.dataset.genre.toLowerCase();
             const songInstruments = song.dataset.instruments.toLowerCase().split(",");
             const songDifficulty = song.dataset.difficulty.toLowerCase();
 
             let matches = false;
 
-            // Controleer of er een overeenkomst is met genre, instrument of moeilijkheid
+            // Deze code niet meer nodig, moet ik nog netjes weghalen
             if (selectedFilters.genre.includes(songGenre)) matches = true;
             if (songInstruments.some(instr => selectedFilters.instruments.includes(instr))) matches = true;
 
@@ -139,11 +141,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Voeg class toe als het niet matcht
             song.classList.toggle("filtered-out", !matches);
         });
-        currentPage = 1 // Zet de pagina weer op 1
-        showPage(currentPage) // Laad de eerste pagina na het filteren
+        currentPage = 1
+        showPage(currentPage)
     }
 
     checkboxes.forEach(checkbox => {
@@ -166,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     })
 
+    /********** Voegt de selected filters bovenaan de pagina **********/
     function addFilter(checkbox) {
         const label =checkbox.closest('li').querySelector('label')
         const filterText = label.textContent
@@ -194,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
         filtersContainer.appendChild(filterTag)
     }
 
+    /********** Haalt de filters weer weg **********/
     function removeFilter(checkbox) {
         const filterToRemove = filtersContainer.querySelector(`.selected-filter[data-value='${checkbox.value}']`)
         if (filterToRemove) {
@@ -202,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /********** Voor de paginatie onderaan de pagina **********/
     function showPage(page) {
         const tracks = document.querySelectorAll('#results .song:not(.filtered-out)')
         let start = (page - 1) * itemsPerPage
@@ -262,6 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.appendChild(next)
     }
 
+    /********** Zorgt dat de selected filters weer bovenaan staan bij herladen pagina **********/
     function restoreFilters() {
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
@@ -271,11 +276,11 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
+    /********** Voor het sorteren van songs **********/
     function sortSongs() {
         const sortOption = document.getElementById("sort").value;
         const resultsContainer = document.getElementById("results");
 
-        // **1. Haal ALLE nummers op (niet alleen die zichtbaar zijn)**
         let tracks = Array.from(document.querySelectorAll('#results .song'));
 
         tracks.sort((a, b) => {
@@ -305,20 +310,16 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // **2. Ga altijd terug naar de eerste pagina NA het sorteren**
         currentPage = 1;
 
-        // **3. Herhaal de filters NA het sorteren zodat alleen relevante nummers blijven**
         resultsContainer.innerHTML = "";
         tracks.forEach(track => resultsContainer.appendChild(track));
 
-        filterSongs(); // **Herhaal de filters**
+        filterSongs();
 
-        // **4. Update paginatie en toon pagina 1**
         showPage(currentPage);
     }
 
-    // Hulpfunctie: Zet tijd om van "mm:ss" naar seconden
     function getDurationInSeconds(durationString) {
         const [minutes, seconds] = durationString.split(":").map(Number);
         return (minutes * 60) + seconds;
@@ -330,26 +331,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let allSongs = document.querySelectorAll(".song");
 
+    /********** Voor het openen van de extra info van de songs **********/
     allSongs.forEach(song => {
         song.addEventListener("click", function(event) {
-            // Controleer of de klik in een .actions-element is
             if (event.target.closest(".actions")) return;
 
             let extraInfo = song.querySelector(".extraSongInfo");
 
-            // Als de geklikte song al openstaat, sluit hem dan
             if (extraInfo.classList.contains("visible")) {
                 extraInfo.classList.remove("visible");
             } else {
-                // Sluit alle andere extraSongInfo's
                 allSongs.forEach(otherSong => {
                     let otherExtraInfo = otherSong.querySelector(".extraSongInfo");
                     otherExtraInfo.classList.remove("visible");
                 });
-                // Open de geklikte song
                 extraInfo.classList.add("visible");
             }
-            // Voorkom dat de klik verder wordt doorgegeven (optioneel)
             event.stopPropagation();
         });
     });
@@ -360,6 +357,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return selectedFilters;
     }
 
+    /********** Geeft de extra informatie een highlight die match met de geselecteerde filters **********/
     function highlightMatchingSpans() {
         const selectedFilters = getSelectedFilters();
 
@@ -384,7 +382,8 @@ document.addEventListener('DOMContentLoaded', function () {
             highlightMatchingSpans();
         });
     });
-  
+
+    /********** Roept de meeste functies aan bij het laden/herladen van de pagina **********/
     restoreFilters()
     filterSongs()
     sortSongs()
@@ -395,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
 buttonInstruments.addEventListener('click', showInstrumentOptions)
 buttonGenre.addEventListener('click', showGenreOptions)
 
-document.addEventListener('DOMContentLoaded', addFilterMenuBackground)
+document.addEventListener('DOMContentLoaded', addFilterMenuBackground)//Waarscijnlook ook niet meer nodig, nog controleren!!
 window.addEventListener('resize', addFilterMenuBackground)
 
 filterBtn.addEventListener('click', () => {
@@ -423,7 +422,7 @@ if (window.innerWidth > 750) {
 }
 })
 
-
+/********** Voor het scrollen met drag van de selected-filters **********/
 // Voornamelijk chatGPT code, scrollen met overflow-x wist is, maar het scrollen doen met daggen was wat lastiger.
 let isDown = false;
 let startX;
@@ -468,6 +467,8 @@ scrollContainer.addEventListener("touchmove", (e) => {
   scrollContainer.scrollLeft = scrollLeft - walk
 })
 
+
+/********** Voor het afspelen van de muziek previews **********/
 function play(trackId) {
     const audioElement = document.getElementById(`audio-${trackId}`)
     const buttonElement = document.querySelector(`[onclick="play('${trackId}')"]`)

@@ -563,6 +563,7 @@ async function onFriends(req, res) {
   const friends = user.friends || []
 
   const message = req.session.message
+  delete req.session.message
   
 
   res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user, friends: friends, message: message})

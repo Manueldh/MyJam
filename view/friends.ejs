@@ -14,6 +14,12 @@
 
     <main>
 
+        <% if (typeof message !== 'undefined') { %>
+            <div class="friendNoti">
+                <p style="color: white;"><%= message %></p>
+            </div>
+        <% } %>
+
         <h1>Add your friends!</h1>
 
         <div id="user-list">

@@ -561,7 +561,11 @@ async function onFriends(req, res) {
   const users = await collection.find().toArray()
   const user = await collection.findOne({ username: req.session.user.username })
   const friends = user.friends || []
-  res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user, friends: friends})
+
+  const message = req.session.message
+  
+
+  res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user, friends: friends, message: message})
 }
 
 async function onAddFriend(req, res) {
@@ -576,7 +580,9 @@ async function onAddFriend(req, res) {
     { $addToSet: { friends: friend } }
   )
 
-  res.redirect('/friends')
+  req.session.message = `You have added ${friend} as a friend.`
+
+  res.redirect('/friends',)
 }
 
 async function onRemoveFriend(req, res) {
@@ -590,6 +596,8 @@ async function onRemoveFriend(req, res) {
     { username: user },
     { $pull: { friends: friend } }
   )
+
+  req.session.message = `You have removed ${friend} as a friend.`
 
   res.redirect('/friends')
 }  

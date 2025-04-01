@@ -24,8 +24,9 @@ function kiesWillekeurigLiedje() {
     document.getElementById("liedjeWeergave").innerText = "🎵 " + gekozenLiedje;
 }
 
+if (randomBtn) {
 randomBtn.addEventListener('click', kiesWillekeurigLiedje);
-
+}
 
 
 

@@ -21,7 +21,7 @@ app
   .set('view engine', 'ejs')                 // Set EJS to be our templating engine
   .set('views', 'view')                      // And tell it the views can be found in the directory named view
 
-
+  
   .get('/logout', onLogout)
   .get('/login', onLogin)
   .get('/register', onRegister)
@@ -30,7 +30,7 @@ app
   .get('/difficulty', onDifficulty)
   .get('/filter-sorteer', tracksToFrontend)
   .get('/api/tracks', tracksToFrontend)
-  .get('/account', loginCheck, onAccount)
+  .get('/account',  onAccount)
   .get('/favorites', onFavorites)
   .get('/home', onHome)
   .get('/forgot', onForgot)
@@ -46,6 +46,7 @@ app
   .post('/addToFavorites', addToFavorites)
   .post('/removeFromFavorites', removeFromFavorites)
   .post('/addFriend', onAddFriend)
+  .post('/removeFriend', onRemoveFriend)
 
   .listen(4497)
 
@@ -114,6 +115,7 @@ app.get('/track/:id', async (req, res) => {
 
   
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
+const { error } = require('console')
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
 const client = new MongoClient(uri, {
@@ -135,7 +137,7 @@ client.connect()
   })
 
 app.get('/', (req, res) => {
-  res.render('register.ejs', {title: 'Login', user: req.session.user, error: null})
+  res.render('home.ejs', {title: 'MyJam', user: req.session.user})
 })
 
 
@@ -164,7 +166,7 @@ app.use((req, res) => {
   // log error to console
   console.error('404 error at URL: ' + req.url)
   // send back a HTTP response with status code 404
-  res.status(404).send('404 error at URL: ' + req.url)
+  res.status(404).render('404.ejs', {title: '404', user: req.session.user, error: '404: page not found at URL: ' + req.url})
 })
 
 // Middleware to handle server errors - error 500
@@ -175,19 +177,17 @@ app.use((err, req, res) => {
   res.status(500).send('500: server error')
 })
 
-function loginCheck(req, res, next) {
-  if (req.session.user) {
-    next()
-  } else {
-    res.redirect('/login')
-  }
-}
 
 function onForgot(req, res) {
   res.render('forgot.ejs', {title: 'Forgot', user: req.session.user})
 }
 
 async function onAccount(req, res) {
+
+  if (!req.session.user) {
+    return res.redirect('/login')
+  }
+
   const dataBase = client.db(process.env.DB_NAME)
   const collection = dataBase.collection(process.env.DB_COLLECTION)
   const user = await collection.findOne({ username: req.session.user.username })
@@ -196,6 +196,11 @@ async function onAccount(req, res) {
 }
 
 function onLogin(req, res) {
+
+  if (req.session.user) {
+    return res.redirect('/')
+  }
+
   res.render('login.ejs', {title: 'Login', user: req.session.user, error: null})
 }
 
@@ -308,6 +313,11 @@ async function onSubmitInlog(req, res) {
 }
 
 function onRegister(req, res) {
+
+  if (req.session.user) {
+    return res.redirect('/')
+  }
+
   res.render('register.ejs', {title: 'Register', user: req.session.user, error: null})
 }
 
@@ -541,10 +551,17 @@ async function removeFromFavorites(req, res) {
 }
 
 async function onFriends(req, res) {
+
+  if (!req.session.user) {
+    return res.redirect('/login')
+  }
+
   const dataBase = client.db(process.env.DB_NAME)
   const collection = dataBase.collection(process.env.DB_COLLECTION)
   const users = await collection.find().toArray()
-  res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user})
+  const user = await collection.findOne({ username: req.session.user.username })
+  const friends = user.friends || []
+  res.render('friends.ejs', { title: 'friends', users: users, user: req.session.user, friends: friends})
 }
 
 async function onAddFriend(req, res) {
@@ -559,9 +576,23 @@ async function onAddFriend(req, res) {
     { $addToSet: { friends: friend } }
   )
 
-
   res.redirect('/friends')
 }
+
+async function onRemoveFriend(req, res) {
+  const dataBase = client.db(process.env.DB_NAME)
+  const collection = dataBase.collection(process.env.DB_COLLECTION)
+
+  const friend = req.body.friend
+  const user = req.session.user.username
+
+  await collection.updateOne(
+    { username: user },
+    { $pull: { friends: friend } }
+  )
+
+  res.redirect('/friends')
+}  
 
 async function onProfile(req, res){
   const dataBase = client.db(process.env.DB_NAME)

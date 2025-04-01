@@ -1714,6 +1714,38 @@ form > button{
     color: var(--main-color-grey);
 }
 
+.unfriend {
+    background-color: var(--main-bg-color);
+    border: 2px red solid;
+}
+
+.friendProfile {
+    display: flex;  
+    gap: 1em;
+    justify-content: center;
+}
+
+.friendProfile p {
+    align-content: center;
+    margin-top: 10px;
+    text-align: left;
+    width: 5em;
+}
+
+.friendProfile button {
+    padding: 10px 50px 10px 50px;
+}
+
+.list {
+    background-color: var(--nav-primary-color);
+    border-radius: 1em;
+}
+
+#user-list {
+    max-width: 40%;
+    margin: 0 auto;
+}
+
 /* favorite pagina */ 
 
 #favorite-songs .song .extraSongInfo {

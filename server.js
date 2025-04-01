@@ -232,6 +232,7 @@ async function tracksToFrontend(req, res) {
     let favorites = []
 
     const tracks = await collection.find().toArray() // Haal alle tracks op)
+    const totalTracks = await collection.countDocuments()
 
     if (req.session.user) {
       user = await usersCollection.findOne({ username: req.session.user.username });
@@ -245,7 +246,12 @@ async function tracksToFrontend(req, res) {
       });
     }
 
-    res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user, tracks: tracks,}) // Stuur de tracks als JSON naar de frontend
+    res.render('filter-sorteer.ejs', {  // Stuur de tracks als JSON naar de frontend
+      title: 'Filter & Sorteer', 
+      user: req.session.user, 
+      tracks: tracks,
+      totalTracks: totalTracks
+    })
   } catch (err) {
     console.error('❌ Failed to fetch tracks:', err)
     res.status(500).json({ error: 'Failed to fetch tracks' })
@@ -265,7 +271,7 @@ async function onFavorites(req, res) {
     favorites = user.favorites
   }
   
-  // Kijk in user database naar de favorites en store die in een variabele 
+  // Kijk in user database naar de favorites en store die in een variabele
   // Laat alleen de tracks zien die hetzelfde spotifyId hebben als de favorites.
 
   const tracks = await collection.find({ spotifyId: { $in: favorites } }).toArray();

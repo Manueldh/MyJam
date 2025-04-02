@@ -916,11 +916,11 @@ form > button{
             }
 
     .right-column .results-container .song {
-        display: grid;
+        display: none;
         grid-template-columns: repeat(8, 1fr);
         margin-bottom: 1em;
     }
-    
+
         .right-column .results-container .song .song-info-container {
             grid-column: 1 / 4;
             display: flex;
@@ -975,27 +975,20 @@ form > button{
             gap: 1em;
         }
 
-            .right-column .results-container .song .actions form{
-                margin: 0;
+            .right-column .results-container .song .actions button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                height: 4em;
+                width: 4em;
+                background-color: var(--main-link-color);
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
             }
 
-                .right-column .results-container .song .actions button {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-shrink: 0;
-                    height: 4em;
-                    width: 4em;
-                    margin: 0;
-                    background-color: var(--main-link-color);
-                    border: none;
-                    border-radius: 50%;
-                    cursor: pointer;
-                }
-
-            .right-column .results-container .song .actions button.playUnavailable,
-            .right-column .results-container .song .actions button.playUnavailable svg,
-            .right-column .results-container .song .actions button.playUnavailable svg path {
+            .right-column .results-container .song .actions button.playUnavailable {
                 opacity: 0.5;
                 cursor: not-allowed;
             }
@@ -1004,6 +997,7 @@ form > button{
                     fill: var(--main-text-color);
                     width: 1.7em;
                 }
+
 
             .right-column .results-container .song .actions button.play {
                 position: relative;
@@ -1034,7 +1028,7 @@ form > button{
                     }
 
     .right-column #results .filtered-out {
-        display: none;
+        display: none !important;
     }
 
     .right-column #results .song :not(.actions):not(.playUnavailable):not(.playUnavailable svg):not(.playUnavailable svg path) {
@@ -1139,6 +1133,10 @@ form > button{
         .right-column #pagination button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .right-column #pagination span {
+            color: var(--main-text-color);
         }
 
 @media (max-width: 1100px) {
@@ -1844,3 +1842,24 @@ form > button{
         margin: 0 0.2em 0.3em 0.2em;
         white-space: nowrap;
     }
+
+/* No favorites page */
+
+.nonfav-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--main-text-color);
+    padding: 10em;
+}
+
+.loginBtn{
+    text-decoration: none;
+    color: var(--main-text-color);
+    background-color: var(--main-link-color);
+    padding: 10px 25px;
+    margin: 20px;
+    border-radius: .3em;
+}
+

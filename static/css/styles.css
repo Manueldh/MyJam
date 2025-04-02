@@ -919,7 +919,7 @@ form > button{
         grid-template-columns: repeat(8, 1fr);
         margin-bottom: 1em;
     }
-    
+
         .right-column .results-container .song .song-info-container {
             grid-column: 1 / 4;
             display: flex;
@@ -974,27 +974,20 @@ form > button{
             gap: 1em;
         }
 
-            .right-column .results-container .song .actions form{
-                margin: 0;
+            .right-column .results-container .song .actions button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                height: 4em;
+                width: 4em;
+                background-color: var(--main-link-color);
+                border: none;
+                border-radius: 50%;
+                cursor: pointer;
             }
 
-                .right-column .results-container .song .actions button {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-shrink: 0;
-                    height: 4em;
-                    width: 4em;
-                    margin: 0;
-                    background-color: var(--main-link-color);
-                    border: none;
-                    border-radius: 50%;
-                    cursor: pointer;
-                }
-
-            .right-column .results-container .song .actions button.playUnavailable,
-            .right-column .results-container .song .actions button.playUnavailable svg,
-            .right-column .results-container .song .actions button.playUnavailable svg path {
+            .right-column .results-container .song .actions button.playUnavailable {
                 opacity: 0.5;
                 cursor: not-allowed;
             }
@@ -1003,6 +996,7 @@ form > button{
                     fill: var(--main-text-color);
                     width: 1.7em;
                 }
+
 
             .right-column .results-container .song .actions button.play {
                 position: relative;

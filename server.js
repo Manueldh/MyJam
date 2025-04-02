@@ -25,9 +25,9 @@ app
   .get('/logout', onLogout)
   .get('/login', onLogin)
   .get('/register', onRegister)
-  .get('/genre', onGenre)
+  // .get('/genre', onGenre)
   .get('/instrument', onInstrument)
-  .get('/difficulty', onDifficulty)
+  // .get('/difficulty', onDifficulty)
   .get('/filter-sorteer', tracksToFrontend)
   .get('/api/tracks', tracksToFrontend)
   .get('/account', loginCheck, onAccount)
@@ -47,6 +47,11 @@ app
   .post('/addToFavorites', addToFavorites)
   .post('/removeFromFavorites', removeFromFavorites)
   .post('/addFriend', onAddFriend)
+
+  .post('/genre', onGenre)
+  // .post('/instrument', onInstrument)
+  .post('/difficulty', onDifficulty)
+  .post('/filterResultaat', onFilterSorteer)
 
   .listen(4497)
 
@@ -219,12 +224,46 @@ function onInstrument(req, res) {
   res.render('instrument.ejs', {title: 'Instrument', user: req.session.user})
 }
 
-function onDifficulty(req, res) {
+function onGenre(req, res) {
+  res.render('genre.ejs', {title: 'Genre', user: req.session.user})
+}
+
+async function onDifficulty(req, res) {
   res.render('difficulty.ejs', {title: 'Difficulty', user: req.session.user})
 }
 
-function onFilterSorteer(req, res) {
-  res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user})
+
+async function onFilterSorteer(req, res) {
+  try {
+    const dataBase = client.db(process.env.DB_NAME);
+    const collection = dataBase.collection('music-data'); // Ensure this is the correct collection
+    const usersCollection = dataBase.collection(process.env.DB_COLLECTION);
+
+    let user = null;
+    let favorites = [];
+    const tracks = await collection.find().toArray(); // Fetch all tracks
+
+    if (req.session.user) {
+      user = await usersCollection.findOne({ username: req.session.user.username });
+      favorites = user.favorites || [];
+      tracks.forEach(track => {
+        track.isFavorite = favorites.includes(track.spotifyId);
+      });
+    } else {
+      tracks.forEach(track => {
+        track.isFavorite = false;
+      });
+    }
+
+    res.render('filter-sorteer.ejs', {
+      title: 'resultaat',
+      user: req.session.user,
+      tracks: tracks, // Pass tracks to the view
+    });
+  } catch (err) {
+    console.error('❌ Error in onDifficulty:', err);
+    res.status(500).send('Failed to load difficulty page');
+  }
 }
 
 async function tracksToFrontend(req, res) {

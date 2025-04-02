@@ -118,18 +118,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 anyFilterSelected = true
                 const category = checkbox.name
                 const value = checkbox.value.toLowerCase()
-                
-                if (category === "difficulty") {
-                    selectedFilters.difficulty.push(value)
-                } else {
-                    selectedFilters[category].push(value)
-                }
+                selectedFilters[category].push(value)
             }
-        });
+        })
 
         songs.forEach(song => {
             if (!anyFilterSelected) {
-                song.classList.remove("filtered-out");
+                song.classList.remove("filtered-out")
                 return;
             }
 
@@ -137,14 +132,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const songInstruments = song.dataset.instruments.toLowerCase().split(",");
             const songDifficulty = song.dataset.difficulty.toLowerCase();
 
-            let matches = false;
+            const matches = 
+                selectedFilters.genre.includes(songGenre) ||
+                songInstruments.some(instr => selectedFilters.instruments.includes(instr)) ||
+                selectedFilters.difficulty.includes(songDifficulty)
 
-            // Deze code niet meer nodig, moet ik nog netjes weghalen
-            if (selectedFilters.genre.includes(songGenre)) matches = true;
-            if (songInstruments.some(instr => selectedFilters.instruments.includes(instr))) matches = true;
-            if (selectedFilters.difficulty.includes(songDifficulty)) matches = true;
-
-            song.classList.toggle("filtered-out", !matches);
+            song.classList.toggle("filtered-out", !matches)
         });
         currentPage = 1
         showPage(currentPage)

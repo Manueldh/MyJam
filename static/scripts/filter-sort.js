@@ -9,9 +9,9 @@ const filterMenuBackground = document.createElement('div')
 const scrollContainer = document.querySelector('.selected-filters-container')
 const body = document.body
 
-let audioPlayer = new Audio();
-let currentlyPlayingButton = null;
-let isProcessing = false;
+let audioPlayer = new Audio()
+let currentlyPlayingButton = null
+let isProcessing = false
 
 /********** Verstoppen en tonen van de filteropties **********/
 function showInstrumentOptions() {
@@ -42,8 +42,8 @@ function showGenreOptions() {
 
 /********** Checkt of selected-filters scrolbaar zijn bij smal scherm **********/
 function checkIfScrollable() {
-    const containerWidth = scrollContainer.offsetWidth;
-    const contentWidth = scrollContainer.scrollWidth;
+    const containerWidth = scrollContainer.offsetWidth
+    const contentWidth = scrollContainer.scrollWidth
   
     if (contentWidth <= containerWidth) {
       scrollContainer.classList.add('no-scroll')
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
             instruments: [],
             genre: [],
             difficulty: []
-        };
+        }
 
         let anyFilterSelected = false
 
@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
             checkIfScrollable()
             filterSongs()
             highlightMatchingSpans()
+            updateLocalStorage()
         });
 
         filterTag.appendChild(removeBtn)
@@ -272,21 +273,21 @@ document.addEventListener('DOMContentLoaded', function () {
         prev.appendChild(inBtnArrowLeft)
         paginationContainer.appendChild(prev)
 
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, currentPage + 2);
+        let startPage = Math.max(1, currentPage - 2)
+        let endPage = Math.min(totalPages, currentPage + 2)
 
         if (startPage > 1) {
-            paginationContainer.appendChild(createPageButton(1));
-            if (startPage > 2) paginationContainer.appendChild(createDots());
+            paginationContainer.appendChild(createPageButton(1))
+            if (startPage > 2) paginationContainer.appendChild(createDots())
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            paginationContainer.appendChild(createPageButton(i));
+            paginationContainer.appendChild(createPageButton(i))
         }
 
         if (endPage < totalPages) {
-            if (endPage < totalPages - 1) paginationContainer.appendChild(createDots());
-            paginationContainer.appendChild(createPageButton(totalPages));
+            if (endPage < totalPages - 1) paginationContainer.appendChild(createDots())
+            paginationContainer.appendChild(createPageButton(totalPages))
         }
 
         const next = document.createElement("button")
@@ -305,120 +306,120 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function createPageButton(page) {
-        const btn = document.createElement("button");
+        const btn = document.createElement("button")
         btn.innerText = page;
         if (currentPage === page) {
-            btn.classList.add("active");
+            btn.classList.add("active")
         }
         btn.addEventListener("click", () => {
-            currentPage = page;
-            showPage(currentPage);
-        });
-        return btn;
+            currentPage = page
+            showPage(currentPage)
+        })
+        return btn
     }
     
     function createDots() {
-        const dots = document.createElement("span");
-        dots.innerText = "...";
-        dots.classList.add("dots");
-        return dots;
+        const dots = document.createElement("span")
+        dots.innerText = "..."
+        dots.classList.add("dots")
+        return dots
     }
 
     /********** Voor het sorteren van songs **********/
     function sortSongs() {
-        const sortOption = document.getElementById("sort").value;
+        const sortOption = document.getElementById("sort").value
 
-        let tracks = Array.from(document.querySelectorAll('#results .song'));
+        let tracks = Array.from(document.querySelectorAll('#results .song'))
 
         tracks.sort((a, b) => {
             switch (sortOption) {
                 case "popular":
-                    const popA = parseInt(a.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim());
-                    const popB = parseInt(b.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim());
+                    const popA = parseInt(a.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim())
+                    const popB = parseInt(b.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim())
                     return popB - popA; // Hoogste populariteit eerst
 
                 case "recent":
-                    const dateA = new Date(a.querySelector(".date-added").innerText.trim());
-                    const dateB = new Date(b.querySelector(".date-added").innerText.trim());
+                    const dateA = new Date(a.querySelector(".date-added").innerText.trim())
+                    const dateB = new Date(b.querySelector(".date-added").innerText.trim())
                     return dateB - dateA; // Nieuwste eerst
 
                 case "durationLong":
-                    const durationA = getDurationInSeconds(a.querySelector(".duration").innerText.trim());
-                    const durationB = getDurationInSeconds(b.querySelector(".duration").innerText.trim());
+                    const durationA = getDurationInSeconds(a.querySelector(".duration").innerText.trim())
+                    const durationB = getDurationInSeconds(b.querySelector(".duration").innerText.trim())
                     return durationB - durationA; // Langste nummers eerst
 
                 case "durationShort":
-                    const durA = getDurationInSeconds(a.querySelector(".duration").innerText.trim());
-                    const durB = getDurationInSeconds(b.querySelector(".duration").innerText.trim());
+                    const durA = getDurationInSeconds(a.querySelector(".duration").innerText.trim())
+                    const durB = getDurationInSeconds(b.querySelector(".duration").innerText.trim())
                     return durA - durB; // Kortste nummers eerst
 
                 default:
-                    return 0;
+                    return 0
             }
-        });
+        })
 
-        currentPage = 1;
+        currentPage = 1
 
-        resultsContainer.innerHTML = "";
-        tracks.forEach(track => resultsContainer.appendChild(track));
+        resultsContainer.innerHTML = ""
+        tracks.forEach(track => resultsContainer.appendChild(track))
 
-        filterSongs();
+        filterSongs()
 
-        showPage(currentPage);
+        showPage(currentPage)
     }
 
     function getDurationInSeconds(durationString) {
-        const [minutes, seconds] = durationString.split(":").map(Number);
-        return (minutes * 60) + seconds;
+        const [minutes, seconds] = durationString.split(":").map(Number)
+        return (minutes * 60) + seconds
     }
 
     document.getElementById("sort").addEventListener("change", () => {
-        sortSongs();
-    });
+        sortSongs()
+    })
 
     /********** Voor het openen van de extra info van de songs **********/
-    let allSongs = document.querySelectorAll(".song");
+    let allSongs = document.querySelectorAll(".song")
 
     allSongs.forEach(song => {
         song.addEventListener("click", function(event) {
-            if (event.target.closest(".actions")) return;
+            if (event.target.closest(".actions")) return
 
-            let extraInfo = song.querySelector(".extraSongInfo");
+            let extraInfo = song.querySelector(".extraSongInfo")
 
             if (extraInfo.classList.contains("visible")) {
-                extraInfo.classList.remove("visible");
+                extraInfo.classList.remove("visible")
             } else {
                 allSongs.forEach(otherSong => {
-                    let otherExtraInfo = otherSong.querySelector(".extraSongInfo");
-                    otherExtraInfo.classList.remove("visible");
-                });
-                extraInfo.classList.add("visible");
+                    let otherExtraInfo = otherSong.querySelector(".extraSongInfo")
+                    otherExtraInfo.classList.remove("visible")
+                })
+                extraInfo.classList.add("visible")
             }
-            event.stopPropagation();
-        });
-    });
+            event.stopPropagation()
+        })
+    })
 
     function getSelectedFilters() {
         const selectedFilters = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-            .map(checkbox => checkbox.nextElementSibling.textContent.trim().toLowerCase());
-        return selectedFilters;
+            .map(checkbox => checkbox.nextElementSibling.textContent.trim().toLowerCase())
+        return selectedFilters
     }
 
     /********** Geeft de extra informatie een highlight die match met de geselecteerde filters **********/
     function highlightMatchingSpans() {
-        const selectedFilters = getSelectedFilters();
+        const selectedFilters = getSelectedFilters()
 
         document.querySelectorAll(".extraSongInfoBG").forEach(span => {
-            const spanText = span.textContent.trim().toLowerCase();
+            const spanText = span.textContent.trim().toLowerCase()
 
             if (selectedFilters.includes(spanText)) {
                 if (!span.classList.contains("highlight")) {
-                    span.classList.add("highlight");
+                    span.classList.add("highlight")
                 } else {
             }
             } else {
                 if (span.classList.contains("highlight")) {
-                    span.classList.remove("highlight");
+                    span.classList.remove("highlight")
                 }
             }
         });
@@ -465,9 +466,9 @@ if (window.innerWidth > 750) {
 
 /********** Voor het scrollen met drag van de selected-filters **********/
 // Voornamelijk chatGPT code, scrollen met overflow-x wist is, maar het scrollen doen met daggen was wat lastiger.
-let isDown = false;
-let startX;
-let scrollLeft;
+let isDown = false
+let startX
+let scrollLeft
 
 // Muis ingedrukt houden
 scrollContainer.addEventListener("mousedown", (e) => {
@@ -497,22 +498,22 @@ scrollContainer.addEventListener("mousemove", (e) => {
 })
 
 function lazyLoadCovers() {
-    const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load');
+    const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load')
 
     visibleSongs.forEach(img => {
-        if (!img.dataset.src) return; // Als er geen data-src is, skippen
+        if (!img.dataset.src) return // Als er geen data-src is, skippen
 
-        img.src = img.dataset.src;  // Zet de echte afbeelding
-        img.removeAttribute('data-src'); // Voorkomt dat het opnieuw wordt geladen
-        img.classList.remove('lazy-load'); // Verwijdert de class na laden
-    });
+        img.src = img.dataset.src // Zet de echte afbeelding
+        img.removeAttribute('data-src') // Voorkomt dat het opnieuw wordt geladen
+        img.classList.remove('lazy-load') // Verwijdert de class na laden
+    })
 }
 
 // Roep deze functie aan na het laden van de pagina en bij paginatie updates
-document.addEventListener("DOMContentLoaded", lazyLoadCovers);
-document.addEventListener("pageChange", lazyLoadCovers);
+document.addEventListener("DOMContentLoaded", lazyLoadCovers)
+document.addEventListener("pageChange", lazyLoadCovers)
 
-audioPlayer.preload = "auto";
+audioPlayer.preload = "auto"
 
 /********** Voor het afspelen van de muziek previews **********/
 document.addEventListener("click", (event) => {
@@ -558,7 +559,7 @@ document.addEventListener("click", (event) => {
                     console.error("Fout bij afspelen van audio:", error)
                     button.classList.remove("playing")
                     currentlyPlayingButton = null
-                });
+                })
             }
         } catch (e) {
             console.error("Fout bij het instellen van audio:", e)
@@ -568,7 +569,7 @@ document.addEventListener("click", (event) => {
         
         setTimeout(() => { isProcessing = false; }, 50)
     }
-});
+})
 
 audioPlayer.addEventListener("ended", () => {
     if (currentlyPlayingButton) {

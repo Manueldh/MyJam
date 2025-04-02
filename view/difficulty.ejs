@@ -16,51 +16,56 @@
 
     <h1 class="kop-difficulty">Choose your difficulty</h1>
 
-    <form action="/difficulty" method="post" class="filter-container" class="form2"></form>
+    <div class="filter-container">
         <ul class="difficulty-container">
           <li class="item">
             <label for="Amateur">
-              <input type="checkbox" name="difficulty" id="Amateur" value="Amateur">
+              <input type="checkbox" name="difficulty" value="1">
               <span>Amateur</span>
             </label>
           </li>
           <li class="item">
             <label for="Beginner">
-              <input type="checkbox" name="difficulty" id="Beginner" value="Beginner">
+              <input type="checkbox" name="difficulty" value="2">
               <span>Beginner</span>
             </label>
           </li>
           <li class="item">
             <label for="Intermediate">
-              <input type="checkbox" name="difficulty" id="Intermediate" value="Intermediate">
+              <input type="checkbox" name="difficulty" value="3">
               <span>Intermediate</span>
             </label>
           </li>
           <li class="item">
             <label for="Experienced">
-              <input type="checkbox" name="difficulty" id="Experienced" value="Experienced">
+              <input type="checkbox" name="difficulty" value="4">
               <span>Experienced</span>
             </label>
           </li>
           <li class="item">
             <label for="Master">
-              <input type="checkbox" name="difficulty" id="Master" value="Master">
+              <input type="checkbox" name="difficulty" value="5">
               <span>Master</span>
             </label>
           </li>
         </ul>
 
         <div class="progress-buttons">
+          <a class="previous" href="/genre"><img src="/static/images/arrow-left.svg" alt="arrow-left"> Previous</a>
+          <a class="next" href="/filter-sorteer">Next <img src="/static/images/arrow-right.svg" alt="arrow-right"></a>
+          <!--
           <button class="Previous"><img src="/static/images/arrow-left.svg" alt="">Previous</button>
           <button class="Next" type="submit">Next <img src="/static/images/arrow-right.svg" alt=""></button>
+          -->
         </div>
-      </form>
+    </form>
         
     </main>
 
     <footer></footer>
 
     <script src="/static/scripts/animatie.js"></script>
+    <script src="/static/scripts/connect-filters.js"></script>
 
 </body>
 

@@ -409,23 +409,19 @@ form > button{
     justify-content: center;
     gap: 20px;
 }
-    .progress-buttons button {
+    .progress-buttons a {
+        display: flex;
         padding: 10px 20px;
         margin-bottom: 20px;
-        border: none;
+        overflow: hidden;
+        gap: 10px;
         border-radius: 5px;
         background-color: var(--main-link-color);
         color: var(--main-text-color);
         font-family: var(--main-font);
         font-size: 18px;
         text-decoration: none;
-
-        display: flex;
     }
-        .progress-buttons button > img{
-            padding: 0 7px;
-        }
-
 
 /* Instrument images */
         #Electric-guitar{
@@ -986,6 +982,11 @@ form > button{
                 border: none;
                 border-radius: 50%;
                 cursor: pointer;
+            }
+
+            .right-column .results-container .song .actions form,
+            .right-column .results-container .song .actions form button {
+                margin: 0;
             }
 
             .right-column .results-container .song .actions button.playUnavailable {

@@ -11,93 +11,98 @@
      
       <h1 class="kop-genre">Choose your genre</h1> 
 
-      <form action="/difficulty" method="post" class="filter-container" class="form3">
+      <div class="filter-container">
         <ul>
           <li class="item">
             <label for="Rock">
-              <input type="checkbox" name="Rock" id="Rock" value="Rock">
+              <input type="checkbox" name="genre" value="Rock">
               <span>Rock</span>
             </label>
           </li>
           <li class="item">
             <label for="Metal">
-              <input type="checkbox" name="Metal" id="Metal" value="Metal">
+              <input type="checkbox" name="genre" value="Metal">
               <span>Metal</span>
             </label>
           </li>
           <li class="item"> 
             <label for="Pop">
-              <input type="checkbox" name="Pop" id="Pop" value="Pop">
+              <input type="checkbox" name="genre" value="Pop">
               <span>Pop</span>
             </label>
           </li>
           <li class="item">
             <label for="R&B">
-              <input type="checkbox" name="R&B" id="R&B" value="R&B">
+              <input type="checkbox" name="genre" value="R&B">
               <span>R&B</span>
             </label>
           </li>
           <li class="item">
             <label for="Jazz">
-              <input type="checkbox" name="Jazz" id="Jazz" value="Jazz">
+              <input type="checkbox" name="genre" value="Jazz">
               <span>Jazz</span>
             </label>
           </li>
           <li class="item">
             <label for="Soul">
-              <input type="checkbox" name="Soul" id="Soul" value="Soul">
+              <input type="checkbox" name="genre" value="Soul">
               <span>Soul</span>
             </label>
           </li>
           <li class="item">
-            <label for="Classic">
-              <input type="checkbox" name="Classic" id="Classic" value="Classic">
-              <span>Classic</span>
+            <label for="Classical">
+              <input type="checkbox" name="genre" value="Classical">
+              <span>Classical</span>
             </label>
           </li>
           <li class="item">
             <label for="Country">
-              <input type="checkbox" name="Country" id="Country" value="Country">
+              <input type="checkbox" name="genre" value="Country">
               <span>Country</span>
             </label>
           </li>
           <li class="item">
             <label for="Hip-Hop">
-              <input type="checkbox" name="Hip-Hop" id="Hip-Hop" value="Hip-Hop">
+              <input type="checkbox" name="genre" value="Hip-Hop">
               <span>Hip-Hop</span>
             </label>
           </li>
           <li class="item">
             <label for="Electronic">
-              <input type="checkbox" name="Electronic" id="Electronic" value="Electronic">
+              <input type="checkbox" name="genre" value="Electronic">
               <span>Electronic</span>
             </label>
           </li>
           <li class="item">
             <label for="Alternative">
-              <input type="checkbox" name="Alternative" id="Alternative" value="Alternative">
+              <input type="checkbox" name="genre" value="Alternative">
               <span>Alternative</span>
             </label>
           </li>
           <li class="item">
             <label for="House">
-              <input type="checkbox" name="House" id="House" value="House">
+              <input type="checkbox" name="genre" value="House">
               <span>House</span>
             </label>
           </li>
         </ul>
 
         <div class="progress-buttons">
+          <a class="previous" href="/instrument"><img src="/static/images/arrow-left.svg" alt="arrow-left"> Previous</a>
+          <a class="next" href="/difficulty">Next <img src="/static/images/arrow-right.svg" alt="arrow-right"></a>
+          <!--
           <button class="Previous"><img src="/static/images/arrow-left.svg" alt="">Previous</button>
           <button class="Next" type="submit">Next <img src="/static/images/arrow-right.svg" alt=""></button>
+          -->
         </div>
-      </form>
+      </div>
     
     </main>
 
     <footer></footer>
 
     <script src="/static/scripts/animatie.js"></script>
+    <script src="/static/scripts/connect-filters.js"></script>
   
 
   </body>

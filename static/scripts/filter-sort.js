@@ -99,6 +99,82 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }, 100);
 
+    function loadSavedFilters() {
+        filtersContainer.innerHTML = '';
+        // Load instruments
+        const savedInstruments = JSON.parse(localStorage.getItem("selectedInstruments")) || [];
+        // Load genres
+        const savedGenres = JSON.parse(localStorage.getItem("selectedGenres")) || [];
+        // Load difficulty
+        const savedDifficulty = JSON.parse(localStorage.getItem("selectedDifficulty")) || [];
+        
+        // Apply the saved filters to the checkboxes
+        freshCheckboxes.forEach(checkbox => {
+            const value = checkbox.value;
+            const category = checkbox.name;
+            
+            if ((category === "instruments" && savedInstruments.includes(value)) ||
+                (category === "genre" && savedGenres.includes(value)) ||
+                (category === "difficulty" && savedDifficulty.includes(value))) {
+                checkbox.checked = true;
+            }
+        });
+        
+        // Update filters and display
+        freshCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                addFilter(checkbox);
+            }
+        });
+    }
+
+    function updateLocalStorage() {
+        // Get all currently checked filters by category
+        const selectedInstruments = Array.from(document.querySelectorAll("input[name='instruments']:checked"))
+            .map(checkbox => checkbox.value);
+        
+        const selectedGenres = Array.from(document.querySelectorAll("input[name='genre']:checked"))
+            .map(checkbox => checkbox.value);
+        
+        const selectedDifficulty = Array.from(document.querySelectorAll("input[name='difficulty']:checked"))
+            .map(checkbox => checkbox.value);
+        
+        // Save to localStorage
+        localStorage.setItem("selectedInstruments", JSON.stringify(selectedInstruments));
+        localStorage.setItem("selectedGenres", JSON.stringify(selectedGenres));
+        localStorage.setItem("selectedDifficulty", JSON.stringify(selectedDifficulty));
+    }
+    
+    // Modify your checkbox event listeners to update localStorage when changed
+    checkboxes.forEach(checkbox => {
+        // Clone and replace to remove old event listeners
+        const newCheckbox = checkbox.cloneNode(true);
+        checkbox.parentNode.replaceChild(newCheckbox, checkbox);
+    });
+    
+    // Get the fresh set of checkboxes after replacing
+    const freshCheckboxes = document.querySelectorAll("input[type='checkbox']");
+
+    // Add new unified event listeners
+    freshCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            // Clear existing filters before redisplaying them
+            filtersContainer.innerHTML = '';
+            
+            // Re-add all selected filters
+            freshCheckboxes.forEach(cb => {
+                if (cb.checked) {
+                    addFilter(cb);
+                }
+            });
+            
+            checkIfScrollable();
+            filterSongs();
+            updateLocalStorage();
+            highlightMatchingSpans();
+        });
+    });
+
     const itemsPerPage = 20
     let currentPage = 1
 
@@ -288,16 +364,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return dots;
     }
 
-    /********** Zorgt dat de selected filters weer bovenaan staan bij herladen pagina **********/
-    function restoreFilters() {
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                addFilter(checkbox)
-                checkIfScrollable()
-            }
-        })
-    }
-
     /********** Voor het sorteren van songs **********/
     function sortSongs() {
         const sortOption = document.getElementById("sort").value;
@@ -405,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /********** Roept de meeste functies aan bij het laden/herladen van de pagina **********/
-    restoreFilters()
+    loadSavedFilters()
     filterSongs()
     sortSongs()
     showPage(currentPage)

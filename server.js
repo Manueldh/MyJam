@@ -36,6 +36,7 @@ app
   .get('/forgot', onForgot)
   .get('/friends', onFriends)
   .get('/profile/:username', onProfile)
+  .get('/nofavorite', onNofavorites)
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
@@ -204,6 +205,10 @@ function onLogout(req, res) {
     res.redirect('/') 
   })
 
+}
+
+function onNofavorites(req, res) {
+  res.render('nofav.ejs', {title: 'Empty favorites ', user: req.session.user, error: null})
 }
 
 function onGenre(req, res) {

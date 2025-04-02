@@ -1716,3 +1716,23 @@ form > button{
 .friends {
     color: var(--main-color-grey);
 }
+
+/* No favorites page */
+
+.nonfav-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--main-text-color);
+    padding: 10em;
+}
+
+.loginBtn{
+    text-decoration: none;
+    color: var(--main-text-color);
+    background-color: var(--main-link-color);
+    padding: 10px 25px;
+    margin: 20px;
+    border-radius: .3em;
+}

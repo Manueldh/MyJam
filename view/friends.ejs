@@ -14,6 +14,12 @@
 
     <main>
 
+        <% if (typeof message !== 'undefined') { %>
+            <div class="friendNoti">
+                <p style="color: white;"><%= message %></p>
+            </div>
+        <% } %>
+
         <h1>Add your friends!</h1>
 
         <div id="user-list">
@@ -22,10 +28,17 @@
                 <% users.forEach(user => { %>
                     <li class="friendProfile">
                         <p class="friends"><%= user.username %></p>
-                        <form action="/addFriend" method="POST">
-                            <input type="hidden" name="friend" value="<%= user.username %>">
-                            <button type="submit">Add Friend</button>
-                        </form>
+                        <% if (friends.includes(user.username)) { %>
+                            <form action="/removeFriend" method="POST">
+                                <input type="hidden" name="friend" value="<%= user.username %>">
+                                <button class="unfriend" type="submit">Unfriend</button>
+                            </form>
+                        <% } else { %>
+                            <form action="/addFriend" method="POST">
+                                <input type="hidden" name="friend" value="<%= user.username %>">
+                                <button class="friend" type="submit">Add Friend</button>
+                            </form>
+                        <% } %>
                     </li>
                 <% }) %>
             </ul>

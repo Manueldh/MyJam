@@ -1,4 +1,4 @@
-# MyJam <img src="myjam.svg" alt="MyJam Logo" width="30" height="30" style="vertical-align: middle;">
+# MyJam <img src="static/Images/myjam.svg" alt="MyJam Logo" width="30" height="30" style="vertical-align: middle;">
 
 Do you ever feel lost in the countless amounts of songs you can learn? Are you not sure which songs are too difficult for your instrument? 
 

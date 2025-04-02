@@ -36,6 +36,7 @@ app
   .get('/forgot', onForgot)
   .get('/friends', onFriends)
   .get('/profile/:username', onProfile)
+  .get('/nofavorite', onNofavorites)
 
   .post('/submitInlog', onSubmitInlog)
   .post('/registerAccount', onRegisterAccount)
@@ -211,6 +212,14 @@ function onLogout(req, res) {
 
 }
 
+function onNofavorites(req, res) {
+  res.render('nofav.ejs', {title: 'Empty favorites ', user: req.session.user, error: null})
+}
+
+function onGenre(req, res) {
+  res.render('genre.ejs', {title: 'Genre', user: req.session.user})
+}
+
 function onInstrument(req, res) {
   res.render('instrument.ejs', {title: 'Instrument', user: req.session.user})
 }
@@ -267,6 +276,7 @@ async function tracksToFrontend(req, res) {
     let favorites = []
 
     const tracks = await collection.find().toArray() // Haal alle tracks op)
+    const totalTracks = await collection.countDocuments()
 
     if (req.session.user) {
       user = await usersCollection.findOne({ username: req.session.user.username });
@@ -280,7 +290,12 @@ async function tracksToFrontend(req, res) {
       });
     }
 
-    res.render('filter-sorteer.ejs', {title: 'Filter & Sorteer', user: req.session.user, tracks: tracks,}) // Stuur de tracks als JSON naar de frontend
+    res.render('filter-sorteer.ejs', {  // Stuur de tracks als JSON naar de frontend
+      title: 'Filter & Sorteer', 
+      user: req.session.user, 
+      tracks: tracks,
+      totalTracks: totalTracks
+    })
   } catch (err) {
     console.error('❌ Failed to fetch tracks:', err)
     res.status(500).json({ error: 'Failed to fetch tracks' })
@@ -300,7 +315,7 @@ async function onFavorites(req, res) {
     favorites = user.favorites
   }
   
-  // Kijk in user database naar de favorites en store die in een variabele 
+  // Kijk in user database naar de favorites en store die in een variabele
   // Laat alleen de tracks zien die hetzelfde spotifyId hebben als de favorites.
 
   const tracks = await collection.find({ spotifyId: { $in: favorites } }).toArray();

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Functie om opgeslagen keuzes te laden en checkboxes correct te zetten
     function loadSelections(category) {
         let savedSelections = JSON.parse(localStorage.getItem(category)) || [];
         console.log(`Loaded ${category}:`, savedSelections)
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Functie om keuzes op te slaan in localStorage wanneer een checkbox wordt aangeklikt
     function saveSelections(category) {
         let selected = [...document.querySelectorAll(`input[type="checkbox"]:checked`)]
             .map(checkbox => checkbox.value);
@@ -22,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(`Saved ${category}:`, selected)
     }
 
-    // Detecteer de huidige pagina en stel de juiste categorie in
     let category;
     if (window.location.pathname.includes("instrument")) {
         category = "selectedInstruments";
@@ -35,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (category) {
         loadSelections(category);
 
-        // Voeg eventlisteners toe aan alle checkboxes
         document.querySelectorAll(`input[type="checkbox"]`).forEach(checkbox => {
             checkbox.addEventListener("change", () => saveSelections(category));
         });

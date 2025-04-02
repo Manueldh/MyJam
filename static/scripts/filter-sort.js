@@ -86,98 +86,76 @@ document.addEventListener('DOMContentLoaded', function () {
     const filtersContainer = document.querySelector('#selected-filters')
     const checkboxes = document.querySelectorAll("input[type='checkbox']")
     const songs = document.querySelectorAll(".song")
-    const resultsContainer = document.querySelector("#results");
+    const resultsContainer = document.querySelector("#results")
     const paginationContainer = document.querySelector('#pagination')
 
-    const checkTotalTracks = setInterval(() => {
-        const totalTracks = parseInt(resultsContainer.dataset.totalTracks, 10) || 0;
-
-        if (totalTracks > 0) {
-            clearInterval(checkTotalTracks); // Stop het interval zodra de waarde correct is
-            renderPagination(totalTracks);
-            showPage(1);
-        }
-    }, 100);
-
-    function loadSavedFilters() {
-        filtersContainer.innerHTML = '';
-        // Load instruments
-        const savedInstruments = JSON.parse(localStorage.getItem("selectedInstruments")) || [];
-        // Load genres
-        const savedGenres = JSON.parse(localStorage.getItem("selectedGenres")) || [];
-        // Load difficulty
-        const savedDifficulty = JSON.parse(localStorage.getItem("selectedDifficulty")) || [];
-        
-        // Apply the saved filters to the checkboxes
-        freshCheckboxes.forEach(checkbox => {
-            const value = checkbox.value;
-            const category = checkbox.name;
-            
-            if ((category === "instruments" && savedInstruments.includes(value)) ||
-                (category === "genre" && savedGenres.includes(value)) ||
-                (category === "difficulty" && savedDifficulty.includes(value))) {
-                checkbox.checked = true;
-            }
-        });
-        
-        // Update filters and display
-        freshCheckboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                addFilter(checkbox);
-            }
-        });
-    }
-
-    function updateLocalStorage() {
-        // Get all currently checked filters by category
-        const selectedInstruments = Array.from(document.querySelectorAll("input[name='instruments']:checked"))
-            .map(checkbox => checkbox.value);
-        
-        const selectedGenres = Array.from(document.querySelectorAll("input[name='genre']:checked"))
-            .map(checkbox => checkbox.value);
-        
-        const selectedDifficulty = Array.from(document.querySelectorAll("input[name='difficulty']:checked"))
-            .map(checkbox => checkbox.value);
-        
-        // Save to localStorage
-        localStorage.setItem("selectedInstruments", JSON.stringify(selectedInstruments));
-        localStorage.setItem("selectedGenres", JSON.stringify(selectedGenres));
-        localStorage.setItem("selectedDifficulty", JSON.stringify(selectedDifficulty));
-    }
-    
-    // Modify your checkbox event listeners to update localStorage when changed
-    checkboxes.forEach(checkbox => {
-        // Clone and replace to remove old event listeners
-        const newCheckbox = checkbox.cloneNode(true);
-        checkbox.parentNode.replaceChild(newCheckbox, checkbox);
-    });
-    
-    // Get the fresh set of checkboxes after replacing
-    const freshCheckboxes = document.querySelectorAll("input[type='checkbox']");
-
-    // Add new unified event listeners
-    freshCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            // Clear existing filters before redisplaying them
-            filtersContainer.innerHTML = '';
-            
-            // Re-add all selected filters
-            freshCheckboxes.forEach(cb => {
-                if (cb.checked) {
-                    addFilter(cb);
-                }
-            });
-            
-            checkIfScrollable();
-            filterSongs();
-            updateLocalStorage();
-            highlightMatchingSpans();
-        });
+    const freshCheckboxes = Array.from(checkboxes).map(checkbox => {
+        const newCheckbox = checkbox.cloneNode(true)
+        checkbox.parentNode.replaceChild(newCheckbox, checkbox)
+        return newCheckbox
     });
 
     const itemsPerPage = 20
     let currentPage = 1
 
+    /********** Voor het aanpassen van de localStorage op resultaat pagina **********/
+    function updateLocalStorage() {
+        const selectedInstruments = Array.from(document.querySelectorAll("input[name='instruments']:checked"))
+            .map(checkbox => checkbox.value)
+        
+        const selectedGenres = Array.from(document.querySelectorAll("input[name='genre']:checked"))
+            .map(checkbox => checkbox.value)
+        
+        const selectedDifficulty = Array.from(document.querySelectorAll("input[name='difficulty']:checked"))
+            .map(checkbox => checkbox.value)
+        
+        localStorage.setItem("selectedInstruments", JSON.stringify(selectedInstruments))
+        localStorage.setItem("selectedGenres", JSON.stringify(selectedGenres))
+        localStorage.setItem("selectedDifficulty", JSON.stringify(selectedDifficulty))
+    }
+
+    /********** Voor het ophalen van de eerder gekozen filters uit localStorage **********/
+    function loadSavedFilters() {
+        filtersContainer.innerHTML = ''
+
+        const savedInstruments = JSON.parse(localStorage.getItem("selectedInstruments")) || []
+        const savedGenres = JSON.parse(localStorage.getItem("selectedGenres")) || []
+        const savedDifficulty = JSON.parse(localStorage.getItem("selectedDifficulty")) || []
+        
+        freshCheckboxes.forEach(checkbox => {
+            const value = checkbox.value
+            const category = checkbox.name
+            
+            if ((category === "instruments" && savedInstruments.includes(value)) ||
+                (category === "genre" && savedGenres.includes(value)) ||
+                (category === "difficulty" && savedDifficulty.includes(value))) {
+                checkbox.checked = true
+            }
+        })
+        
+        freshCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                addFilter(checkbox)
+            }
+        })
+        filterSongs()
+    }
+    
+    freshCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            if (checkbox.checked) {
+                addFilter(checkbox)
+            } else {
+                removeFilter(checkbox)
+            }
+            
+            checkIfScrollable()
+            filterSongs()
+            updateLocalStorage()
+            highlightMatchingSpans()
+        })
+    })
+    
     /********** Voor het filteren van de content **********/
     function filterSongs() {
         const selectedFilters = {
@@ -188,8 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let anyFilterSelected = false
 
-        // Verzamel geselecteerde filters
-        checkboxes.forEach(checkbox => {
+        freshCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 anyFilterSelected = true
                 const category = checkbox.name
@@ -220,25 +197,8 @@ document.addEventListener('DOMContentLoaded', function () {
         showPage(currentPage)
     }
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", filterSongs);
-    });
-
     filterSongs()
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            if (checkbox.checked) {
-                addFilter(checkbox)
-                checkIfScrollable()
-                filterSongs()
-            } else {
-                removeFilter(checkbox)
-                checkIfScrollable()
-                filterSongs()
-            }
-        })
-    })
 
     /********** Voegt de selected filters bovenaan de pagina **********/
     function addFilter(checkbox) {
@@ -463,12 +423,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener("change", () => {
-            highlightMatchingSpans();
-        });
-    });
 
     /********** Roept de meeste functies aan bij het laden/herladen van de pagina **********/
     loadSavedFilters()

@@ -9,9 +9,9 @@ const filterMenuBackground = document.createElement('div')
 const scrollContainer = document.querySelector('.selected-filters-container')
 const body = document.body
 
-let audioPlayer = new Audio();
-let currentlyPlayingButton = null;
-let isProcessing = false;
+let audioPlayer = new Audio()
+let currentlyPlayingButton = null
+let isProcessing = false
 
 /********** Verstoppen en tonen van de filteropties **********/
 function showInstrumentOptions() {
@@ -42,8 +42,8 @@ function showGenreOptions() {
 
 /********** Checkt of selected-filters scrolbaar zijn bij smal scherm **********/
 function checkIfScrollable() {
-    const containerWidth = scrollContainer.offsetWidth;
-    const contentWidth = scrollContainer.scrollWidth;
+    const containerWidth = scrollContainer.offsetWidth
+    const contentWidth = scrollContainer.scrollWidth
   
     if (contentWidth <= containerWidth) {
       scrollContainer.classList.add('no-scroll')
@@ -86,34 +86,87 @@ document.addEventListener('DOMContentLoaded', function () {
     const filtersContainer = document.querySelector('#selected-filters')
     const checkboxes = document.querySelectorAll("input[type='checkbox']")
     const songs = document.querySelectorAll(".song")
-    const resultsContainer = document.querySelector("#results");
+    const resultsContainer = document.querySelector("#results")
     const paginationContainer = document.querySelector('#pagination')
 
-    const checkTotalTracks = setInterval(() => {
-        const totalTracks = parseInt(resultsContainer.dataset.totalTracks, 10) || 0;
-
-        if (totalTracks > 0) {
-            clearInterval(checkTotalTracks); // Stop het interval zodra de waarde correct is
-            renderPagination(totalTracks);
-            showPage(1);
-        }
-    }, 100);
+    const freshCheckboxes = Array.from(checkboxes).map(checkbox => {
+        const newCheckbox = checkbox.cloneNode(true)
+        checkbox.parentNode.replaceChild(newCheckbox, checkbox)
+        return newCheckbox
+    });
 
     const itemsPerPage = 20
     let currentPage = 1
 
+    /********** Voor het aanpassen van de localStorage op resultaat pagina **********/
+    function updateLocalStorage() {
+        const selectedInstruments = Array.from(document.querySelectorAll("input[name='instruments']:checked"))
+            .map(checkbox => checkbox.value)
+        
+        const selectedGenres = Array.from(document.querySelectorAll("input[name='genre']:checked"))
+            .map(checkbox => checkbox.value)
+        
+        const selectedDifficulty = Array.from(document.querySelectorAll("input[name='difficulty']:checked"))
+            .map(checkbox => checkbox.value)
+        
+        localStorage.setItem("selectedInstruments", JSON.stringify(selectedInstruments))
+        localStorage.setItem("selectedGenres", JSON.stringify(selectedGenres))
+        localStorage.setItem("selectedDifficulty", JSON.stringify(selectedDifficulty))
+    }
+
+    /********** Voor het ophalen van de eerder gekozen filters uit localStorage **********/
+    function loadSavedFilters() {
+        filtersContainer.innerHTML = ''
+
+        const savedInstruments = JSON.parse(localStorage.getItem("selectedInstruments")) || []
+        const savedGenres = JSON.parse(localStorage.getItem("selectedGenres")) || []
+        const savedDifficulty = JSON.parse(localStorage.getItem("selectedDifficulty")) || []
+        
+        freshCheckboxes.forEach(checkbox => {
+            const value = checkbox.value
+            const category = checkbox.name
+            
+            if ((category === "instruments" && savedInstruments.includes(value)) ||
+                (category === "genre" && savedGenres.includes(value)) ||
+                (category === "difficulty" && savedDifficulty.includes(value))) {
+                checkbox.checked = true
+            }
+        })
+        
+        freshCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                addFilter(checkbox)
+            }
+        })
+        filterSongs()
+    }
+    
+    freshCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            if (checkbox.checked) {
+                addFilter(checkbox)
+            } else {
+                removeFilter(checkbox)
+            }
+            
+            checkIfScrollable()
+            filterSongs()
+            updateLocalStorage()
+            highlightMatchingSpans()
+        })
+    })
+    
     /********** Voor het filteren van de content **********/
     function filterSongs() {
         const selectedFilters = {
             instruments: [],
             genre: [],
             difficulty: []
-        };
+        }
 
         let anyFilterSelected = false
 
-        // Verzamel geselecteerde filters
-        checkboxes.forEach(checkbox => {
+        freshCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 anyFilterSelected = true
                 const category = checkbox.name
@@ -144,25 +197,8 @@ document.addEventListener('DOMContentLoaded', function () {
         showPage(currentPage)
     }
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", filterSongs);
-    });
-
     filterSongs()
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            if (checkbox.checked) {
-                addFilter(checkbox)
-                checkIfScrollable()
-                filterSongs()
-            } else {
-                removeFilter(checkbox)
-                checkIfScrollable()
-                filterSongs()
-            }
-        })
-    })
 
     /********** Voegt de selected filters bovenaan de pagina **********/
     function addFilter(checkbox) {
@@ -186,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
             checkIfScrollable()
             filterSongs()
             highlightMatchingSpans()
+            updateLocalStorage()
         });
 
         filterTag.appendChild(removeBtn)
@@ -236,21 +273,21 @@ document.addEventListener('DOMContentLoaded', function () {
         prev.appendChild(inBtnArrowLeft)
         paginationContainer.appendChild(prev)
 
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, currentPage + 2);
+        let startPage = Math.max(1, currentPage - 2)
+        let endPage = Math.min(totalPages, currentPage + 2)
 
         if (startPage > 1) {
-            paginationContainer.appendChild(createPageButton(1));
-            if (startPage > 2) paginationContainer.appendChild(createDots());
+            paginationContainer.appendChild(createPageButton(1))
+            if (startPage > 2) paginationContainer.appendChild(createDots())
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            paginationContainer.appendChild(createPageButton(i));
+            paginationContainer.appendChild(createPageButton(i))
         }
 
         if (endPage < totalPages) {
-            if (endPage < totalPages - 1) paginationContainer.appendChild(createDots());
-            paginationContainer.appendChild(createPageButton(totalPages));
+            if (endPage < totalPages - 1) paginationContainer.appendChild(createDots())
+            paginationContainer.appendChild(createPageButton(totalPages))
         }
 
         const next = document.createElement("button")
@@ -269,143 +306,127 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function createPageButton(page) {
-        const btn = document.createElement("button");
+        const btn = document.createElement("button")
         btn.innerText = page;
         if (currentPage === page) {
-            btn.classList.add("active");
+            btn.classList.add("active")
         }
         btn.addEventListener("click", () => {
-            currentPage = page;
-            showPage(currentPage);
-        });
-        return btn;
+            currentPage = page
+            showPage(currentPage)
+        })
+        return btn
     }
     
     function createDots() {
-        const dots = document.createElement("span");
-        dots.innerText = "...";
-        dots.classList.add("dots");
-        return dots;
-    }
-
-    /********** Zorgt dat de selected filters weer bovenaan staan bij herladen pagina **********/
-    function restoreFilters() {
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                addFilter(checkbox)
-                checkIfScrollable()
-            }
-        })
+        const dots = document.createElement("span")
+        dots.innerText = "..."
+        dots.classList.add("dots")
+        return dots
     }
 
     /********** Voor het sorteren van songs **********/
     function sortSongs() {
-        const sortOption = document.getElementById("sort").value;
+        const sortOption = document.getElementById("sort").value
 
-        let tracks = Array.from(document.querySelectorAll('#results .song'));
+        let tracks = Array.from(document.querySelectorAll('#results .song'))
 
         tracks.sort((a, b) => {
             switch (sortOption) {
                 case "popular":
-                    const popA = parseInt(a.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim());
-                    const popB = parseInt(b.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim());
+                    const popA = parseInt(a.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim())
+                    const popB = parseInt(b.querySelector(".topRow span:nth-child(3) .extraSongInfoBG").innerText.replace("/100", "").trim())
                     return popB - popA; // Hoogste populariteit eerst
 
                 case "recent":
-                    const dateA = new Date(a.querySelector(".date-added").innerText.trim());
-                    const dateB = new Date(b.querySelector(".date-added").innerText.trim());
+                    const dateA = new Date(a.querySelector(".date-added").innerText.trim())
+                    const dateB = new Date(b.querySelector(".date-added").innerText.trim())
                     return dateB - dateA; // Nieuwste eerst
 
                 case "durationLong":
-                    const durationA = getDurationInSeconds(a.querySelector(".duration").innerText.trim());
-                    const durationB = getDurationInSeconds(b.querySelector(".duration").innerText.trim());
+                    const durationA = getDurationInSeconds(a.querySelector(".duration").innerText.trim())
+                    const durationB = getDurationInSeconds(b.querySelector(".duration").innerText.trim())
                     return durationB - durationA; // Langste nummers eerst
 
                 case "durationShort":
-                    const durA = getDurationInSeconds(a.querySelector(".duration").innerText.trim());
-                    const durB = getDurationInSeconds(b.querySelector(".duration").innerText.trim());
+                    const durA = getDurationInSeconds(a.querySelector(".duration").innerText.trim())
+                    const durB = getDurationInSeconds(b.querySelector(".duration").innerText.trim())
                     return durA - durB; // Kortste nummers eerst
 
                 default:
-                    return 0;
+                    return 0
             }
-        });
+        })
 
-        currentPage = 1;
+        currentPage = 1
 
-        resultsContainer.innerHTML = "";
-        tracks.forEach(track => resultsContainer.appendChild(track));
+        resultsContainer.innerHTML = ""
+        tracks.forEach(track => resultsContainer.appendChild(track))
 
-        filterSongs();
+        filterSongs()
 
-        showPage(currentPage);
+        showPage(currentPage)
     }
 
     function getDurationInSeconds(durationString) {
-        const [minutes, seconds] = durationString.split(":").map(Number);
-        return (minutes * 60) + seconds;
+        const [minutes, seconds] = durationString.split(":").map(Number)
+        return (minutes * 60) + seconds
     }
 
     document.getElementById("sort").addEventListener("change", () => {
-        sortSongs();
-    });
+        sortSongs()
+    })
 
     /********** Voor het openen van de extra info van de songs **********/
-    let allSongs = document.querySelectorAll(".song");
+    let allSongs = document.querySelectorAll(".song")
 
     allSongs.forEach(song => {
         song.addEventListener("click", function(event) {
-            if (event.target.closest(".actions")) return;
+            if (event.target.closest(".actions")) return
 
-            let extraInfo = song.querySelector(".extraSongInfo");
+            let extraInfo = song.querySelector(".extraSongInfo")
 
             if (extraInfo.classList.contains("visible")) {
-                extraInfo.classList.remove("visible");
+                extraInfo.classList.remove("visible")
             } else {
                 allSongs.forEach(otherSong => {
-                    let otherExtraInfo = otherSong.querySelector(".extraSongInfo");
-                    otherExtraInfo.classList.remove("visible");
-                });
-                extraInfo.classList.add("visible");
+                    let otherExtraInfo = otherSong.querySelector(".extraSongInfo")
+                    otherExtraInfo.classList.remove("visible")
+                })
+                extraInfo.classList.add("visible")
             }
-            event.stopPropagation();
-        });
-    });
+            event.stopPropagation()
+        })
+    })
 
     function getSelectedFilters() {
         const selectedFilters = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-            .map(checkbox => checkbox.nextElementSibling.textContent.trim().toLowerCase());
-        return selectedFilters;
+            .map(checkbox => checkbox.nextElementSibling.textContent.trim().toLowerCase())
+        return selectedFilters
     }
 
     /********** Geeft de extra informatie een highlight die match met de geselecteerde filters **********/
     function highlightMatchingSpans() {
-        const selectedFilters = getSelectedFilters();
+        const selectedFilters = getSelectedFilters()
 
         document.querySelectorAll(".extraSongInfoBG").forEach(span => {
-            const spanText = span.textContent.trim().toLowerCase();
+            const spanText = span.textContent.trim().toLowerCase()
 
             if (selectedFilters.includes(spanText)) {
                 if (!span.classList.contains("highlight")) {
-                    span.classList.add("highlight");
+                    span.classList.add("highlight")
                 } else {
             }
             } else {
                 if (span.classList.contains("highlight")) {
-                    span.classList.remove("highlight");
+                    span.classList.remove("highlight")
                 }
             }
         });
     }
 
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener("change", () => {
-            highlightMatchingSpans();
-        });
-    });
-
     /********** Roept de meeste functies aan bij het laden/herladen van de pagina **********/
-    restoreFilters()
+    loadSavedFilters()
     filterSongs()
     sortSongs()
     showPage(currentPage)
@@ -445,9 +466,9 @@ if (window.innerWidth > 750) {
 
 /********** Voor het scrollen met drag van de selected-filters **********/
 // Voornamelijk chatGPT code, scrollen met overflow-x wist is, maar het scrollen doen met daggen was wat lastiger.
-let isDown = false;
-let startX;
-let scrollLeft;
+let isDown = false
+let startX
+let scrollLeft
 
 // Muis ingedrukt houden
 scrollContainer.addEventListener("mousedown", (e) => {
@@ -477,22 +498,22 @@ scrollContainer.addEventListener("mousemove", (e) => {
 })
 
 function lazyLoadCovers() {
-    const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load');
+    const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load')
 
     visibleSongs.forEach(img => {
-        if (!img.dataset.src) return; // Als er geen data-src is, skippen
+        if (!img.dataset.src) return // Als er geen data-src is, skippen
 
-        img.src = img.dataset.src;  // Zet de echte afbeelding
-        img.removeAttribute('data-src'); // Voorkomt dat het opnieuw wordt geladen
-        img.classList.remove('lazy-load'); // Verwijdert de class na laden
-    });
+        img.src = img.dataset.src // Zet de echte afbeelding
+        img.removeAttribute('data-src') // Voorkomt dat het opnieuw wordt geladen
+        img.classList.remove('lazy-load') // Verwijdert de class na laden
+    })
 }
 
 // Roep deze functie aan na het laden van de pagina en bij paginatie updates
-document.addEventListener("DOMContentLoaded", lazyLoadCovers);
-document.addEventListener("pageChange", lazyLoadCovers);
+document.addEventListener("DOMContentLoaded", lazyLoadCovers)
+document.addEventListener("pageChange", lazyLoadCovers)
 
-audioPlayer.preload = "auto";
+audioPlayer.preload = "auto"
 
 /********** Voor het afspelen van de muziek previews **********/
 document.addEventListener("click", (event) => {
@@ -538,7 +559,7 @@ document.addEventListener("click", (event) => {
                     console.error("Fout bij afspelen van audio:", error)
                     button.classList.remove("playing")
                     currentlyPlayingButton = null
-                });
+                })
             }
         } catch (e) {
             console.error("Fout bij het instellen van audio:", e)
@@ -548,7 +569,7 @@ document.addEventListener("click", (event) => {
         
         setTimeout(() => { isProcessing = false; }, 50)
     }
-});
+})
 
 audioPlayer.addEventListener("ended", () => {
     if (currentlyPlayingButton) {

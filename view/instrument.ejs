@@ -15,87 +15,87 @@
     <main>
         <h1 class="kop-instrument">Choose your instruments</h1>
 
-        <form action="/genre" method="post" class="filter-container" class="form1">
+        <div class="filter-container">
             <ul>
                 <li class="item">
                     <label for="Electric-guitar" id="Electric-guitar">
-                        <input type="checkbox" name="Electric-guitar" value="Electric-guitar">
+                        <input type="checkbox" name="instruments" value="Electric guitar">
                         <span>Electric guitar</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Acoustic-guitar" id="Acoustic-guitar">
-                        <input type="checkbox" name="Acoustic-guitar" value="Acoustic-guitar">
+                        <input type="checkbox" name="instruments" value="Acoustic guitar">
                         <span>Acoustic guitar</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Bass-guitar" id="Bass-guitar">
-                        <input type="checkbox" name="Bass-guitar" value="Bass-guitar">
+                        <input type="checkbox" name="instruments" value="Bass guitar">
                         <span>Bass guitar</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Drums" id="Drums">
-                        <input type="checkbox" name="Drums" value="Drums">
+                        <input type="checkbox" name="instruments" value="Drums">
                         <span>Drums</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Piano" id="Piano">
-                        <input type="checkbox" name="Piano" value="Piano">
+                        <input type="checkbox" name="instruments" value="Piano">
                         <span>Piano</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Ukelele" id="Ukelele">
-                        <input type="checkbox" name="Ukelele" value="Ukelele">
+                        <input type="checkbox" name="instruments" value="Ukelele">
                         <span>Ukelele</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Violin" id="Violin">
-                        <input type="checkbox" name="Violin" value="Violin">
+                        <input type="checkbox" name="instruments" value="Violin">
                         <span>Violin</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Trumpet" id="Trumpet">
-                        <input type="checkbox" name="Trumpet" value="Trumpet">
+                        <input type="checkbox" name="instruments" value="Trumpet">
                         <span>Trumpet</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Saxophone" id="Saxophone">
-                        <input type="checkbox" name="Saxophone" value="Saxophone">
+                        <input type="checkbox" name="instruments" value="Saxophone">
                         <span>Saxophone</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Flute" id="Flute">
-                        <input type="checkbox" name="Flute" value="Flute">
+                        <input type="checkbox" name="instruments" value="Flute">
                         <span>Flute</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Accordion" id="Accordion">
-                        <input type="checkbox" name="Accordion" value="Accordion">
+                        <input type="checkbox" name="instruments" value="Accordion">
                         <span>Accordion</span>
                     </label>
                 </li>
                 <li class="item">
                     <label for="Cello" id="Cello">
-                        <input type="checkbox" name="Cello" value="Cello">
+                        <input type="checkbox" name="instruments" value="Cello">
                         <span>Cello</span>
                     </label>
                 </li>
             </ul>
 
         <div class="progress-buttons">
-            <button class="Next" type="submit">Next <img src="/static/images/arrow-right.svg" alt=""></button>
+            <a class="next" href="/genre">Next <img src="/static/images/arrow-right.svg" alt="arrow-right"></a>
         </div>
 
-        </form>
+    </div>
 
     </main>
 
@@ -103,6 +103,7 @@
     <footer></footer>
 
     <script src="/static/scripts/animatie.js"></script>
+    <script src="/static/scripts/connect-filters.js"></script>
 
 </body>
 

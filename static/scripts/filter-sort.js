@@ -118,34 +118,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 anyFilterSelected = true
                 const category = checkbox.name
                 const value = checkbox.value.toLowerCase()
-                
-                if (category === "difficulty") {
-                    selectedFilters.difficulty.push(value)
-                } else {
-                    selectedFilters[category].push(value)
-                }
+                selectedFilters[category].push(value)
             }
-        });
+        })
 
         songs.forEach(song => {
             if (!anyFilterSelected) {
-                song.classList.remove("filtered-out");
-                return;
+                song.classList.remove("filtered-out")
+                return
             }
 
-            const songGenre = song.dataset.genre.toLowerCase();
-            const songInstruments = song.dataset.instruments.toLowerCase().split(",");
-            const songDifficulty = song.dataset.difficulty.toLowerCase();
+            const songGenre = song.dataset.genre.toLowerCase()
+            const songInstruments = song.dataset.instruments.toLowerCase().split(",")
+            const songDifficulty = song.dataset.difficulty.toLowerCase()
 
-            let matches = false;
+            let matchesGenre = selectedFilters.genre.length === 0 || selectedFilters.genre.includes(songGenre)
+            let matchesInstrument = selectedFilters.instruments.length === 0 || songInstruments.some(instr => selectedFilters.instruments.includes(instr))
+            let matchesDifficulty = selectedFilters.difficulty.length === 0 || selectedFilters.difficulty.includes(songDifficulty)
 
-            // Deze code niet meer nodig, moet ik nog netjes weghalen
-            if (selectedFilters.genre.includes(songGenre)) matches = true;
-            if (songInstruments.some(instr => selectedFilters.instruments.includes(instr))) matches = true;
-            if (selectedFilters.difficulty.includes(songDifficulty)) matches = true;
+            let matches = matchesGenre && matchesInstrument && matchesDifficulty
 
-            song.classList.toggle("filtered-out", !matches);
-        });
+            song.classList.toggle("filtered-out", !matches)
+        })
         currentPage = 1
         showPage(currentPage)
     }

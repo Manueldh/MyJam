@@ -9,8 +9,9 @@ const filterMenuBackground = document.createElement('div')
 const scrollContainer = document.querySelector('.selected-filters-container')
 const body = document.body
 
-let currentAudio = null
-let currentButton = null
+let audioPlayer = new Audio();
+let currentlyPlayingButton = null;
+let isProcessing = false;
 
 /********** Verstoppen en tonen van de filteropties **********/
 function showInstrumentOptions() {
@@ -84,19 +85,29 @@ window.addEventListener('resize', checkIfScrollable)
 document.addEventListener('DOMContentLoaded', function () {
     const filtersContainer = document.querySelector('#selected-filters')
     const checkboxes = document.querySelectorAll("input[type='checkbox']")
-    const songs = document.querySelectorAll(".song");
+    const songs = document.querySelectorAll(".song")
+    const resultsContainer = document.querySelector("#results");
+    const paginationContainer = document.querySelector('#pagination')
+
+    const checkTotalTracks = setInterval(() => {
+        const totalTracks = parseInt(resultsContainer.dataset.totalTracks, 10) || 0;
+
+        if (totalTracks > 0) {
+            clearInterval(checkTotalTracks); // Stop het interval zodra de waarde correct is
+            renderPagination(totalTracks);
+            showPage(1);
+        }
+    }, 100);
 
     const itemsPerPage = 20
     let currentPage = 1
-
-    const paginationContainer = document.querySelector('#pagination')
 
     /********** Voor het filteren van de content **********/
     function filterSongs() {
         const selectedFilters = {
             instruments: [],
             genre: [],
-            difficulty: {}
+            difficulty: []
         };
 
         let anyFilterSelected = false
@@ -105,13 +116,13 @@ document.addEventListener('DOMContentLoaded', function () {
         checkboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 anyFilterSelected = true
-                const category = checkbox.name;
-                const value = checkbox.value.toLowerCase();
+                const category = checkbox.name
+                const value = checkbox.value.toLowerCase()
                 
                 if (category === "difficulty") {
-                    selectedFilters.difficulty[value] = true;
+                    selectedFilters.difficulty.push(value)
                 } else {
-                    selectedFilters[category].push(value);
+                    selectedFilters[category].push(value)
                 }
             }
         });
@@ -131,15 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Deze code niet meer nodig, moet ik nog netjes weghalen
             if (selectedFilters.genre.includes(songGenre)) matches = true;
             if (songInstruments.some(instr => selectedFilters.instruments.includes(instr))) matches = true;
-
-            if (Object.keys(selectedFilters.difficulty).length > 0) {
-                for (const instrument in songDifficulty) {
-                    if (selectedFilters.difficulty[songDifficulty[instrument]]) {
-                        matches = true;
-                        break;
-                    }
-                }
-            }
+            if (selectedFilters.difficulty.includes(songDifficulty)) matches = true;
 
             song.classList.toggle("filtered-out", !matches);
         });
@@ -212,10 +215,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let end = start + itemsPerPage
 
         tracks.forEach((track, index) => {
-            track.style.display = index >= start && index < end ? "" : "none"
+            track.style.display = index >= start && index < end ? "grid" : "none"
         })
 
         renderPagination(tracks.length)
+        lazyLoadCovers()
     }
 
     function renderPagination(totalTracks) {
@@ -238,17 +242,21 @@ document.addEventListener('DOMContentLoaded', function () {
         prev.appendChild(inBtnArrowLeft)
         paginationContainer.appendChild(prev)
 
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement("button")
-            btn.innerText = i
-            if (currentPage === i) {
-                btn.classList.add("active")
-            }
-            btn.addEventListener("click", () => {
-                currentPage = i
-                showPage(currentPage)
-            })
-            paginationContainer.appendChild(btn)
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+
+        if (startPage > 1) {
+            paginationContainer.appendChild(createPageButton(1));
+            if (startPage > 2) paginationContainer.appendChild(createDots());
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            paginationContainer.appendChild(createPageButton(i));
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) paginationContainer.appendChild(createDots());
+            paginationContainer.appendChild(createPageButton(totalPages));
         }
 
         const next = document.createElement("button")
@@ -266,6 +274,26 @@ document.addEventListener('DOMContentLoaded', function () {
         paginationContainer.appendChild(next)
     }
 
+    function createPageButton(page) {
+        const btn = document.createElement("button");
+        btn.innerText = page;
+        if (currentPage === page) {
+            btn.classList.add("active");
+        }
+        btn.addEventListener("click", () => {
+            currentPage = page;
+            showPage(currentPage);
+        });
+        return btn;
+    }
+    
+    function createDots() {
+        const dots = document.createElement("span");
+        dots.innerText = "...";
+        dots.classList.add("dots");
+        return dots;
+    }
+
     /********** Zorgt dat de selected filters weer bovenaan staan bij herladen pagina **********/
     function restoreFilters() {
         checkboxes.forEach(checkbox => {
@@ -279,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function () {
     /********** Voor het sorteren van songs **********/
     function sortSongs() {
         const sortOption = document.getElementById("sort").value;
-        const resultsContainer = document.getElementById("results");
 
         let tracks = Array.from(document.querySelectorAll('#results .song'));
 
@@ -329,9 +356,9 @@ document.addEventListener('DOMContentLoaded', function () {
         sortSongs();
     });
 
+    /********** Voor het openen van de extra info van de songs **********/
     let allSongs = document.querySelectorAll(".song");
 
-    /********** Voor het openen van de extra info van de songs **********/
     allSongs.forEach(song => {
         song.addEventListener("click", function(event) {
             if (event.target.closest(".actions")) return;
@@ -455,41 +482,91 @@ scrollContainer.addEventListener("mousemove", (e) => {
   scrollContainer.scrollLeft = scrollLeft - walk
 })
 
-// Touch events voor mobiele apparaten
-scrollContainer.addEventListener("touchstart", (e) => {
-  startX = e.touches[0].pageX - scrollContainer.offsetLeft
-  scrollLeft = scrollContainer.scrollLeft
-})
+function lazyLoadCovers() {
+    const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load');
 
-scrollContainer.addEventListener("touchmove", (e) => {
-  const x = e.touches[0].pageX - scrollContainer.offsetLeft
-  const walk = (x - startX) * 2
-  scrollContainer.scrollLeft = scrollLeft - walk
-})
+    visibleSongs.forEach(img => {
+        if (!img.dataset.src) return; // Als er geen data-src is, skippen
 
+        img.src = img.dataset.src;  // Zet de echte afbeelding
+        img.removeAttribute('data-src'); // Voorkomt dat het opnieuw wordt geladen
+        img.classList.remove('lazy-load'); // Verwijdert de class na laden
+    });
+}
+
+// Roep deze functie aan na het laden van de pagina en bij paginatie updates
+document.addEventListener("DOMContentLoaded", lazyLoadCovers);
+document.addEventListener("pageChange", lazyLoadCovers);
+
+audioPlayer.preload = "auto";
 
 /********** Voor het afspelen van de muziek previews **********/
-function play(trackId) {
-    const audioElement = document.getElementById(`audio-${trackId}`)
-    const buttonElement = document.querySelector(`[onclick="play('${trackId}')"]`)
-
-    if (currentAudio && currentAudio !== audioElement) {
-        currentAudio.pause()
-        currentAudio.currentTime = 0
-        currentButton.classList.remove('playing')
+document.addEventListener("click", (event) => {
+    const button = event.target.closest('.play')
+    
+    if (!button) return
+    
+    if (isProcessing) return
+    isProcessing = true
+    
+    const previewUrl = button.dataset.previewUrl
+    
+    if (!previewUrl) {
+        console.error("Geen preview URL gevonden voor deze knop")
+        isProcessing = false
+        return
     }
-
-    if (audioElement.paused) {
-        audioElement.play()
-        console.log('Playing:', audioElement.src)
-        buttonElement.classList.add('playing')
-        currentAudio = audioElement
-        currentButton = buttonElement
+    
+    if (currentlyPlayingButton === button) {
+        audioPlayer.pause()
+        button.classList.remove("playing")
+        currentlyPlayingButton = null
+        setTimeout(() => { isProcessing = false; }, 50)
     } else {
-        audioElement.pause()
-        console.log('Paused:', audioElement.src)
-        buttonElement.classList.remove('playing')
-        currentAudio = null
-        currentButton = null
+        audioPlayer.pause()
+        
+        if (currentlyPlayingButton) {
+            currentlyPlayingButton.classList.remove("playing")
+        }
+        
+        button.classList.add("playing")
+        currentlyPlayingButton = button
+        
+        try {
+            audioPlayer.src = previewUrl
+            
+            audioPlayer.load()
+            
+            const playPromise = audioPlayer.play()
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Fout bij afspelen van audio:", error)
+                    button.classList.remove("playing")
+                    currentlyPlayingButton = null
+                });
+            }
+        } catch (e) {
+            console.error("Fout bij het instellen van audio:", e)
+            button.classList.remove("playing")
+            currentlyPlayingButton = null
+        }
+        
+        setTimeout(() => { isProcessing = false; }, 50)
     }
-}
+});
+
+audioPlayer.addEventListener("ended", () => {
+    if (currentlyPlayingButton) {
+        currentlyPlayingButton.classList.remove("playing")
+        currentlyPlayingButton = null
+    }
+})
+
+audioPlayer.addEventListener("error", () => {
+    if (currentlyPlayingButton) {
+        currentlyPlayingButton.classList.remove("playing")
+        currentlyPlayingButton = null
+    }
+    isProcessing = false
+})

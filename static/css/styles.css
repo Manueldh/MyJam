@@ -915,7 +915,7 @@ form > button{
             }
 
     .right-column .results-container .song {
-        display: grid;
+        display: none;
         grid-template-columns: repeat(8, 1fr);
         margin-bottom: 1em;
     }
@@ -1033,7 +1033,7 @@ form > button{
                     }
 
     .right-column #results .filtered-out {
-        display: none;
+        display: none !important;
     }
 
     .right-column #results .song :not(.actions):not(.playUnavailable):not(.playUnavailable svg):not(.playUnavailable svg path) {
@@ -1138,6 +1138,10 @@ form > button{
         .right-column #pagination button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .right-column #pagination span {
+            color: var(--main-text-color);
         }
 
 @media (max-width: 1100px) {

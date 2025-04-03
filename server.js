@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const xss = require('xss')
 const bcrypt = require('bcryptjs')
+const validator = require('validator')
 
 const express = require('express')
 const session = require('express-session')
@@ -251,7 +252,7 @@ async function tracksToFrontend(req, res) {
 
     if (req.session.user) {
       user = await usersCollection.findOne({ username: req.session.user.username });
-      favorites = user.favorites
+      favorites = user.favorites || []
       tracks.forEach(track => {
         track.isFavorite = favorites.includes(track.spotifyId);
       });
@@ -345,6 +346,10 @@ async function onRegisterAccount(req, res) {
     const username = xss(req.body.username)
     const password = xss(req.body.password)
 
+    if (!validator.isEmail(email)) {
+      return res.render('register.ejs', { title: "Register", error: 'Invalid email address', user: null })
+    }
+
     const duplicateUser = await collection.findOne({ username: username })
     if (duplicateUser) {
       return res.render('register.ejs', { title: "Register", error: 'Username already taken', user: null })
@@ -355,6 +360,7 @@ async function onRegisterAccount(req, res) {
       return res.render('register.ejs', { title: "Register", error: 'Email already taken', user: null })
     }
 
+    
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const result = await collection.insertOne({
@@ -369,7 +375,7 @@ async function onRegisterAccount(req, res) {
       email: email,
       password: hashedPassword
      }
-    res.render('register.ejs', { title: 'Register', user: req.session.user, error: null})
+     res.redirect('/') 
   }
 
 

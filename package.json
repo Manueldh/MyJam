@@ -29,6 +29,7 @@
     "p-limit": "^6.2.0",
     "p-retry": "^6.2.1",
     "spotify-web-api-node": "^5.0.2",
+    "validator": "^13.15.0",
     "xss": "^1.0.15"
   }
 }

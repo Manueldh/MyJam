@@ -499,6 +499,7 @@ async function onResetPassword(req, res) {
     const dataBase = client.db(process.env.DB_NAME)
     const collection = dataBase.collection(process.env.DB_COLLECTION)
 
+
     const user = await collection.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() }
@@ -639,7 +640,6 @@ async function onProfile(req, res){
   favorites = user.favorites || []
 
   if (favorites.length === 0) {
-    // Render profile2.ejs if the user has no favorites
     return res.render('noFavorites.ejs', { title: 'Profile', user: req.session.user, profile: user, })
   }
   

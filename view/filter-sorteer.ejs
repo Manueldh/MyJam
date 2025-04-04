@@ -13,6 +13,12 @@
     </header>
 
     <main>
+        <% if (typeof message !== 'undefined') { %>
+            <div class="friendNoti">
+                <p style="color: white;"><%= message %></p>
+            </div>
+        <% } %>
+        
         <div class="filter-sort">
             <div id="left-column">
                 <section class="section-instruments">

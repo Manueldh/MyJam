@@ -67,58 +67,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    function setupPaginationMonitoring() {
-        const paginationContainer = document.querySelector('#pagination')
-        if (paginationContainer) {
-            paginationContainer.addEventListener('click', function() {
-                setTimeout(setupVisibleTextOverflow, 300)
-            })
-        }
-        
-        let lastActivePage = document.querySelector('#pagination .active')
-        
-        setInterval(function() {
-            const currentActivePage = document.querySelector('#pagination .active')
-            
-            if (currentActivePage && (!lastActivePage || 
-                lastActivePage.textContent !== currentActivePage.textContent)) {
-                lastActivePage = currentActivePage
-                setupVisibleTextOverflow()
-            }
-        }, 500)
-        
-        const resultsContainer = document.querySelector('.results-container')
-        if (resultsContainer) {
-            const observer = new MutationObserver(function(mutations) {
-                let displayChanged = false
-                
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && 
-                        mutation.attributeName === 'style' && 
-                        mutation.target.classList.contains('song')) {
-                        displayChanged = true
-                    }
-                })
-                
-                if (displayChanged) {
-                    setTimeout(setupVisibleTextOverflow, 100)
-                }
-            })
-            
-            observer.observe(resultsContainer, {
-                attributes: true,
-                attributeFilter: ['style'],
-                subtree: true
-            })
-        }
-    }
-    
-    setupVisibleTextOverflow()
-    
     window.addEventListener('resize', setupVisibleTextOverflow)
     window.addEventListener('load', function() {
         setupVisibleTextOverflow()
-        setupPaginationMonitoring()
     })
     window.refreshTextOverflow = setupVisibleTextOverflow
+
+    /********** Voor het openen van de extra info van de songs **********/
+    document.body.addEventListener('click', function(event) {
+        const song = event.target.closest('.song');
+        
+        if (!song || event.target.closest(".actions")) return;
+        
+        const extraInfo = song.querySelector(".extraSongInfo");
+        
+        if (extraInfo.classList.contains("visible")) {
+            extraInfo.classList.remove("visible");
+        } else {
+            document.querySelectorAll(".song .extraSongInfo.visible").forEach(info => {
+                info.classList.remove("visible");
+            });
+            
+            extraInfo.classList.add("visible");
+        }
+        
+        event.stopPropagation();
+    });
 })
+
+function lazyLoadCovers() {
+    const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load')
+
+    visibleSongs.forEach(img => {
+        if (!img.dataset.src) return
+
+        img.src = img.dataset.src
+        img.removeAttribute('data-src')
+        img.classList.remove('lazy-load')
+    })
+}
+
+// Roep deze functie aan na het laden van de pagina en bij paginatie updates
+document.addEventListener("DOMContentLoaded", lazyLoadCovers)
+document.addEventListener("pageChange", lazyLoadCovers)

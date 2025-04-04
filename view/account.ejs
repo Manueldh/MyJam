@@ -11,13 +11,23 @@
     
      <h1>Hallo, <%= user.username %></h1>
      <a href="/logout">log out</a>
-     <button class="showFriends"><%= friends.length %> friends</button>
+     <button class="showFriends">
+      <% if (friends && friends.length > 0) { %>
+        <%= friends.length %> friends
+      <% } else { %>
+        <p>0 friends</p>
+      <% } %>
+    </button>
      <dialog class="showFriendsModal">
       <h2>Your friends</h2>
       <ul>
-        <% friends.forEach(friend => { %>
-          <li><a href="/profile/<%= friend %>"><%= friend %></a></li>
-        <% }) %>
+        <% if (friends && friends.length > 0) { %>
+          <% friends.forEach(friend => { %>
+            <li><a href="/profile/<%= friend %>"><%= friend %></a></li>
+          <% }) %>
+        <% } else { %>
+          <li>Add new friends at <a href="/friends">here!</a></li>
+        <% } %>
         </ul>
       <button class="modalClose">x</button>
       </dialog>
@@ -40,6 +50,6 @@
         </form>
     </main>
     <footer></footer>
-    <script src="static/scripts/index.js"></script>
+    <script src="static/scripts/account.js"></script>
   </body>
 </html>

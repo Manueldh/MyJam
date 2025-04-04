@@ -249,6 +249,9 @@ async function tracksToFrontend(req, res) {
 
     const tracks = await collection.find().toArray() // Haal alle tracks op)
     const totalTracks = await collection.countDocuments()
+    
+    const message = req.session.message
+    delete req.session.message
 
     if (req.session.user) {
       user = await usersCollection.findOne({ username: req.session.user.username });
@@ -266,7 +269,8 @@ async function tracksToFrontend(req, res) {
       title: 'Filter & Sorteer', 
       user: req.session.user, 
       tracks: tracks,
-      totalTracks: totalTracks
+      totalTracks: totalTracks,
+      message: message
     })
   } catch (err) {
     console.error('❌ Failed to fetch tracks:', err)
@@ -281,6 +285,9 @@ async function onFavorites(req, res) {
   const usersCollection = dataBase.collection(process.env.DB_COLLECTION)
   let user = null
   let favorites = []
+
+  const message = req.session.message
+  delete req.session.message
 
   if (req.session.user) {
     user = await usersCollection.findOne({ username: req.session.user.username });
@@ -297,7 +304,7 @@ async function onFavorites(req, res) {
     });
   }
 
-  res.render('favorites.ejs', {title: 'Favorites', user: req.session.user, tracks: tracks})
+  res.render('favorites.ejs', {title: 'Favorites', user: req.session.user, tracks: tracks, message: message})
 }
 
 function onHome(req, res) {
@@ -533,9 +540,9 @@ async function onResetPassword(req, res) {
 
 
 async function addToFavorites(req, res) {
-  console.log("hij laadt")
   const dataBase = client.db(process.env.DB_NAME)
   const collection = dataBase.collection(process.env.DB_COLLECTION)
+  const trackName = req.body.trackName
 
   try {
     await collection.updateOne(
@@ -547,9 +554,11 @@ async function addToFavorites(req, res) {
       }
     )
     console.log("Updaten gaat goed")
+    req.session.message = `Added "${trackName}" to favorites.`
     res.redirect(req.get('Referer') || '/');
   } catch {
     console.log('Updaten gaat niet goed')
+    req.session.message = `Failed to add "${trackName}" to favorites. Please log in`
     res.redirect(req.get('Referer') || '/');
   }
 }

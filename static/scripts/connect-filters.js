@@ -1,7 +1,7 @@
+/********** Voor het opslaan van gekoze filters in de local storage **********/
 document.addEventListener("DOMContentLoaded", function () {
     function loadSelections(category) {
         let savedSelections = JSON.parse(localStorage.getItem(category)) || [];
-        console.log(`Loaded ${category}:`, savedSelections)
         savedSelections.forEach(value => {
             let checkbox = document.querySelector(`input[name="${category}"][value="${value}"]`);
             if (checkbox) {
@@ -16,8 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let selected = [...document.querySelectorAll(`input[type="checkbox"]:checked`)]
             .map(checkbox => checkbox.value);
         localStorage.setItem(category, JSON.stringify(selected));
-
-        console.log(`Saved ${category}:`, selected)
     }
 
     let category;

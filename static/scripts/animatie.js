@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     window.addEventListener('resize', setupVisibleTextOverflow)
+    window.addEventListener('click', setupVisibleTextOverflow)
     window.addEventListener('load', function() {
         setupVisibleTextOverflow()
     })
@@ -107,6 +108,5 @@ function lazyLoadCovers() {
     })
 }
 
-// Roep deze functie aan na het laden van de pagina en bij paginatie updates
 document.addEventListener("DOMContentLoaded", lazyLoadCovers)
 document.addEventListener("pageChange", lazyLoadCovers)

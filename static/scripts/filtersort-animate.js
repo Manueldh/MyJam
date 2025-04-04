@@ -11,39 +11,21 @@ const body = document.body
 const scrollContainer = document.querySelector('.selected-filters-container')
 
 /********** Animatie voor verstoppen en tonen van de filteropties **********/
-function showInstrumentOptions() {
-    const hiddenOptions = document.querySelectorAll('.section-instruments .hidden-option')
+function toggleOptions() {
+    const section = this.closest('section') || this.closest('.section-instruments') || this.closest('.section-genre')
+    const hiddenOptions = section.querySelectorAll('.hidden-option')
     const isVisible = hiddenOptions[0].style.visibility === 'visible'
-
+    
     hiddenOptions.forEach(option => {
         option.style.visibility = isVisible ? 'hidden' : 'visible'
         option.style.height = isVisible ? '0' : '2em'
     })
-
     this.querySelector('p').textContent = isVisible ? 'More' : 'Less'
     this.querySelector('svg').style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)'
 }
 
-function showGenreOptions() {
-    const hiddenOptions = document.querySelectorAll('.section-genre .hidden-option')
-    const isVisible = hiddenOptions[0].style.visibility === 'visible'
-
-    hiddenOptions.forEach(option => {
-        option.style.visibility = isVisible ? 'hidden' : 'visible'
-        option.style.height = isVisible ? '0' : '2em'
-    })
-
-    this.querySelector('p').textContent = isVisible ? 'More' : 'Less'
-    this.querySelector('svg').style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)'
-}
-
-if (buttonInstruments) {
-    buttonInstruments.addEventListener('click', showInstrumentOptions);
-}
-
-if (buttonGenre) {
-    buttonGenre.addEventListener('click', showGenreOptions);
-}
+buttonInstruments.addEventListener('click', toggleOptions)
+buttonGenre.addEventListener('click', toggleOptions)
 
 /********** Voegt faded overlay toe wanneer filter menu open is, bij smal scherm **********/  
 function addFilterMenuBackground() {

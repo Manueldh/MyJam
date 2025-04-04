@@ -894,7 +894,7 @@ form > button {
                 fill: #5F5F5F;
             }
 
-    .right-column .results-container .song {
+    .results-container .song {
         display: none;
         grid-template-columns: repeat(8, 1fr);
         margin-bottom: 1em;
@@ -1023,7 +1023,7 @@ form > button {
                         opacity: 1;
                     }
 
-    .right-column #results .filtered-out {
+    #results .filtered-out {
         display: none !important;
     }
 

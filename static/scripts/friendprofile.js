@@ -1,5 +1,5 @@
 
-const showfriends = document.querySelector('.showFriends')
+const showfriends = document.querySelector('.showFriends, .friendsOfFriends')
 const showfriendsModal = document.querySelector('.showFriendsModal')
 const showfriendsClose = document.querySelector('.modalClose')
 

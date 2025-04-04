@@ -3,7 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const checkboxes = document.querySelectorAll("input[type='checkbox']")
     const songs = document.querySelectorAll(".song")
     const resultsContainer = document.querySelector("#results")
+
     const paginationContainer = document.querySelector('#pagination')
+    const prevButton = paginationContainer.querySelector('.previousBtn');
+    const nextButton = paginationContainer.querySelector('.nextBtn');
 
     const freshCheckboxes = Array.from(checkboxes).map(checkbox => {
         const newCheckbox = checkbox.cloneNode(true)
@@ -97,9 +100,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 return
             }
 
-            const songGenre = song.dataset.genre.toLowerCase()
-            const songInstruments = song.dataset.instruments.toLowerCase().split(",")
-            const songDifficulty = song.dataset.difficulty.toLowerCase()
+            const songGenre = song.querySelector('.extraSongInfo .topRow span:first-child .extraSongInfoBG').textContent.toLowerCase();
+            const instrumentElements = song.querySelectorAll('.extraSongInfo .bottomRow .extraSongInfoBG');
+            const songInstruments = Array.from(instrumentElements).map(el => el.textContent.toLowerCase());
+            const difficultyText = song.querySelector('.extraSongInfo .topRow span:nth-child(2) .extraSongInfoBG').textContent.toLowerCase();
+            let songDifficulty;
+            switch(difficultyText) {
+                case 'amateur': 
+                    songDifficulty = '1'; 
+                    break;
+                case 'beginner': 
+                    songDifficulty = '2'; 
+                    break;
+                case 'intermediate': 
+                    songDifficulty = '3'; 
+                    break;
+                case 'experienced': 
+                    songDifficulty = '4'; 
+                    break;
+                case 'master': 
+                    songDifficulty = '5'; 
+                    break;
+                default: 
+                    songDifficulty = '1';
+            }
 
             let matchesGenre = selectedFilters.genre.length === 0 || selectedFilters.genre.includes(songGenre)
             let matchesInstrument = selectedFilters.instruments.length === 0 || songInstruments.some(instr => selectedFilters.instruments.includes(instr))
@@ -112,9 +136,6 @@ document.addEventListener('DOMContentLoaded', function () {
         currentPage = 1
         showPage(currentPage)
     }
-
-    filterSongs()
-
 
     /********** Voegt de selected filters bovenaan de pagina **********/
     function addFilter(checkbox) {
@@ -170,55 +191,39 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderPagination(totalTracks) {
-        paginationContainer.innerHTML = ""
-        let totalPages = Math.ceil(totalTracks / itemsPerPage)
-
-        if (totalPages <= 1) return
-
-        const prev = document.createElement("button")
-        const inBtnArrowLeft = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-        prev.classList.add('previousBtn')
-        inBtnArrowLeft.setAttribute("viewBox", "0 0 12 9")
-        inBtnArrowLeft.setAttribute("xmlns", "http://www.w3.org/2000/svg")
-        inBtnArrowLeft.innerHTML = `<path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>`
-        prev.disabled = currentPage === 1
-        prev.addEventListener("click", () => {
-            currentPage--
-            showPage(currentPage)
-        })
-        prev.appendChild(inBtnArrowLeft)
-        paginationContainer.appendChild(prev)
-
-        let startPage = Math.max(1, currentPage - 2)
-        let endPage = Math.min(totalPages, currentPage + 2)
-
+        while (prevButton.nextSibling && prevButton.nextSibling !== nextButton) {
+            paginationContainer.removeChild(prevButton.nextSibling);
+        }
+        
+        let totalPages = Math.ceil(totalTracks / itemsPerPage);
+        
+        if (totalPages <= 1) {
+            prevButton.style.display = 'none';
+            nextButton.style.display = 'none';
+            return;
+        } else {
+            prevButton.style.display = '';
+            nextButton.style.display = '';
+        }
+        prevButton.disabled = currentPage === 1;
+        nextButton.disabled = currentPage === totalPages;
+        
+        const fragment = document.createDocumentFragment();
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+        
         if (startPage > 1) {
-            paginationContainer.appendChild(createPageButton(1))
-            if (startPage > 2) paginationContainer.appendChild(createDots())
-        }
-
+            fragment.appendChild(createPageButton(1));
+            if (startPage > 2) fragment.appendChild(createDots());
+        }  
         for (let i = startPage; i <= endPage; i++) {
-            paginationContainer.appendChild(createPageButton(i))
-        }
-
+            fragment.appendChild(createPageButton(i));
+        }     
         if (endPage < totalPages) {
-            if (endPage < totalPages - 1) paginationContainer.appendChild(createDots())
-            paginationContainer.appendChild(createPageButton(totalPages))
+            if (endPage < totalPages - 1) fragment.appendChild(createDots());
+            fragment.appendChild(createPageButton(totalPages));
         }
-
-        const next = document.createElement("button")
-        const inBtnArrowRight = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-        next.classList.add('nextBtn')
-        inBtnArrowRight.setAttribute("viewBox", "0 0 12 9")
-        inBtnArrowRight.setAttribute("xmlns", "http://www.w3.org/2000/svg")
-        inBtnArrowRight.innerHTML = `<path d="M5.99921 9C5.74392 8.99871 5.49212 8.94061 5.26208 8.82991C5.03203 8.71922 4.82951 8.5587 4.66921 8.36L0.459215 3.26C0.213209 2.95297 0.0584007 2.583 0.0124318 2.19227C-0.0335371 1.80153 0.0311821 1.40574 0.199215 1.05C0.335494 0.740826 0.557888 0.477413 0.839834 0.291223C1.12178 0.105032 1.45136 0.00393305 1.78921 0H10.2092C10.5471 0.00393305 10.8767 0.105032 11.1586 0.291223C11.4405 0.477413 11.6629 0.740826 11.7992 1.05C11.9672 1.40574 12.032 1.80153 11.986 2.19227C11.94 2.583 11.7852 2.95297 11.5392 3.26L7.32921 8.36C7.16892 8.5587 6.9664 8.71922 6.73635 8.82991C6.50631 8.94061 6.25451 8.99871 5.99921 9Z"/>`
-        next.disabled = currentPage === totalPages
-        next.addEventListener("click", () => {
-            currentPage++
-            showPage(currentPage)
-        })
-        next.appendChild(inBtnArrowRight)
-        paginationContainer.appendChild(next)
+        paginationContainer.insertBefore(fragment, nextButton);
     }
 
     function createPageButton(page) {
@@ -240,6 +245,15 @@ document.addEventListener('DOMContentLoaded', function () {
         dots.classList.add("dots")
         return dots
     }
+
+    prevButton.addEventListener("click", () => {
+        currentPage--
+        showPage(currentPage)
+    })
+    nextButton.addEventListener("click", () => {
+        currentPage++
+        showPage(currentPage)
+    })
 
     /********** Voor het sorteren van songs **********/
     function sortSongs() {
@@ -273,14 +287,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     return 0
             }
         })
-
         currentPage = 1
-
         resultsContainer.innerHTML = ""
         tracks.forEach(track => resultsContainer.appendChild(track))
-
-        filterSongs()
-
         showPage(currentPage)
     }
 

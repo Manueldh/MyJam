@@ -29,7 +29,7 @@ app
   .get('/genre', onGenre)
   .get('/instrument', onInstrument)
   .get('/difficulty', onDifficulty)
-  .get('/filter-sorteer', tracksToFrontend)
+  .get('/results', tracksToFrontend)
   .get('/api/tracks', tracksToFrontend)
   .get('/account',  onAccount)
   .get('/favorites', onFavorites)
@@ -265,8 +265,8 @@ async function tracksToFrontend(req, res) {
       });
     }
 
-    res.render('filter-sorteer.ejs', {  // Stuur de tracks als JSON naar de frontend
-      title: 'Filter & Sorteer', 
+    res.render('results.ejs', {  // Stuur de tracks als JSON naar de frontend
+      title: 'Filter & Sort results', 
       user: req.session.user, 
       tracks: tracks,
       totalTracks: totalTracks,

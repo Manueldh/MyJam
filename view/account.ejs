@@ -9,15 +9,28 @@
     <div class="login">
     <div class="inner-login">
     
-     <h1>Hallo, <%= user.username %></h1>
-     <a href="/logout">log out</a>
-     <button class="showFriends">
-      <% if (friends && friends.length > 0) { %>
-        <%= friends.length %> friends
-      <% } else { %>
-        <p>0 friends</p>
-      <% } %>
-    </button>
+     
+      <div class="button-row">
+        <div class="left-buttons">
+          <a href="/logout" class="logout-btn">Log out <img src="/static/images/logout.png" alt="logout icon" class="logout-icon"></a>
+        </div>
+        <div class="right-buttons">
+          <button class="edit-details">
+            <span class="button-text">Edit details</span>
+            <img src="/static/Images/edit-pen.png" alt="edit pen icon" class="pen-icon">
+          </button>
+          <button class="showFriends">
+            <% if (friends && friends.length > 0) { %>
+              <%= friends.length %> friends
+            <% } else { %>
+              <p>0 friends</p>
+            <% } %>
+          </button>
+        </div>
+      </div>
+
+      <h1>Hallo, <%= user.username %></h1>
+
      <dialog class="showFriendsModal">
       <h2>Your friends</h2>
       <ul>
@@ -31,7 +44,6 @@
         </ul>
       <button class="modalClose">x</button>
       </dialog>
-        <button class="edit-details">edit details</button>
         <form class="test" action="/editInfo" method="POST">
           <label for="email">Email</label>
           <input type="text" name="email" class="email" value="<%= user.email %>" required readonly/>
@@ -51,5 +63,6 @@
     </main>
     <footer></footer>
     <script src="static/scripts/account.js"></script>
+    <script src="static/scripts/dialog.js"></script>
   </body>
 </html>

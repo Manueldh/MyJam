@@ -285,10 +285,6 @@ form > button{
             width: 90%; 
             padding: 2em; 
         }
-    
-        .login {
-            margin-top: 50px; 
-        }
     }
 
 /* Instrument page */
@@ -617,6 +613,12 @@ form > button{
     .filter-container ul {
         grid-template-columns: repeat(2, 1fr); /* 2 kolommen */
         padding: 15px 30px;
+    }
+
+    .progress-buttons{
+        position: sticky;
+        z-index: 10;
+        bottom: 0;
     }
 }
 
@@ -1612,22 +1614,82 @@ form > button{
         }
 }
 
-.random{
-    padding: 10px 20px;
+/* Randomizer-knop */
+
+.random {
+    display: inline-block;
+    padding: 15px 30px;
     border: none;
-    border-radius: 5px;
-    background-color: var(--main-link-color);
-    color: var(--color-light);
+    border-radius: 50px;
+    background: linear-gradient(45deg, #FF7300, #FF4500);
+    color: #fff;
     font-family: var(--main-font);
+    font-size: 1.2em;
+    font-weight: 800;
+    text-transform: uppercase;
     cursor: pointer;
-    margin-top: 10em;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin-bottom: 10px;
 }
 
-#liedjeWeergave{
-    color: var(--color-light);
-
+.random:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
+.random:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Liedje-weergave */
+#liedjeWeergave {
+    margin: 4em 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--main-text-color);
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Animatie voor fade-in effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .random {
+        padding: 10px 20px;
+        font-size: 1em;
+        border-radius: 40px;
+    }
+
+    #liedjeWeergave {
+        font-size: 1.2em;
+        margin: 2em 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .random {
+        padding: 8px 15px;
+        font-size: 0.9em;
+        border-radius: 30px;
+    }
+
+    #liedjeWeergave {
+        font-size: 1em;
+        margin: 1.5em 0;
+    }
+}
 /* Home page */
 .home{
     display: flex;
@@ -1657,6 +1719,129 @@ form > button{
     font-size: 1.5em;
     padding: 20px;
     text-align: center;
+}
+
+.login-routes {
+    text-align: center;
+    margin: auto;
+    gap: 1em; /* Ruimte tussen de knoppen */
+}
+
+.login-routes h2{
+    padding-bottom: 20px;
+}
+
+/* Styling voor de knoppen */
+.login-routes a {
+    display: inline-block;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--main-link-color);
+    color: var(--color-light);
+    font-family: var(--main-font);
+    font-size: 1em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    margin: 10px;
+}
+
+/* Hover- en active-effecten */
+.login-routes a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.login-routes a:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 1024px) {
+    .home {
+        padding: 5em;
+    }
+
+    .home h1 {
+        font-size: 2.5em;
+    }
+
+    .home p {
+        font-size: 1.2em;
+        padding: 15px;
+    }
+
+    .home a {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+
+    .login-routes h2 {
+        font-size: 1.3em;
+    }
+
+    .login-routes a {
+        font-size: 0.9em;
+        padding: 8px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .home {
+        padding: 3em;
+    }
+
+    .home h1 {
+        font-size: 2em;
+    }
+
+    .home p {
+        font-size: 1em;
+    }
+
+    .home a {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    .login-routes h2 {
+        font-size: 1.2em;
+    }
+
+    .login-routes a {
+        font-size: 0.8em;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home {
+        padding: 2em;
+    }
+
+    .home h1 {
+        font-size: 1.8em;
+    }
+
+    .home p {
+        font-size: 0.9em;
+    }
+
+    .home a {
+        font-size: 0.8em;
+        padding: 6px 12px;
+    }
+
+    .login-routes h2 {
+        font-size: 1em;
+    }
+
+    .login-routes a {
+        font-size: 0.7em;
+        padding: 6px 12px;
+    }
 }
 
 /* Confirm pagina */
@@ -1772,3 +1957,133 @@ form > button{
     margin: 20px;
     border-radius: .3em;
 }
+
+
+/* Account page */
+
+
+.showFriendsModal{
+    position: relative; /* Zorg ervoor dat de .modalClose knop correct wordt gepositioneerd */
+    overflow: visible;
+    padding: 3em;
+    margin: auto;
+    background-color: var(--nav-primary-color);
+    color: var(--main-text-color);
+    border-radius: .8em;
+    border: none;
+    width: 30%;
+
+}
+
+.showFriendsModal  ul{
+    list-style-type: none;
+}
+
+.showFriendsModal  ul li{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--main-link-color);
+    border-radius: .8em;
+    margin-top: 1em;
+}
+
+.showFriendsModal  ul li a{
+    text-decoration: none;
+    color: var(--main-text-color);
+    font-size: 1.2em;
+}
+
+.modalClose{
+    position: absolute;
+    top: -10px; /* Plaats de knop iets boven de dialog */
+    right: -10px; /* Plaats de knop iets rechts buiten de dialog */
+    background: #ffffff;
+    color: var(--main-link-color);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    font-weight: 600;
+    padding: .8em;
+  }
+
+
+::backdrop {
+    background-color: rgba(0, 0, 0, 0.5); /* Donkere overlay met 50% doorzichtigheid */
+    backdrop-filter: blur(5px); 
+  }
+  
+  
+  .button-row {
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;/* Zorgt ervoor dat de knoppen links uitgelijnd zijn */ /* Ruimte tussen de knoppen */
+    margin-bottom: 1em; /* Ruimte onder de knoppen */
+    position: relative;
+    overflow: visible;
+  }
+
+    .button-row a,
+    .button-row button {
+        border: none;
+        font-family: var(--main-font);
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 1em; /* Voor de link */
+    }
+
+        .left-buttons {
+            display: flex;
+            position: absolute;
+            top: -5.5em;
+            right: -10px;
+        }
+
+        .left-buttons a{
+           color: var(--main-text-color);
+        }
+    
+            .logout-icon{
+                width: 1.5em;
+                height: 1.5em;
+                position: absolute;
+                padding-left: 2px;
+            }
+
+        .right-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Ruimte tussen de knoppen aan de rechterkant */
+        }
+
+        .showFriends{
+            margin-right: auto;
+            background-color: var(--color-light);
+            color: var(--main-link-color);
+            padding: 5px 10px;
+            border-radius: 1em;
+        }
+
+        .edit-details{
+            margin-left: auto;
+            background: none;
+            color: var(--main-text-color);
+            padding-right: 2em;
+        }
+
+            .pen-icon{
+                position: absolute;
+                padding-left: 2px;
+            }
+        
+
+        
+    
+    

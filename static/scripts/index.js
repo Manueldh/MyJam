@@ -1,7 +1,7 @@
 const showfriends = document.querySelector('.showFriends')
 const showfriendsModal = document.querySelector('.showFriendsModal')
 const showfriendsClose = document.querySelector('.modalClose')
-const editDetails = document.querySelector('.edit-details .button-text'); 
+const editDetails = document.querySelector('.edit-details'); 
 
 let originalValues = {}; // Hier bewaren we de originele waarden
 
@@ -27,9 +27,9 @@ function toggleEditing() {
 
   // Pas de knoptekst aan
   if (emailField.hasAttribute('readonly')) {
-    editDetails.textContent = 'Edit details';
+    editDetails.textContent = 'edit details';
   } else {
-    editDetails.textContent = 'Cancel';
+    editDetails.textContent = 'cancel';
   }
 }
 

@@ -1,31 +1,34 @@
-let liedjes = [
-    "Bohemian Rhapsody - Queen",
-    "Billie Jean - Michael Jackson",
-    "Hotel California - Eagles",
-    "Stairway to Heaven - Led Zeppelin",
-    "Smells Like Teen Spirit - Nirvana",
-    "One - Metallica",
-    "Imagine - John Lennon",
-    "Hey Jude - The Beatles",   
-    "Sweet Child O' Mine - Guns N' Roses",
-    "Like a Rolling Stone - Bob Dylan",
-    "With or Without You - U2",
-    "Angel - Massive Attack",
-    "Purple Rain - Prince",
-    "Like a tattoo - Sade",
-];
 
-const randomBtn = document.querySelector('.random');
-
-function kiesWillekeurigLiedje() {
-    let randomIndex = Math.floor(Math.random() * liedjes.length);
-    let gekozenLiedje = liedjes[randomIndex];
-
-    document.getElementById("liedjeWeergave").innerText = "🎵 " + gekozenLiedje;
+// Haal de favoriete liedjes uit de DOM
+function getFavoriteSongsFromDOM() {
+    const songElements = document.querySelectorAll('.song');
+    const favoriteSongs = Array.from(songElements).map(song => ({
+        trackName: song.querySelector('.title').textContent,
+        artist: song.querySelector('.artist').textContent,
+        spotifyId: song.dataset.spotifyId
+    }));
+    return favoriteSongs;
 }
 
+let favoriteSongs = getFavoriteSongsFromDOM();
+
+// Randomizer-functie
+function kiesWillekeurigLiedje() {
+    if (favoriteSongs.length === 0) {
+        document.getElementById("liedjeWeergave").innerText = "🎵 No favorite songs available!";
+        return;
+    }
+
+    let randomIndex = Math.floor(Math.random() * favoriteSongs.length);
+    let gekozenLiedje = favoriteSongs[randomIndex];
+
+    document.getElementById("liedjeWeergave").innerText = `🎵 ${gekozenLiedje.trackName} - ${gekozenLiedje.artist}`;
+}
+
+// Voeg een event listener toe aan de randomizer-knop
+const randomBtn = document.querySelector('.random');
 if (randomBtn) {
-randomBtn.addEventListener('click', kiesWillekeurigLiedje);
+    randomBtn.addEventListener('click', kiesWillekeurigLiedje);
 }
 
 

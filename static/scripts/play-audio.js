@@ -5,10 +5,26 @@ let isProcessing = false
 
 audioPlayer.preload = "auto"
 
+function stopAudioIfSongHidden() {
+    if (currentlyPlayingButton) {
+        const songContainer = currentlyPlayingButton.closest('.song')
+        
+        if (!songContainer || songContainer.style.display === 'none') {
+            audioPlayer.pause()
+            currentlyPlayingButton.classList.remove("playing")
+            currentlyPlayingButton = null
+        }
+    }
+}
+
+
 document.addEventListener("click", (event) => {
     const button = event.target.closest('.play')
     
-    if (!button) return
+    if (!button) {
+        setTimeout(stopAudioIfSongHidden, 50)
+        return
+    }
     
     if (isProcessing) return
     isProcessing = true

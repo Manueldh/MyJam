@@ -1,4 +1,3 @@
-/********** Animatie voor verstoppen en tonen van de filteropties **********/
 const buttonInstruments = document.querySelector('.button-more-instruments')
 const buttonGenre = document.querySelector('.button-more-genres')
 
@@ -23,9 +22,6 @@ function toggleOptions() {
     this.querySelector('p').textContent = isVisible ? 'More' : 'Less'
     this.querySelector('svg').style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)'
 }
-
-buttonInstruments.addEventListener('click', toggleOptions)
-buttonGenre.addEventListener('click', toggleOptions)
 
 /********** Voegt faded overlay toe wanneer filter menu open is, bij smal scherm **********/  
 function addFilterMenuBackground() {
@@ -52,9 +48,6 @@ function addFilterMenuBackground() {
         }
     }
 }
-
-window.addEventListener('resize', addFilterMenuBackground)
-
 
 if (filterBtn) {
     filterBtn.addEventListener('click', () => {
@@ -95,17 +88,14 @@ function checkIfScrollable() {
     }
 }
   
-  checkIfScrollable()
-
-window.addEventListener('resize', checkIfScrollable)
+checkIfScrollable()
 
 /********** Voor het scrollen met drag van de selected-filters **********/
-// Voornamelijk chatGPT code, scrollen met overflow-x wist is, maar het scrollen doen met daggen was wat lastiger.
+// Voornamelijk chatGPT code voor scrollContainer, scrollen met overflow-x wist is, maar het scrollen doen met daggen was wat lastiger.
 let isDown = false
 let startX
 let scrollLeft
 
-// Muis ingedrukt houden
 scrollContainer.addEventListener("mousedown", (e) => {
   isDown = true
   scrollContainer.classList.add("active")
@@ -123,11 +113,23 @@ scrollContainer.addEventListener("mouseup", () => {
   scrollContainer.classList.remove("active")
 });
 
-// Muis bewegen en slepen
 scrollContainer.addEventListener("mousemove", (e) => {
   if (!isDown) return
   e.preventDefault()
   const x = e.pageX - scrollContainer.offsetLeft
-  const walk = (x - startX) * 2; // Hoe snel gesleept wordt
+  const walk = (x - startX) * 2
   scrollContainer.scrollLeft = scrollLeft - walk
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+    addFilterMenuBackground()
+    checkIfScrollable()
+
+    window.addEventListener('resize', () => {
+        addFilterMenuBackground()
+        checkIfScrollable()
+    })
+
+    buttonInstruments.addEventListener('click', toggleOptions)
+    buttonGenre.addEventListener('click', toggleOptions)
 })

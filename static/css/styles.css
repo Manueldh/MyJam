@@ -154,10 +154,14 @@ main {
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
 
+        nav ul.animate-expand {
+            animation: expandWidth 0.5s ease-in-out forwards;
+        }
+
         nav ul {
             margin-left: auto;
             justify-content: space-evenly;
-            animation: expandWidth 0.5s ease-in-out forwards;
+            width: 100%;
         }
 
         nav ul li a {
@@ -174,7 +178,6 @@ main {
 h1 {
     font-family: var(--main-font);
     color: var(--color-light);
-    margin: 0 2em;
 }
 
 .login h1 {
@@ -301,6 +304,7 @@ form > button {
 
 .kop-instrument, .kop-genre {
     padding: 50px 70px 0;
+    transition: all 0.5s ease-in-out;
 }
 
 .filter-container ul{
@@ -308,6 +312,7 @@ form > button {
     grid-template-columns: repeat(4, 1fr); 
     gap: 20px;
     padding: 35px 70px;
+    transition: all 0.5s ease-in-out;
 } 
     .filter-container li{
         text-align: center;
@@ -355,39 +360,6 @@ form > button {
             color: var(--main-link-color);
             border: #FF7300 2px solid;
             transition: .2s all ease;
-        }
-
-        @media (max-width: 1024px) {
-            .filter-container ul {
-                grid-template-columns: repeat(3, 1fr); 
-                padding: 20px 50px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .filter-container ul {
-                grid-template-columns: repeat(2, 1fr); 
-                padding: 15px 30px;
-            }
-
-            .progress-buttons{
-                position: sticky;
-                z-index: 10;
-                bottom: 0;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .filter-container ul {
-                grid-template-columns: 1fr; 
-                padding: 10px 20px;
-            }
-
-            .kop-instrument, .kop-genre, .kop-difficulty {
-                text-align: center; 
-                padding: 15px 10px 0;
-                font-size: 1.5rem; 
-            }
         }
 
         /* Animatie filter opties */
@@ -519,8 +491,8 @@ form > button {
 
 .kop-difficulty{
     text-align: center;
-    padding-bottom: 20px;
-    padding-top: 60px;
+    padding-top: 50px;
+    transition: all 0.5s ease-in-out;
 }
 
 .test input:focus{
@@ -612,6 +584,53 @@ form > button {
             border: #FF7300 2px solid;
             transition: .2s all ease;
         } 
+
+@media (max-width: 1024px) {
+    .kop-instrument, .kop-genre, .kop-difficulty {
+        padding: 40px 50px 0;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .filter-container ul {
+        grid-template-columns: repeat(3, 1fr); 
+        padding: 20px 50px;
+        transition: all 0.5s ease-in-out;
+    }
+}
+
+@media (max-width: 768px) {
+    .kop-instrument, .kop-genre, .kop-difficulty {
+        padding: 30px 30px 0;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .filter-container ul {
+        grid-template-columns: repeat(2, 1fr); 
+        padding: 20px 30px;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .progress-buttons{
+        position: sticky;
+        z-index: 10;
+        bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-container ul {
+        grid-template-columns: 1fr; 
+        padding: 10px 20px;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .kop-instrument, .kop-genre, .kop-difficulty {
+        text-align: center; 
+        padding: 15px 10px 0;
+        font-size: 1.5rem; 
+        transition: all 0.5s ease-in-out;
+    }
+}
 
 /* Filter & Sorting page */
 @keyframes filtersHidden {
@@ -895,10 +914,17 @@ form > button {
                 fill: #5F5F5F;
             }
 
+        #results {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+
     .results-container .song {
         display: none;
+        position: relative;
+        z-index: 1;
         grid-template-columns: repeat(8, 1fr);
-        margin-bottom: 1em;
     }
 
         .song .song-info-container {
@@ -1036,8 +1062,12 @@ form > button {
         grid-column: 1 / 9;
         opacity: 0;
         max-height: 0;
+        overflow: hidden;
+        pointer-events: none;
         color: var(--nav-secondary-color);
         padding: 0;
+        visibility: hidden;
+        z-index: -1;
         transition: all 0.5s ease-in-out;
     }
 
@@ -1049,6 +1079,9 @@ form > button {
         border-radius: 0 0 0.7rem 0.7rem;
         padding: 0 0.7rem 0.3em 0.7em ;
         padding-top: none;
+        pointer-events: auto;
+        visibility: visible;
+        z-index: 2;
         transition: all 0.5s ease-in-out;
     }
 
@@ -1124,14 +1157,17 @@ form > button {
             transition: all 0.5s ease-in-out;
         }
 
-    .right-column #pagination {
+    #pagination {
         display: flex;
         justify-content: center;
         gap: 0.5rem;
-        margin: 2em 0;
+        margin: 1em 0;
+        padding: 1em 0;
+        position: relative;
+        z-index: 3;
     }
 
-        .right-column #pagination button {
+        #pagination button {
             appearance: none;
             color: var(--main-text-color);
             background: none;
@@ -1141,30 +1177,30 @@ form > button {
             cursor: pointer;
         }
 
-        .right-column #pagination button.active {
+        #pagination button.active {
             border-bottom: 2px solid var(--main-text-color);
             scale: 1.2;
         }
 
-        .right-column #pagination button.previousBtn, .right-column #pagination button.nextBtn {
+        #pagination button.previousBtn, #pagination button.nextBtn {
             fill: var(--main-link-color);
             width: 1em;
         }
 
-        .right-column #pagination button.previousBtn {
+        #pagination button.previousBtn {
             rotate: 90deg;
         }
 
-        .right-column #pagination button.nextBtn {
+        #pagination button.nextBtn {
             rotate: -90deg;
         }
 
-        .right-column #pagination button:disabled {
+        #pagination button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .right-column #pagination span {
+        #pagination span {
             color: var(--main-text-color);
         }
 
@@ -1394,7 +1430,6 @@ form > button {
     .right-column .results-container .song {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        margin-bottom: 1em;
     }
 
         .right-column .results-container .song .song-info-container {
@@ -1477,11 +1512,16 @@ form > button {
             fill: #5F5F5F;
         }
 
-    #favorite-songs .song {
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        margin-bottom: 1em;
+    #favorite-songs {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
     }
+
+        #favorite-songs .song {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+        }
 
 @media (max-width: 1100px) {
     .favorite-container {
@@ -1919,6 +1959,10 @@ form > button {
 
 /* friends profile */
 
+.profile-main h1 {
+    margin: 0 2em;
+}
+
 .user{
     display: flex;
     align-items: start;
@@ -2118,8 +2162,3 @@ form > button {
                 position: absolute;
                 padding-left: 2px;
             }
-        
-
-        
-    
-    

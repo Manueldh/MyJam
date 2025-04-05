@@ -13,10 +13,6 @@
     </header>
 
     <main>
-      <div class="user">
-        <h1><%= profile.username %> profile</h1>
-        <button class="showFriends"><%= profile.friends ? profile.friends.length : 0%> friend(s)</button>
-      </div>
 
         <dialog class="showFriendsModal">
          <h2>Your friends</h2>
@@ -32,6 +28,10 @@
          <button class="modalClose">x</button>
         </dialog>
         <section class="favorite-container">
+          <div class="user">
+            <h1><%= profile.username %> profile</h1>
+            <button class="showFriends"><%= profile.friends ? profile.friends.length : 0%> friend(s)</button>
+          </div>
             <h2> <%= profile.username %> Favorites</h2>
                 <p>This user has no favorites yet! Tell them to add some songs to their favorites!</p>
         </section>

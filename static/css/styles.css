@@ -1622,7 +1622,7 @@ form > button {
 /* Liedje-weergave */
 #liedjeWeergave {
     margin: 3em 0;
-    font-size: 1.5em;
+    font-size: 1em;
     font-weight: bold;
     color: var(--main-text-color);
     text-align: center;

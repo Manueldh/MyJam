@@ -13,8 +13,11 @@
     </header>
 
     <main>
+      <div class="user">
         <h1><%= profile.username %> profile</h1>
         <button class="showFriends"><%= profile.friends ? profile.friends.length : 0%> friend(s)</button>
+      </div>
+
         <dialog class="showFriendsModal">
          <h2>Your friends</h2>
          <ul>

@@ -24,11 +24,13 @@
 
     </div>
 
-    <div class="login-routes">
-        <h2>Or log in to your account!</h2>
-        <a href="/login">Log in</a>
-        <a href="/register">Register</a>
-    </div>
+    <% if (!user) { %>
+        <div class="login-routes">
+            <h2>Or log in to your account!</h2>
+            <a href="/login">Log in</a>
+            <a href="/register">Register</a>
+        </div>
+    <% } %>
 
     </main>
 

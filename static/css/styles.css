@@ -1969,43 +1969,30 @@ form > button {
     justify-content: flex-start;
     flex-direction: column;
     color: var(--main-text-color);
-    padding: 10em;
+    padding: 8em 14em;
     padding-bottom: 5em;
 }
 
 .user > button{
-    margin-left: 4.5em;
     margin-top: 1em;
 }
 
 /* Responsiviteit */
     @media (max-width: 1024px) {
         .user {
-            padding: 5em 4em;
-        }
-
-        .user > button {
-            margin-left: 5em; 
+            padding: 5em 8em;
         }
     }
 
     @media (max-width: 768px) {
         .user {
-            padding: 5em 2em; 
-        }
-
-        .user > button {
-            margin-left: 4.5em; 
+            padding: 5em 6em; 
         }
     }
 
     @media (max-width: 480px) {
         .user {
-            padding: 5em 0; 
-        }
-
-        .user > button {
-            margin-left: 4.5em; 
+            padding: 5em 3em; 
         }
     }
 

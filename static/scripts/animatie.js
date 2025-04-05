@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const items = document.querySelectorAll('.item') // Selecteer alle items met de class "item"
-
     items.forEach((item, index) => {
         setTimeout(() => {
             item.classList.add('animate') // Voeg de animatieklasse toe
         }, index * 100) // Voeg een vertraging toe voor een "staggered" effect
     })
-
 
     /********** Voor title en artist animatie bij songs **********/
     const PIXELS_PER_SECOND = 40
@@ -14,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_DURATION = 10
     
     let isProcessing = false
+    let hasAnimated = false;
     
     function setupVisibleTextOverflow() {
         if (isProcessing) return
@@ -66,47 +65,63 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         }
     }
+
+    function lazyLoadCovers() {
+        const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load')
     
-    window.addEventListener('resize', setupVisibleTextOverflow)
+        visibleSongs.forEach(img => {
+            if (!img.dataset.src) return
+    
+            img.src = img.dataset.src
+            img.removeAttribute('data-src')
+            img.classList.remove('lazy-load')
+        })
+    }
+    
+    document.addEventListener("pageChange", lazyLoadCovers)
+    
+    function handleResize() {
+        const navUl = document.querySelector("nav ul");
+        if (window.innerWidth <= 750 && !hasAnimated) {
+            navUl.classList.remove("animate-expand");
+            hasAnimated = false;
+        } else if (window.innerWidth > 750) {
+            navUl.classList.add("animate-expand");
+            hasAnimated = true;
+        }
+    }
+
+    /********** Voor het openen van de extra info van de songs **********/
+    document.body.addEventListener('click', function(event) {
+        const song = event.target.closest('.song')
+        
+        if (!song || event.target.closest(".actions")) return
+        
+        const extraInfo = song.querySelector(".extraSongInfo")
+        
+        if (extraInfo.classList.contains("visible")) {
+            extraInfo.classList.remove("visible")
+        } else {
+            document.querySelectorAll(".song .extraSongInfo.visible").forEach(info => {
+                info.classList.remove("visible")
+            });
+            
+            extraInfo.classList.add("visible")
+        }
+    })
+
+    document.addEventListener("pageChange", lazyLoadCovers)
+
+    window.addEventListener('resize', () => {
+        handleResize()
+        setupVisibleTextOverflow()
+    })
     window.addEventListener('click', setupVisibleTextOverflow)
     window.addEventListener('load', function() {
         setupVisibleTextOverflow()
     })
     window.refreshTextOverflow = setupVisibleTextOverflow
 
-    /********** Voor het openen van de extra info van de songs **********/
-    document.body.addEventListener('click', function(event) {
-        const song = event.target.closest('.song');
-        
-        if (!song || event.target.closest(".actions")) return;
-        
-        const extraInfo = song.querySelector(".extraSongInfo");
-        
-        if (extraInfo.classList.contains("visible")) {
-            extraInfo.classList.remove("visible");
-        } else {
-            document.querySelectorAll(".song .extraSongInfo.visible").forEach(info => {
-                info.classList.remove("visible");
-            });
-            
-            extraInfo.classList.add("visible");
-        }
-        
-        event.stopPropagation();
-    });
+    lazyLoadCovers()
+    handleResize()
 })
-
-function lazyLoadCovers() {
-    const visibleSongs = document.querySelectorAll('.song:not([style*="display: none"]) .cover.lazy-load')
-
-    visibleSongs.forEach(img => {
-        if (!img.dataset.src) return
-
-        img.src = img.dataset.src
-        img.removeAttribute('data-src')
-        img.classList.remove('lazy-load')
-    })
-}
-
-document.addEventListener("DOMContentLoaded", lazyLoadCovers)
-document.addEventListener("pageChange", lazyLoadCovers)

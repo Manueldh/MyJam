@@ -535,7 +535,7 @@ async function onResetPassword(req, res) {
       password: hashedPassword
     }
 
-    res.render('login.ejs', { title: 'Login', user: req.session.user })
+    res.render('home.ejs', { title: 'home', user: req.session.user })
   }
 
 
